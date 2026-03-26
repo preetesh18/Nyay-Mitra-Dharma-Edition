@@ -20,7 +20,7 @@
 html{scroll-behavior:smooth}
 
 body{
-  background:var(--ink);
+  background:linear-gradient(135deg,#0a0610,#0f0614,#0a0610);
   color:var(--cream);
   font-family:'EB Garamond',serif;
   overflow-x:hidden;
@@ -28,45 +28,35 @@ body{
   min-height:100vh;
 }
 
-/* ── ANIMATED BACKGROUND ── */
-.background{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;background:linear-gradient(135deg,#080604,#100C06,#080604)}
-
-#starfield{position:fixed;top:0;left:0;width:100%;height:100%;z-index:1;pointer-events:none}
-
-.falling-object{position:fixed;font-size:1.5rem;z-index:2;pointer-events:none;animation:fall linear infinite}
-
-@keyframes fall{
-  to{transform:translateY(100vh) rotate(360deg);opacity:0}
+/* ── ANIMATED CANVAS BACKGROUND ── */
+#wormhole-canvas{
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  z-index:0;
+  pointer-events:none;
+  display:block;
 }
 
-.comet{
+#shooting-stars{
   position:fixed;
-  width:3px;
-  height:30px;
-  background:linear-gradient(to bottom,rgba(240,212,130,1),transparent);
-  z-index:2;
-  animation:fall-comet linear infinite;
-  box-shadow:0 0 10px rgba(240,212,130,.8);
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  z-index:1;
   pointer-events:none;
 }
 
-@keyframes fall-comet{
-  to{transform:translateY(100vh) translateX(200px) rotate(45deg);opacity:0}
-}
-
-.star{
+.shooting-star{
   position:absolute;
   width:2px;
-  height:2px;
-  background:rgba(240,212,130,.8);
-  border-radius:50%;
-  box-shadow:0 0 10px rgba(240,212,130,.6);
-  animation:twinkle 3s infinite;
-}
-
-@keyframes twinkle{
-  0%,100%{opacity:.3;transform:scale(1)}
-  50%{opacity:1;transform:scale(1.3)}
+  height:100px;
+  background:linear-gradient(to bottom,rgba(201,168,76,0.8),transparent);
+  box-shadow:0 0 20px rgba(201,168,76,0.6);
+  pointer-events:none;
 }
 
 /* ── GRAIN TEXTURE ── */
@@ -77,7 +67,7 @@ body::after{
   z-index:3;
   pointer-events:none;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.08'/%3E%3C/svg%3E");
-  opacity:.3;
+  opacity:.2;
 }
 
 /* ── CONTAINER ── */
@@ -94,12 +84,12 @@ body::after{
 .login-wrapper{
   width:100%;
   max-width:500px;
-  background:linear-gradient(135deg,rgba(26,19,8,.85),rgba(35,26,10,.9));
+  background:linear-gradient(135deg,rgba(26,19,8,.88),rgba(35,26,10,.92));
   border:1px solid rgba(201,168,76,.25);
-  backdrop-filter:blur(20px);
+  backdrop-filter:blur(25px);
   padding:3.5rem 3rem;
   clip-path:polygon(20px 0%,100% 0%,calc(100% - 20px) 100%,0% 100%);
-  box-shadow:0 30px 80px rgba(0,0,0,.7),inset 0 1px 0 rgba(201,168,76,.1);
+  box-shadow:0 30px 80px rgba(0,0,0,.9),inset 0 1px 0 rgba(201,168,76,.1),0 0 40px rgba(201,168,76,.15);
   animation:slideIn .8s cubic-bezier(.22,1,.36,1);
 }
 
@@ -123,6 +113,12 @@ body::after{
   -webkit-text-fill-color:transparent;
   background-clip:text;
   filter:drop-shadow(0 0 20px rgba(201,168,76,.5));
+  animation:glow 4s ease-in-out infinite;
+}
+
+@keyframes glow{
+  0%,100%{filter:drop-shadow(0 0 20px rgba(201,168,76,.5))}
+  50%{filter:drop-shadow(0 0 40px rgba(232,131,26,.8))}
 }
 
 .logo-text{
@@ -158,7 +154,7 @@ body::after{
   padding:1rem;
   background:transparent;
   border:none;
-  color:var(--text-dim);
+  color:#C4AA80;
   font-family:'Cinzel',serif;
   font-size:.75rem;
   letter-spacing:.18em;
@@ -167,7 +163,6 @@ body::after{
   transition:all .3s;
   position:relative;
   border-bottom:2px solid transparent;
-  color:#C4AA80;
 }
 
 .tab-btn::after{
@@ -350,9 +345,11 @@ body::after{
 </head>
 <body>
 
-<!-- ANIMATED BACKGROUND -->
-<div class="background"></div>
-<div id="starfield"></div>
+<!-- WORMHOLE CANVAS -->
+<canvas id="wormhole-canvas"></canvas>
+
+<!-- SHOOTING STARS -->
+<div id="shooting-stars"></div>
 
 <!-- LOGIN CONTAINER -->
 <div id="login-container">
@@ -416,86 +413,130 @@ body::after{
 <script src="shared-audio.js"></script>
 <script>
 
-// ── FALLING ANIMATIONS ──
-function createFallingObjects(){
-  const container=document.getElementById('starfield');
-  const duration=Math.random()*5+8;
-  
-  // Falling stars
-  for(let i=0;i<30;i++){
-    setTimeout(()=>{
-      const star=document.createElement('div');
-      star.className='falling-object';
-      star.textContent='✦';
-      star.style.left=Math.random()*100+'%';
-      star.style.top='-20px';
-      star.style.color='rgba(240,212,130,0.7)';
-      star.style.fontSize=Math.random()*1+0.5+'rem';
-      star.style.animationDuration=(Math.random()*5+6)+'s';
-      star.style.textShadow='0 0 10px rgba(240,212,130,0.6)';
-      container.appendChild(star);
-      setTimeout(()=>star.remove(),8000);
-    },i*200);
-  }
-  
-  // Falling plants/flowers
-  for(let i=0;i<20;i++){
-    setTimeout(()=>{
-      const plant=document.createElement('div');
-      plant.className='falling-object';
-      plant.textContent=['🌿','🍃','🌱'][Math.floor(Math.random()*3)];
-      plant.style.left=Math.random()*100+'%';
-      plant.style.top='-20px';
-      plant.style.fontSize=Math.random()*1.2+0.8+'rem';
-      plant.style.animationDuration=(Math.random()*6+7)+'s';
-      plant.style.opacity=(Math.random()*0.5+0.5).toString();
-      container.appendChild(plant);
-      setTimeout(()=>plant.remove(),9000);
-    },i*300);
-  }
-  
-  // Falling comets
-  for(let i=0;i<8;i++){
-    setTimeout(()=>{
-      const comet=document.createElement('div');
-      comet.className='comet';
-      comet.style.left=Math.random()*100+'%';
-      comet.style.top='-50px';
-      comet.style.animationDuration=(Math.random()*4+3)+'s';
-      container.appendChild(comet);
-      setTimeout(()=>comet.remove(),7000);
-    },i*1500);
-  }
-  
-  // Keep spawning
-  setTimeout(createFallingObjects,2000);
-}
+// ── WORMHOLE ANIMATION ──
+const canvas=document.getElementById('wormhole-canvas');
+const ctx=canvas.getContext('2d');
+let W=canvas.width=window.innerWidth;
+let H=canvas.height=window.innerHeight;
+let time=0;
 
-// ── STARFIELD BACKGROUND ──
-function createStaticStarfield(){
-  const starfield=document.getElementById('starfield');
-  const starCount=100;
-  
-  for(let i=0;i<starCount;i++){
-    const star=document.createElement('div');
-    star.className='star';
-    star.style.left=Math.random()*100+'%';
-    star.style.top=Math.random()*100+'%';
-    star.style.animationDelay=Math.random()*3+'s';
-    star.style.animationDuration=(2+Math.random()*2)+'s';
-    starfield.appendChild(star);
-  }
-}
-
-// ── INITIALIZE ──
-window.addEventListener('load',()=>{
-  createStaticStarfield();
-  createFallingObjects();
-  
-  // Initialize and start music
-  initializeSharedAudio();
-  startSharedAudio();
+window.addEventListener('resize',()=>{
+  W=canvas.width=window.innerWidth;
+  H=canvas.height=window.innerHeight;
 });
+
+function drawWormhole(){
+  time+=0.005;
+  
+  // Clear canvas
+  ctx.fillStyle='rgba(8,6,4,0.1)';
+  ctx.fillRect(0,0,W,H);
+  
+  // Center position
+  const cx=W/2;
+  const cy=H/2;
+  const baseRadius=Math.min(W,H)*0.15;
+  
+  // Background glow
+  const glowGradient=ctx.createRadialGradient(cx,cy,0,cx,cy,baseRadius*3);
+  glowGradient.addColorStop(0,'rgba(201,168,76,0.15)');
+  glowGradient.addColorStop(0.5,'rgba(232,131,26,0.08)');
+  glowGradient.addColorStop(1,'rgba(201,168,76,0)');
+  ctx.fillStyle=glowGradient;
+  ctx.fillRect(0,0,W,H);
+  
+  // Main wormhole rings (gold/saffron dharmic colors)
+  const rings=8;
+  for(let i=0;i<rings;i++){
+    const t=time+i*0.15;
+    const scale=1+(Math.sin(t)*0.3);
+    const radius=baseRadius*scale+i*20;
+    const opacity=0.8-i*0.09;
+    const hue=(i%2===0)?201:232;
+    const sat=(i%2===0)?168:131;
+    const hsl=(i%2===0)?76:26;
+    
+    ctx.strokeStyle=`rgba(${hue},${sat},${hsl},${opacity})`;
+    ctx.lineWidth=3+i*0.5;
+    ctx.beginPath();
+    ctx.arc(cx,cy,radius,0,Math.PI*2);
+    ctx.stroke();
+    
+    // Glow effect
+    ctx.shadowBlur=20+i*3;
+    ctx.shadowColor=`rgba(${hue},${sat},${hsl},${opacity*0.6})`;
+    ctx.stroke();
+    ctx.shadowBlur=0;
+  }
+  
+  // Rotating particles around wormhole
+  const particles=40;
+  for(let i=0;i<particles;i++){
+    const angle=((i/particles)*Math.PI*2)+(time*2);
+    const distance=baseRadius*0.8+Math.sin(time+i)*30;
+    const px=cx+Math.cos(angle)*distance;
+    const py=cy+Math.sin(angle)*distance;
+    const size=2+Math.sin(time*3+i)*1.5;
+    const opacity=(Math.sin(time*2+i)+1)/2*0.7;
+    
+    ctx.fillStyle=`rgba(240,212,130,${opacity})`;
+    ctx.shadowBlur=10;
+    ctx.shadowColor='rgba(201,168,76,0.8)';
+    ctx.beginPath();
+    ctx.arc(px,py,size,0,Math.PI*2);
+    ctx.fill();
+  }
+  
+  ctx.shadowBlur=0;
+}
+
+function animate(){
+  drawWormhole();
+  requestAnimationFrame(animate);
+}
+
+// ── SHOOTING STARS ──
+function createShootingStar(){
+  const container=document.getElementById('shooting-stars');
+  const star=document.createElement('div');
+  star.className='shooting-star';
+  
+  const startX=Math.random()*W;
+  const startY=Math.random()*H*0.6;
+  const angle=45+Math.random()*90;
+  const duration=2+Math.random()*1;
+  
+  star.style.left=startX+'px';
+  star.style.top=startY+'px';
+  star.style.transform=`rotate(${angle}deg)`;
+  star.style.animation=`shootingStarFall ${duration}s linear`;
+  
+  container.appendChild(star);
+  setTimeout(()=>star.remove(),duration*1000);
+}
+
+// Add shooting stars periodically
+setInterval(()=>{
+  if(Math.random()>0.6){
+    createShootingStar();
+  }
+},800);
+
+// Add CSS animation
+const style=document.createElement('style');
+style.textContent=`
+  @keyframes shootingStarFall{
+    from{
+      transform:translateX(0) translateY(0) rotate(45deg);
+      opacity:1;
+    }
+    to{
+      transform:translateX(400px) translateY(600px) rotate(45deg);
+      opacity:0;
+    }
+  }
+`;
+document.head.appendChild(style);
 
 // ── TAB SWITCHING ──
 document.querySelectorAll('.tab-btn').forEach(btn=>{
@@ -517,7 +558,15 @@ function togglePassword(id){
   input.type=input.type==='password'?'text':'password';
 }
 
+// ── INITIALIZE ──
+window.addEventListener('load',()=>{
+  animate();
+  initializeSharedAudio();
+  startSharedAudio();
+});
+
 </script>
 </body>
 </html>
+
 
