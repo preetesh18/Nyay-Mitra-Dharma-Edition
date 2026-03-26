@@ -20,7 +20,7 @@
 html{scroll-behavior:smooth}
 
 body{
-  background:linear-gradient(135deg,#0a0610,#0f0614,#0a0610);
+  background:linear-gradient(135deg,#0a0410,#0f0614,#0a0410);
   color:var(--cream);
   font-family:'EB Garamond',serif;
   overflow-x:hidden;
@@ -28,8 +28,8 @@ body{
   min-height:100vh;
 }
 
-/* ── ANIMATED CANVAS BACKGROUND ── */
-#wormhole-canvas{
+/* ── SPACE CANVAS BACKGROUND ── */
+#space-canvas{
   position:fixed;
   top:0;
   left:0;
@@ -54,8 +54,8 @@ body{
   position:absolute;
   width:2px;
   height:100px;
-  background:linear-gradient(to bottom,rgba(201,168,76,0.8),transparent);
-  box-shadow:0 0 20px rgba(201,168,76,0.6);
+  background:linear-gradient(to bottom,rgba(201,168,76,0.9),transparent);
+  box-shadow:0 0 20px rgba(201,168,76,0.7);
   pointer-events:none;
 }
 
@@ -345,8 +345,8 @@ body::after{
 </head>
 <body>
 
-<!-- WORMHOLE CANVAS -->
-<canvas id="wormhole-canvas"></canvas>
+<!-- SPACE CANVAS -->
+<canvas id="space-canvas"></canvas>
 
 <!-- SHOOTING STARS -->
 <div id="shooting-stars"></div>
@@ -413,8 +413,8 @@ body::after{
 <script src="shared-audio.js"></script>
 <script>
 
-// ── WORMHOLE ANIMATION ──
-const canvas=document.getElementById('wormhole-canvas');
+// ── SPACE SCENE ANIMATION ──
+const canvas=document.getElementById('space-canvas');
 const ctx=canvas.getContext('2d');
 let W=canvas.width=window.innerWidth;
 let H=canvas.height=window.innerHeight;
@@ -425,73 +425,111 @@ window.addEventListener('resize',()=>{
   H=canvas.height=window.innerHeight;
 });
 
-function drawWormhole(){
-  time+=0.005;
-  
-  // Clear canvas
-  ctx.fillStyle='rgba(8,6,4,0.1)';
-  ctx.fillRect(0,0,W,H);
-  
-  // Center position
-  const cx=W/2;
-  const cy=H/2;
-  const baseRadius=Math.min(W,H)*0.15;
-  
-  // Background glow
-  const glowGradient=ctx.createRadialGradient(cx,cy,0,cx,cy,baseRadius*3);
-  glowGradient.addColorStop(0,'rgba(201,168,76,0.15)');
-  glowGradient.addColorStop(0.5,'rgba(232,131,26,0.08)');
-  glowGradient.addColorStop(1,'rgba(201,168,76,0)');
-  ctx.fillStyle=glowGradient;
-  ctx.fillRect(0,0,W,H);
-  
-  // Main wormhole rings (gold/saffron dharmic colors)
-  const rings=8;
-  for(let i=0;i<rings;i++){
-    const t=time+i*0.15;
-    const scale=1+(Math.sin(t)*0.3);
-    const radius=baseRadius*scale+i*20;
-    const opacity=0.8-i*0.09;
-    const hue=(i%2===0)?201:232;
-    const sat=(i%2===0)?168:131;
-    const hsl=(i%2===0)?76:26;
-    
-    ctx.strokeStyle=`rgba(${hue},${sat},${hsl},${opacity})`;
-    ctx.lineWidth=3+i*0.5;
-    ctx.beginPath();
-    ctx.arc(cx,cy,radius,0,Math.PI*2);
-    ctx.stroke();
-    
-    // Glow effect
-    ctx.shadowBlur=20+i*3;
-    ctx.shadowColor=`rgba(${hue},${sat},${hsl},${opacity*0.6})`;
-    ctx.stroke();
-    ctx.shadowBlur=0;
+// Generate stars and galaxies
+class Star{
+  constructor(){
+    this.x=Math.random()*W;
+    this.y=Math.random()*H;
+    this.size=Math.random()*1.5+0.3;
+    this.opacity=Math.random()*0.5+0.4;
+    this.twinkleSpeed=Math.random()*0.05+0.01;
+    this.twinklePhase=Math.random()*Math.PI*2;
   }
   
-  // Rotating particles around wormhole
-  const particles=40;
-  for(let i=0;i<particles;i++){
-    const angle=((i/particles)*Math.PI*2)+(time*2);
-    const distance=baseRadius*0.8+Math.sin(time+i)*30;
-    const px=cx+Math.cos(angle)*distance;
-    const py=cy+Math.sin(angle)*distance;
-    const size=2+Math.sin(time*3+i)*1.5;
-    const opacity=(Math.sin(time*2+i)+1)/2*0.7;
-    
-    ctx.fillStyle=`rgba(240,212,130,${opacity})`;
-    ctx.shadowBlur=10;
-    ctx.shadowColor='rgba(201,168,76,0.8)';
+  update(){
+    this.twinklePhase+=this.twinkleSpeed;
+    this.opacity=0.4+Math.sin(this.twinklePhase)*0.3;
+  }
+  
+  draw(ctx){
+    ctx.fillStyle=`rgba(240,212,130,${this.opacity})`;
+    ctx.shadowBlur=8;
+    ctx.shadowColor='rgba(201,168,76,0.6)';
     ctx.beginPath();
-    ctx.arc(px,py,size,0,Math.PI*2);
+    ctx.arc(this.x,this.y,this.size,0,Math.PI*2);
     ctx.fill();
   }
+}
+
+class Galaxy{
+  constructor(){
+    this.x=Math.random()*W;
+    this.y=Math.random()*H;
+    this.radius=Math.random()*40+15;
+    this.rotation=Math.random()*Math.PI*2;
+    this.rotationSpeed=Math.random()*0.001+0.0005;
+    this.colors=[
+      {inner:'rgba(201,168,76,0.4)',outer:'rgba(201,168,76,0.1)'},
+      {inner:'rgba(232,131,26,0.3)',outer:'rgba(232,131,26,0.05)'},
+      {inner:'rgba(240,212,130,0.35)',outer:'rgba(240,212,130,0.08)'}
+    ];
+    this.color=this.colors[Math.floor(Math.random()*this.colors.length)];
+  }
+  
+  update(){
+    this.rotation+=this.rotationSpeed;
+  }
+  
+  draw(ctx){
+    ctx.save();
+    ctx.translate(this.x,this.y);
+    ctx.rotate(this.rotation);
+    
+    // Outer glow
+    const outerGradient=ctx.createRadialGradient(0,0,0,0,0,this.radius*1.5);
+    outerGradient.addColorStop(0,this.color.inner);
+    outerGradient.addColorStop(1,this.color.outer);
+    ctx.fillStyle=outerGradient;
+    ctx.beginPath();
+    ctx.arc(0,0,this.radius*1.5,0,Math.PI*2);
+    ctx.fill();
+    
+    // Galaxy spirals
+    ctx.strokeStyle=this.color.inner;
+    ctx.lineWidth=1;
+    ctx.globalAlpha=0.6;
+    for(let i=0;i<3;i++){
+      ctx.beginPath();
+      ctx.arc(0,0,this.radius*0.6+i*8,0,Math.PI*2);
+      ctx.stroke();
+    }
+    
+    ctx.restore();
+  }
+}
+
+// Create stars and galaxies
+const stars=Array.from({length:120},()=>new Star());
+const galaxies=Array.from({length:8},()=>new Galaxy());
+
+function drawSpace(){
+  time+=0.01;
+  
+  // Deep space background
+  const bgGradient=ctx.createRadialGradient(W/2,H/2,0,W/2,H/2,Math.sqrt(W*W+H*H)/2);
+  bgGradient.addColorStop(0,'rgba(15,6,20,0.8)');
+  bgGradient.addColorStop(1,'rgba(8,4,10,1)');
+  ctx.fillStyle=bgGradient;
+  ctx.fillRect(0,0,W,H);
+  
+  // Draw galaxies first (background)
+  galaxies.forEach(galaxy=>{
+    galaxy.update();
+    galaxy.draw(ctx);
+  });
+  
+  // Draw stars
+  stars.forEach(star=>{
+    star.update();
+    star.draw(ctx);
+  });
   
   ctx.shadowBlur=0;
+  ctx.globalAlpha=1;
 }
 
 function animate(){
-  drawWormhole();
+  drawSpace();
   requestAnimationFrame(animate);
 }
 
@@ -517,10 +555,10 @@ function createShootingStar(){
 
 // Add shooting stars periodically
 setInterval(()=>{
-  if(Math.random()>0.6){
+  if(Math.random()>0.65){
     createShootingStar();
   }
-},800);
+},1000);
 
 // Add CSS animation
 const style=document.createElement('style');
