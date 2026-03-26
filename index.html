@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Nyay Mitra — न्याय मित्र · Friend of Justice</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;500;600;700&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Noto+Serif+Devanagari:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --gold:#C9A84C;--gold-lt:#F0D483;--gold-dk:#7A6230;
+  --saffron:#E8831A;--saffron-lt:#FF9933;
+  --cream:#F5E8CA;--cream-dim:#C4AA80;
+  --ink:#080604;--ink2:#100C06;--ink3:#1A1308;--ink4:#231A0A;
+  --star-color:rgba(240,212,130,.6);--ember-color:hsl(38,90%,65%);
+}
+html.light-mode{--bg-main:#FFFEF9;--text-main:#1A1410;--text-dim:#4A4540;--card-bg:#FFFFFF;--card-border:rgba(201,168,76,.35);--nav-bg:rgba(255,254,249,.98);--overlay-light:rgba(201,168,76,.12);--star-color:rgba(201,168,76,.7);--ember-color:rgba(232,131,26,.8)}
+html.light-mode body::after{opacity:.15}
+html.light-mode .dv-g{filter:drop-shadow(0 0 4px rgba(232,131,26,.5)) !important}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;--bg-main:#080604;--text-main:#F5E8CA;--text-dim:#C4AA80;--card-bg:#1A1308;--card-border:rgba(201,168,76,.13);--nav-bg:rgba(8,6,4,.95);--overlay-light:rgba(201,168,76,.07)}
+body{background:var(--bg-main);color:var(--text-main);font-family:'EB Garamond',serif;overflow-x:hidden;cursor:none;transition:background .4s,color .4s}
+
+/* Cursor */
+#cur{position:fixed;width:10px;height:10px;background:var(--gold);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:transform .1s}
+#cur-r{position:fixed;width:34px;height:34px;border:1px solid rgba(201,168,76,.5);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:transform .18s cubic-bezier(.22,1,.36,1),width .3s,height .3s}
+
+/* Canvas */
+#cv{position:fixed;inset:0;z-index:0;pointer-events:none}
+
+/* Grain */
+body::after{content:'';position:fixed;inset:0;z-index:1;pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");opacity:.45}
+
+/* ── NAV ── */
+#nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:center;justify-content:space-between;padding:1.3rem 5rem;transition:all .5s}
+#nav.stuck{background:rgba(8,6,4,.95);border-bottom:1px solid rgba(201,168,76,.18);backdrop-filter:blur(14px);padding:.9rem 5rem}
+.nav-brand{font-family:'Cinzel Decorative',serif;font-size:1.1rem;letter-spacing:.04em;background:linear-gradient(120deg,var(--gold-lt),var(--gold),var(--saffron-lt));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;filter:drop-shadow(0 0 20px rgba(201,168,76,.35))}
+.nav-links{display:flex;gap:3rem;list-style:none}
+.nav-links a{font-family:'Cinzel',serif;font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--text-dim);text-decoration:none;position:relative;transition:color .3s}
+.nav-links a::before{content:'';position:absolute;bottom:-4px;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);transform:scaleX(0);transition:transform .4s cubic-bezier(.22,1,.36,1)}
+.nav-links a:hover{color:var(--gold-lt)}
+.nav-links a:hover::before{transform:scaleX(1)}
+#theme-toggle{background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.3);color:var(--gold);padding:.4rem .8rem;border-radius:20px;cursor:pointer;font-family:'Cinzel',serif;font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;transition:all .3s;display:flex;align-items:center;gap:.5rem}#theme-toggle:hover{background:rgba(201,168,76,.2);border-color:rgba(201,168,76,.5)}#theme-toggle::before{content:'🌙';display:inline-block;transition:opacity .3s}html.light-mode #theme-toggle::before{content:'☀️'}
+
+/* ── HERO ── */
+#hero{position:relative;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:8rem 2rem 5rem;overflow:hidden;z-index:2}
+
+.mandala-wrap{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:min(820px,96vw);height:min(820px,96vw);pointer-events:none}
+.mandala-wrap svg{width:100%;height:100%}
+.r1{animation:spin 90s linear infinite;transform-origin:center}
+.r2{animation:spin 60s linear infinite reverse;transform-origin:center}
+.r3{animation:spin 38s linear infinite;transform-origin:center}
+.r4{animation:spin 22s linear infinite reverse;transform-origin:center}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+.hero-in{position:relative;z-index:3;max-width:880px}
+.h-pill{display:inline-flex;align-items:center;gap:.6rem;font-family:'Cinzel',serif;font-size:.67rem;letter-spacing:.26em;text-transform:uppercase;color:var(--saffron);border:1px solid rgba(232,131,26,.32);padding:.38rem 1.2rem;margin-bottom:2rem;background:rgba(232,131,26,.05);animation:fd .8s .2s both}
+@keyframes fd{from{opacity:0;transform:translateY(-18px)}to{opacity:1;transform:translateY(0)}}
+.h-om{font-family:'Noto Serif Devanagari',serif;font-size:clamp(3.5rem,8vw,5.5rem);line-height:1;margin-bottom:.8rem;background:linear-gradient(135deg,var(--gold-lt) 0%,var(--gold) 45%,var(--saffron) 80%,var(--gold-lt) 100%);background-size:300%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:fd .9s .35s both,sh 5s 1.2s linear infinite;filter:drop-shadow(0 0 40px rgba(201,168,76,.5))}
+@keyframes sh{0%{background-position:0% 50%}100%{background-position:300% 50%}}
+.h-title{font-family:'Cinzel Decorative',serif;font-size:clamp(3.5rem,10vw,8.5rem);font-weight:900;line-height:.92;letter-spacing:-.01em;background:linear-gradient(135deg,var(--gold-lt) 0%,var(--gold) 35%,var(--saffron-lt) 60%,var(--gold-lt) 100%);background-size:300%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:tu 1s .5s cubic-bezier(.22,1,.36,1) both,sh 6s 1.5s linear infinite;filter:drop-shadow(0 4px 50px rgba(201,168,76,.4))}
+@keyframes tu{from{opacity:0;transform:translateY(40px) skewY(3deg)}to{opacity:1;transform:none}}
+.h-deva{font-family:'Noto Serif Devanagari',serif;font-size:clamp(1.1rem,2.5vw,1.7rem);color:var(--saffron-lt);letter-spacing:.12em;margin:.8rem 0 2rem;opacity:.82;animation:tu .9s .7s cubic-bezier(.22,1,.36,1) both}
+.h-tag{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(1.05rem,1.8vw,1.45rem);color:var(--text-dim);line-height:1.78;max-width:640px;margin:0 auto 1.8rem;animation:tu .9s .85s cubic-bezier(.22,1,.36,1) both}
+.h-shloka{font-family:'Noto Serif Devanagari',serif;font-size:.93rem;color:var(--gold-dk);letter-spacing:.06em;margin-bottom:3rem;opacity:.72;animation:tu .9s 1s cubic-bezier(.22,1,.36,1) both}
+.h-btns{display:flex;gap:1.4rem;justify-content:center;flex-wrap:wrap;animation:tu .9s 1.1s cubic-bezier(.22,1,.36,1) both}
+
+/* ── BUTTONS ── */
+.btn{position:relative;overflow:hidden;font-family:'Cinzel',serif;font-size:.78rem;letter-spacing:.18em;text-transform:uppercase;padding:.95rem 2.6rem;text-decoration:none;display:inline-block;clip-path:polygon(14px 0%,100% 0%,calc(100% - 14px) 100%,0% 100%);transition:transform .35s cubic-bezier(.22,1,.36,1),box-shadow .35s;font-weight:700;cursor:pointer;border:none}
+.btn::before{content:'';position:absolute;inset:0;background:linear-gradient(120deg,rgba(255,255,255,.18),transparent 60%);opacity:0;transition:opacity .3s}
+.btn:hover{transform:translateY(-4px)}.btn:hover::before{opacity:1}
+.btn-g{background:linear-gradient(135deg,var(--gold-lt),var(--gold),#b8862a);color:var(--ink)}
+.btn-g:hover{box-shadow:0 18px 50px rgba(201,168,76,.55),0 0 0 1px rgba(201,168,76,.3)}
+.btn-o{background:transparent;color:var(--gold);box-shadow:inset 0 0 0 1px var(--gold-dk)}
+.btn-o:hover{background:rgba(201,168,76,.1);box-shadow:inset 0 0 0 1px var(--gold),0 12px 40px rgba(201,168,76,.22);color:var(--gold-lt)}
+
+/* Scroll cue */
+.sc{position:absolute;bottom:2.5rem;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:.5rem;opacity:.45;animation:bob 2.5s ease-in-out infinite;z-index:3}
+.sc span{font-family:'Cinzel',serif;font-size:.6rem;letter-spacing:.25em;text-transform:uppercase;color:var(--gold-dk)}
+.sc-l{width:1px;height:44px;background:linear-gradient(to bottom,var(--gold-dk),transparent)}
+@keyframes bob{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(10px)}}
+
+/* ── MARQUEE ── */
+#mq{overflow:hidden;padding:1.4rem 0;border-top:1px solid rgba(201,168,76,.1);border-bottom:1px solid rgba(201,168,76,.1);position:relative;z-index:2}
+.mq-t{display:flex;gap:3rem;width:max-content;animation:mq 32s linear infinite}
+@keyframes mq{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.mq-i{font-family:'Noto Serif Devanagari',serif;font-size:.88rem;color:var(--text-dim);letter-spacing:.07em;white-space:nowrap;display:flex;align-items:center;gap:1.2rem}
+.mq-i::after{content:'✦';color:var(--saffron);opacity:.55}
+
+/* ── SECTION SCAFFOLD ── */
+section{position:relative;z-index:2}
+.sw{max-width:1180px;margin:0 auto;padding:0 2.5rem}
+.ey{font-family:'Cinzel',serif;font-size:.67rem;letter-spacing:.3em;text-transform:uppercase;color:var(--saffron);margin-bottom:1rem;display:flex;align-items:center;gap:.8rem}
+.ey::before,.ey::after{content:'';width:26px;height:1px;background:var(--saffron);opacity:.45}
+.st{font-family:'Cinzel Decorative',serif;font-size:clamp(1.7rem,3.5vw,3rem);font-weight:700;line-height:1.15;margin-bottom:1.5rem;background:linear-gradient(135deg,var(--gold-lt),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.bt{font-size:clamp(1rem,1.3vw,1.2rem);line-height:1.95;color:var(--text-dim)}
+
+/* ── DIVIDER ── */
+.dv{display:flex;align-items:center;gap:1.8rem;max-width:950px;margin:0 auto;padding:0 2rem;position:relative;z-index:2}
+.dv-l{flex:1;height:1px;background:linear-gradient(to right,transparent,rgba(201,168,76,.32),transparent)}
+.dv-g{font-size:1.2rem;filter:drop-shadow(0 0 8px rgba(201,168,76,.6));animation:pg 3s ease-in-out infinite}
+@keyframes pg{0%,100%{filter:drop-shadow(0 0 8px rgba(201,168,76,.4))}50%{filter:drop-shadow(0 0 22px rgba(201,168,76,.9)) drop-shadow(0 0 40px rgba(232,131,26,.4))}}
+
+/* ── ABOUT ── */
+#about{padding:9rem 0}
+.ag{display:grid;grid-template-columns:1fr 1fr;gap:6rem;align-items:center}
+.bt{margin-bottom:1.3rem}
+.qb{margin:2.5rem 0;padding:1.8rem 2rem;background:linear-gradient(135deg,rgba(201,168,76,.07),rgba(232,131,26,.04));border-left:2px solid var(--gold);position:relative}
+.qb::before{content:'"';position:absolute;top:-.5rem;left:1rem;font-family:'Cinzel Decorative',serif;font-size:4rem;color:var(--gold);opacity:.18;line-height:1}
+.qb-d{font-family:'Noto Serif Devanagari',serif;font-size:1.12rem;color:var(--cream);line-height:2;margin-bottom:.6rem}
+.qb-c{font-size:.9rem;color:var(--text-dim);font-style:italic}
+.sg{display:grid;grid-template-columns:repeat(2,1fr);gap:1.2rem;margin-top:2.8rem}
+.sb{padding:1.6rem 1.2rem;text-align:center;background:rgba(201,168,76,.05);border:1px solid rgba(201,168,76,.17);clip-path:polygon(10px 0%,100% 0%,calc(100% - 10px) 100%,0% 100%);transition:background .4s,border-color .4s,transform .4s;cursor:default}
+.sb:hover{background:rgba(201,168,76,.12);border-color:rgba(201,168,76,.38);transform:translateY(-4px)}
+.sn{font-family:'Cinzel Decorative',serif;font-size:2.2rem;font-weight:900;background:linear-gradient(135deg,var(--gold-lt),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;filter:drop-shadow(0 0 15px rgba(201,168,76,.4));display:block}
+.sl{font-family:'Cinzel',serif;font-size:.64rem;letter-spacing:.14em;text-transform:uppercase;color:var(--text-dim);margin-top:.3rem;display:block}
+
+/* About visual */
+.av{position:relative;display:flex;align-items:center;justify-content:center;height:500px}
+.av-m{position:absolute;width:430px;height:430px}
+.av-m svg{width:100%;height:100%}
+.av-c{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;gap:1.2rem}
+.av-om{font-family:'Noto Serif Devanagari',serif;font-size:7rem;line-height:1;background:linear-gradient(135deg,var(--gold-lt),var(--gold),var(--saffron));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;filter:drop-shadow(0 0 30px rgba(201,168,76,.5));animation:pg 3.5s ease-in-out infinite,fl 6s ease-in-out infinite}
+@keyframes fl{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
+.av-r{display:flex;gap:1rem;font-size:2rem;opacity:.58}
+.av-r span{animation:fl 5s ease-in-out infinite}
+.av-r span:nth-child(2){animation-delay:.6s}
+.av-r span:nth-child(3){animation-delay:1.2s}
+
+/* ── FEATURES ── */
+#features{padding:6rem 0 10rem;background:radial-gradient(ellipse 80% 60% at 50% 100%,rgba(201,168,76,.05),transparent)}
+.fhd{text-align:center;max-width:660px;margin:0 auto 5.5rem}
+.fhd .ey{justify-content:center}
+.cg{display:grid;grid-template-columns:1fr 1fr;gap:3rem;max-width:1100px;margin:0 auto}
+
+.fc{position:relative;overflow:hidden;background:linear-gradient(145deg,var(--ink3),var(--ink4));border:1px solid rgba(201,168,76,.14);padding:3.5rem 3rem 3rem;transition:transform .5s cubic-bezier(.22,1,.36,1),box-shadow .5s,border-color .5s;clip-path:polygon(20px 0%,100% 0%,calc(100% - 20px) 100%,0% 100%)}
+.fc::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--gold-dk) 20%,var(--gold) 50%,var(--saffron) 70%,transparent);transform:translateX(-100%);transition:transform .7s cubic-bezier(.22,1,.36,1)}
+.fc::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 50% at 50% 0%,rgba(201,168,76,.1),transparent);opacity:0;transition:opacity .5s;pointer-events:none}
+.fc:hover{transform:translateY(-14px) rotateX(1.5deg);box-shadow:0 35px 80px rgba(0,0,0,.7),0 0 0 1px rgba(201,168,76,.35),0 0 60px rgba(201,168,76,.14);border-color:rgba(201,168,76,.4)}
+.fc:hover::before{transform:translateX(0)}
+.fc:hover::after{opacity:1}
+
+.c-wm{position:absolute;right:-1.5rem;bottom:.5rem;font-family:'Noto Serif Devanagari',serif;font-size:7rem;opacity:.04;color:var(--gold);line-height:1;pointer-events:none;user-select:none;transition:opacity .5s,transform .5s}
+.fc:hover .c-wm{opacity:.09;transform:scale(1.1)}
+
+.c-badge{display:inline-block;font-family:'Cinzel',serif;font-size:.62rem;letter-spacing:.22em;text-transform:uppercase;color:var(--saffron);border:1px solid rgba(232,131,26,.28);padding:.28rem .75rem;margin-bottom:1.2rem;background:rgba(232,131,26,.05)}
+.c-icon{font-size:3.2rem;display:block;margin-bottom:1.2rem;animation:fl 5s ease-in-out infinite}
+.fc:nth-child(2) .c-icon{animation-delay:1s}
+.c-t{font-family:'Cinzel Decorative',serif;font-size:clamp(1.3rem,2.5vw,1.85rem);font-weight:700;line-height:1.15;background:linear-gradient(135deg,var(--gold-lt),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:.4rem}
+.c-d{font-family:'Noto Serif Devanagari',serif;font-size:.93rem;color:var(--saffron-lt);opacity:.73;margin-bottom:1.6rem;letter-spacing:.05em}
+.c-p{font-size:clamp(.95rem,1.1vw,1.1rem);line-height:1.9;color:var(--text-dim);margin-bottom:2rem;position:relative;z-index:1}
+.c-tags{display:flex;flex-wrap:wrap;gap:.55rem;margin-bottom:2.5rem;position:relative;z-index:1}
+.c-tag{font-family:'Cinzel',serif;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--gold-dk);border:1px solid rgba(201,168,76,.17);padding:.28rem .65rem;background:rgba(201,168,76,.04);transition:background .3s,color .3s,border-color .3s}
+.c-tag:hover{background:rgba(201,168,76,.12);color:var(--gold);border-color:rgba(201,168,76,.34)}
+.c-lnk{position:relative;z-index:1;display:inline-block;font-family:'Cinzel',serif;font-size:.75rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ink);font-weight:700;padding:.9rem 2.2rem;clip-path:polygon(10px 0%,100% 0%,calc(100% - 10px) 100%,0% 100%);text-decoration:none;overflow:hidden;transition:transform .35s cubic-bezier(.22,1,.36,1),box-shadow .35s}
+.c-lnk::before{content:'';position:absolute;inset:0;background:linear-gradient(120deg,rgba(255,255,255,.18),transparent 60%);opacity:0;transition:opacity .3s}
+.c-lnk:hover{transform:translateY(-3px)}.c-lnk:hover::before{opacity:1}
+.lg{background:linear-gradient(135deg,var(--gold-lt),var(--gold),#b8862a)}.lg:hover{box-shadow:0 14px 40px rgba(201,168,76,.55)}
+.ls{background:linear-gradient(135deg,var(--saffron-lt),var(--saffron),#c26314)}.ls:hover{box-shadow:0 14px 40px rgba(232,131,26,.55)}
+
+/* ── QUOTE BAND ── */
+#qband{padding:6rem 2rem;text-align:center;position:relative;overflow:hidden;z-index:2}
+#qband::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 80% at 50% 50%,rgba(201,168,76,.06),transparent)}
+.qbi{position:relative;z-index:1;max-width:900px;margin:0 auto}
+.qd{font-family:'Noto Serif Devanagari',serif;font-size:clamp(1.3rem,3vw,2.2rem);color:var(--saffron-lt);opacity:.8;margin-bottom:.8rem;letter-spacing:.08em}
+.qe{font-family:'Cinzel Decorative',serif;font-size:clamp(1.1rem,2.5vw,2rem);background:linear-gradient(135deg,var(--gold-lt),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1.4;margin-bottom:1rem}
+.qs{font-size:.95rem;color:var(--gold-dk);font-style:italic}
+.qo{display:flex;justify-content:center;gap:1.5rem;margin:2rem 0;font-size:1.4rem;opacity:.32}
+
+/* ── SCRIPTURES ── */
+#scriptures{padding:7rem 0;border-top:1px solid rgba(201,168,76,.1);border-bottom:1px solid rgba(201,168,76,.1);background:linear-gradient(135deg,rgba(201,168,76,.04),rgba(232,131,26,.02) 50%,rgba(201,168,76,.04))}
+.shd{text-align:center;margin-bottom:4rem}
+.shd .ey{justify-content:center}
+.sgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:2rem;max-width:1100px;margin:0 auto}
+.sc-c{text-align:center;padding:2.8rem 1.5rem;border:1px solid rgba(201,168,76,.12);background:rgba(201,168,76,.03);transition:all .45s cubic-bezier(.22,1,.36,1);position:relative;overflow:hidden}
+.sc-c::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(201,168,76,.12),transparent 70%);opacity:0;transition:opacity .4s}
+.sc-c:hover{background:rgba(201,168,76,.07);border-color:rgba(201,168,76,.3);transform:translateY(-8px);box-shadow:0 20px 50px rgba(0,0,0,.5),0 0 0 1px rgba(201,168,76,.2)}
+.sc-c:hover::before{opacity:1}
+.sc-i{font-size:2.6rem;display:block;margin-bottom:1.1rem}
+.sc-n{font-family:'Cinzel',serif;font-size:.8rem;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-bottom:.7rem}
+.sc-p{font-size:.95rem;line-height:1.72;color:var(--text-dim)}
+
+/* ── FOOTER ── */
+footer{position:relative;z-index:2;padding:5rem 2.5rem 2.5rem;border-top:1px solid rgba(201,168,76,.12);text-align:center}
+.ft-om{font-family:'Noto Serif Devanagari',serif;font-size:3.5rem;background:linear-gradient(135deg,var(--gold-lt),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;filter:drop-shadow(0 0 20px rgba(201,168,76,.4));animation:pg 4s ease-in-out infinite;display:block;margin-bottom:.8rem}
+.ft-br{font-family:'Cinzel Decorative',serif;font-size:2rem;margin-bottom:.5rem;background:linear-gradient(120deg,var(--gold-lt),var(--gold),var(--saffron-lt));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;filter:drop-shadow(0 0 20px rgba(201,168,76,.32))}
+.ft-sb{font-family:'Noto Serif Devanagari',serif;font-size:1rem;color:var(--gold-dk);opacity:.68;letter-spacing:.08em;margin-bottom:2.5rem}
+.ft-gl{width:min(600px,90%);height:1px;margin:0 auto 2.5rem;background:linear-gradient(90deg,transparent,var(--gold-dk) 30%,var(--saffron) 50%,var(--gold-dk) 70%,transparent)}
+.ft-lk{display:flex;justify-content:center;gap:3rem;margin-bottom:2.5rem;flex-wrap:wrap}
+.ft-lk a{font-family:'Cinzel',serif;font-size:.72rem;letter-spacing:.15em;text-transform:uppercase;color:var(--text-dim);text-decoration:none;transition:color .3s}
+.ft-lk a:hover{color:var(--gold-lt)}
+.ft-cp{font-size:.85rem;color:var(--gold-dk);opacity:.42;letter-spacing:.07em}
+
+/* ── SCROLL REVEAL ── */
+.sr{opacity:0;transition:opacity .9s cubic-bezier(.22,1,.36,1),transform .9s cubic-bezier(.22,1,.36,1)}
+.sr-u{transform:translateY(55px)}.sr-l{transform:translateX(-65px)}.sr-r{transform:translateX(65px)}.sr-s{transform:scale(.9)}
+.sr.in{opacity:1;transform:none!important}
+.d1{transition-delay:.12s}.d2{transition-delay:.25s}.d3{transition-delay:.38s}.d4{transition-delay:.51s}.d5{transition-delay:.64s}
+
+/* ── RESPONSIVE ── */
+@media(max-width:900px){
+  #nav{padding:1rem 1.5rem}#nav.stuck{padding:.9rem 1.5rem}
+  .nav-links{display:none}
+  .ag{grid-template-columns:1fr;gap:3rem}
+  .av{display:none}
+  .cg{grid-template-columns:1fr}
+  .sgrid{grid-template-columns:1fr 1fr}
+}
+@media(max-width:480px){
+  .sgrid{grid-template-columns:1fr}
+  .h-btns{flex-direction:column;align-items:center}
+  .sg{grid-template-columns:1fr 1fr}
+}
+</style>
+</head>
+<body>
+
+<div id="cur"></div>
+<div id="cur-r"></div>
+<canvas id="cv"></canvas>
+
+<!-- NAV -->
+<nav id="nav">
+  <div class="nav-brand">Nyay&nbsp;Mitra</div>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#features">Features</a></li>
+    <li><a href="#scriptures">Scriptures</a></li>
+    <li><a href="studies.html">Studies</a></li>
+    <li><a href="yuga-events.html">Yugas</a></li>
+    <li><a href="texts-hub.html">Texts Hub</a></li>
+  </ul>
+  <button id="theme-toggle"></button>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <!-- SVG Mandala -->
+  <div class="mandala-wrap">
+    <svg viewBox="0 0 700 700" xmlns="http://www.w3.org/2000/svg" fill="none">
+      <!-- Ring 1 – outermost -->
+      <g class="r1">
+        <circle cx="350" cy="350" r="335" stroke="rgba(201,168,76,.09)" stroke-width="1" stroke-dasharray="4 9"/>
+        <circle cx="350" cy="350" r="335" stroke="rgba(232,131,26,.05)" stroke-width="1" stroke-dasharray="1 22"/>
+        <g stroke="rgba(201,168,76,.1)" stroke-width=".8">
+          <line x1="350" y1="15" x2="350" y2="685"/><line x1="15" y1="350" x2="685" y2="350"/>
+          <line x1="113" y1="113" x2="587" y2="587"/><line x1="587" y1="113" x2="113" y2="587"/>
+          <line x1="350" y1="15" x2="350" y2="685" transform="rotate(22.5 350 350)"/>
+          <line x1="350" y1="15" x2="350" y2="685" transform="rotate(45 350 350)"/>
+          <line x1="350" y1="15" x2="350" y2="685" transform="rotate(67.5 350 350)"/>
+          <line x1="350" y1="15" x2="350" y2="685" transform="rotate(112.5 350 350)"/>
+          <line x1="350" y1="15" x2="350" y2="685" transform="rotate(135 350 350)"/>
+          <line x1="350" y1="15" x2="350" y2="685" transform="rotate(157.5 350 350)"/>
+        </g>
+        <g fill="rgba(201,168,76,.22)">
+          <circle cx="350" cy="15" r="2.5"/><circle cx="685" cy="350" r="2.5"/>
+          <circle cx="350" cy="685" r="2.5"/><circle cx="15" cy="350" r="2.5"/>
+          <circle cx="113" cy="113" r="2"/><circle cx="587" cy="113" r="2"/>
+          <circle cx="587" cy="587" r="2"/><circle cx="113" cy="587" r="2"/>
+        </g>
+      </g>
+      <!-- Ring 2 -->
+      <g class="r2">
+        <circle cx="350" cy="350" r="245" stroke="rgba(201,168,76,.13)" stroke-width="1"/>
+        <circle cx="350" cy="350" r="245" stroke="rgba(232,131,26,.07)" stroke-width="1" stroke-dasharray="2 11"/>
+        <g stroke="rgba(201,168,76,.14)" stroke-width=".9" fill="none">
+          <path d="M350 105 Q385 200 350 245 Q315 200 350 105" transform="rotate(0 350 350)"/>
+          <path d="M350 105 Q385 200 350 245 Q315 200 350 105" transform="rotate(30 350 350)"/>
+          <path d="M350 105 Q385 200 350 245 Q315 200 350 105" transform="rotate(60 350 350)"/>
+          <path d="M350 105 Q385 200 350 245 Q315 200 350 105" transform="rotate(90 350 350)"/>
+          <path d="M350 105 Q385 200 350 245 Q315 200 350 105" transform="rotate(120 350 350)"/>
+          <path d="M350 105 Q385 200 350 245 Q315 200 350 105" transform="rotate(150 350 350)"/>
+          <path d="M350 105 Q385 200 350 245 Q315 200 350 105" transform="rotate(180 350 350)"/>
+          <path d="M350 105 Q385 200 350 245 Q315 200 350 105" transform="rotate(210 350 350)"/>
+          <path d="M350 105 Q385 200 350 245 Q315 200 350 105" transform="rotate(240 350 350)"/>
+          <path d="M350 105 Q385 200 350 245 Q315 200 350 105" transform="rotate(270 350 350)"/>
+          <path d="M350 105 Q385 200 350 245 Q315 200 350 105" transform="rotate(300 350 350)"/>
+          <path d="M350 105 Q385 200 350 245 Q315 200 350 105" transform="rotate(330 350 350)"/>
+        </g>
+        <g fill="rgba(201,168,76,.28)">
+          <circle cx="350" cy="105" r="2.5"/><circle cx="472.3" cy="167.5" r="2.5"/>
+          <circle cx="533.5" cy="289.8" r="2.5"/><circle cx="533.5" cy="410.2" r="2.5"/>
+          <circle cx="472.3" cy="532.5" r="2.5"/><circle cx="350" cy="595" r="2.5"/>
+          <circle cx="227.7" cy="532.5" r="2.5"/><circle cx="166.5" cy="410.2" r="2.5"/>
+          <circle cx="166.5" cy="289.8" r="2.5"/><circle cx="227.7" cy="167.5" r="2.5"/>
+        </g>
+      </g>
+      <!-- Ring 3 -->
+      <g class="r3">
+        <circle cx="350" cy="350" r="160" stroke="rgba(201,168,76,.12)" stroke-width="1" stroke-dasharray="3 6"/>
+        <g stroke="rgba(232,131,26,.12)" stroke-width=".8">
+          <line x1="350" y1="190" x2="350" y2="510"/>
+          <line x1="190" y1="350" x2="510" y2="350"/>
+          <line x1="236.8" y1="236.8" x2="463.2" y2="463.2"/>
+          <line x1="463.2" y1="236.8" x2="236.8" y2="463.2"/>
+        </g>
+        <g fill="rgba(232,131,26,.22)">
+          <circle cx="350" cy="190" r="2.5"/><circle cx="510" cy="350" r="2.5"/>
+          <circle cx="350" cy="510" r="2.5"/><circle cx="190" cy="350" r="2.5"/>
+        </g>
+      </g>
+      <!-- Ring 4 – innermost -->
+      <g class="r4">
+        <circle cx="350" cy="350" r="82" stroke="rgba(201,168,76,.17)" stroke-width="1"/>
+        <circle cx="350" cy="350" r="82" stroke="rgba(201,168,76,.09)" stroke-width="1" stroke-dasharray="2 4"/>
+        <g fill="none" stroke="rgba(201,168,76,.18)" stroke-width=".8">
+          <path d="M350 268 Q365 309 350 318 Q335 309 350 268" transform="rotate(0 350 350)"/>
+          <path d="M350 268 Q365 309 350 318 Q335 309 350 268" transform="rotate(45 350 350)"/>
+          <path d="M350 268 Q365 309 350 318 Q335 309 350 268" transform="rotate(90 350 350)"/>
+          <path d="M350 268 Q365 309 350 318 Q335 309 350 268" transform="rotate(135 350 350)"/>
+          <path d="M350 268 Q365 309 350 318 Q335 309 350 268" transform="rotate(180 350 350)"/>
+          <path d="M350 268 Q365 309 350 318 Q335 309 350 268" transform="rotate(225 350 350)"/>
+          <path d="M350 268 Q365 309 350 318 Q335 309 350 268" transform="rotate(270 350 350)"/>
+          <path d="M350 268 Q365 309 350 318 Q335 309 350 268" transform="rotate(315 350 350)"/>
+        </g>
+      </g>
+      <!-- Center -->
+      <circle cx="350" cy="350" r="5" fill="rgba(201,168,76,.55)"/>
+      <circle cx="350" cy="350" r="10" stroke="rgba(201,168,76,.2)" stroke-width="1" fill="none"/>
+      <circle cx="350" cy="350" r="18" stroke="rgba(201,168,76,.1)" stroke-width="1" fill="none" stroke-dasharray="2 3"/>
+    </svg>
+  </div>
+
+  <div class="hero-in">
+    <div class="h-pill">✦ Major Project · न्याय · Dharma · Justice ✦</div>
+    <div class="h-om">ॐ</div>
+    <h1 class="h-title">Nyay Mitra</h1>
+    <p class="h-deva">न्याय मित्र</p>
+    <p class="h-tag">Where Ancient Dharmic Wisdom meets Modern Justice — your sacred companion on the path of righteousness, law, and eternal truth.</p>
+    <p class="h-shloka">"यतो धर्मस्ततो जयः" — Where there is Dharma, there is Victory</p>
+    <div class="h-btns">
+      <a href="#features" class="btn btn-g">Explore the Sanctuary</a>
+      <a href="#about" class="btn btn-o">Our Mission</a>
+    </div>
+  </div>
+
+  <div class="sc"><span>Scroll</span><div class="sc-l"></div></div>
+</section>
+
+<!-- MARQUEE -->
+<div id="mq">
+  <div class="mq-t">
+    <div class="mq-i">धर्मो रक्षति रक्षितः</div>
+    <div class="mq-i">Dharma protects those who protect Dharma</div>
+    <div class="mq-i">सत्यमेव जयते</div>
+    <div class="mq-i">Truth Alone Triumphs</div>
+    <div class="mq-i">यतो धर्मस्ततो जयः</div>
+    <div class="mq-i">Where Dharma is, Victory is</div>
+    <div class="mq-i">न्याय मित्र · Friend of Justice</div>
+    <div class="mq-i">तमसो मा ज्योतिर्गमय</div>
+    <div class="mq-i">Lead me from Darkness to Light</div>
+    <!-- duplicate -->
+    <div class="mq-i">धर्मो रक्षति रक्षितः</div>
+    <div class="mq-i">Dharma protects those who protect Dharma</div>
+    <div class="mq-i">सत्यमेव जयते</div>
+    <div class="mq-i">Truth Alone Triumphs</div>
+    <div class="mq-i">यतो धर्मस्ततो जयः</div>
+    <div class="mq-i">Where Dharma is, Victory is</div>
+    <div class="mq-i">न्याय मित्र · Friend of Justice</div>
+    <div class="mq-i">तमसो मा ज्योतिर्गमय</div>
+    <div class="mq-i">Lead me from Darkness to Light</div>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="sw">
+    <div class="ag">
+      <div>
+        <p class="ey sr sr-u">Our Purpose · हमारा उद्देश्य</p>
+        <h2 class="st sr sr-u d1">Ancient Wisdom for the Modern World</h2>
+        <p class="bt sr sr-u d2">Nyay Mitra is a sacred bridge between the timeless philosophy of the Vedas and the demands of contemporary life. Justice and wisdom are inseparable — one cannot exist without the other.</p>
+        <p class="bt sr sr-u d3">Our platform houses two divine instruments: a Dharmic legal oracle that delivers verdicts from the Shastras, and a compassionate guide who channels the greatest philosophical traditions of Ancient India.</p>
+        <div class="qb sr sr-u d3">
+          <p class="qb-d">धर्म एव हतो हन्ति धर्मो रक्षति रक्षितः</p>
+          <p class="qb-c">Dharma destroys those who destroy it; Dharma protects those who uphold it — Manusmriti</p>
+        </div>
+        <div class="sg">
+          <div class="sb sr sr-u d1"><span class="sn" data-t="5000" data-s="+">0</span><span class="sl">Cases Analysed</span></div>
+          <div class="sb sr sr-u d2"><span class="sn" data-t="4" data-s="">0</span><span class="sl">Sacred Scriptures</span></div>
+          <div class="sb sr sr-u d3"><span class="sn" data-t="99" data-s="%">0</span><span class="sl">Accuracy Rate</span></div>
+          <div class="sb sr sr-u d4"><span class="sn" data-t="24" data-s="×7">0</span><span class="sl">Always Available</span></div>
+        </div>
+      </div>
+      <div class="av sr sr-r">
+        <div class="av-m">
+          <svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg" fill="none">
+            <g class="r1">
+              <circle cx="200" cy="200" r="190" stroke="rgba(201,168,76,.11)" stroke-width="1" stroke-dasharray="3 8"/>
+              <g stroke="rgba(201,168,76,.09)" stroke-width=".7">
+                <line x1="200" y1="10" x2="200" y2="390"/><line x1="10" y1="200" x2="390" y2="200"/>
+                <line x1="65" y1="65" x2="335" y2="335"/><line x1="335" y1="65" x2="65" y2="335"/>
+                <line x1="200" y1="10" x2="200" y2="390" transform="rotate(22.5 200 200)"/>
+                <line x1="200" y1="10" x2="200" y2="390" transform="rotate(67.5 200 200)"/>
+              </g>
+            </g>
+            <g class="r2">
+              <circle cx="200" cy="200" r="130" stroke="rgba(201,168,76,.15)" stroke-width="1"/>
+              <g fill="none" stroke="rgba(201,168,76,.13)" stroke-width=".9">
+                <path d="M200 70 Q220 130 200 140 Q180 130 200 70" transform="rotate(0 200 200)"/>
+                <path d="M200 70 Q220 130 200 140 Q180 130 200 70" transform="rotate(30 200 200)"/>
+                <path d="M200 70 Q220 130 200 140 Q180 130 200 70" transform="rotate(60 200 200)"/>
+                <path d="M200 70 Q220 130 200 140 Q180 130 200 70" transform="rotate(90 200 200)"/>
+                <path d="M200 70 Q220 130 200 140 Q180 130 200 70" transform="rotate(120 200 200)"/>
+                <path d="M200 70 Q220 130 200 140 Q180 130 200 70" transform="rotate(150 200 200)"/>
+                <path d="M200 70 Q220 130 200 140 Q180 130 200 70" transform="rotate(180 200 200)"/>
+                <path d="M200 70 Q220 130 200 140 Q180 130 200 70" transform="rotate(210 200 200)"/>
+                <path d="M200 70 Q220 130 200 140 Q180 130 200 70" transform="rotate(240 200 200)"/>
+                <path d="M200 70 Q220 130 200 140 Q180 130 200 70" transform="rotate(270 200 200)"/>
+                <path d="M200 70 Q220 130 200 140 Q180 130 200 70" transform="rotate(300 200 200)"/>
+                <path d="M200 70 Q220 130 200 140 Q180 130 200 70" transform="rotate(330 200 200)"/>
+              </g>
+            </g>
+            <g class="r3"><circle cx="200" cy="200" r="60" stroke="rgba(232,131,26,.15)" stroke-width="1" stroke-dasharray="2 5"/></g>
+            <circle cx="200" cy="200" r="3" fill="rgba(201,168,76,.6)"/>
+          </svg>
+        </div>
+        <div class="av-c">
+          <div class="av-om">ॐ</div>
+          <div class="av-r"><span>🪷</span><span>⚖️</span><span>📜</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DIVIDER -->
+<div class="dv sr sr-u"><div class="dv-l"></div><span class="dv-g">⚖️</span><div class="dv-l"></div></div>
+
+<!-- FEATURES -->
+<section id="features">
+  <div class="sw">
+    <div class="fhd">
+      <p class="ey sr sr-u">Sacred Tools · दिव्य उपकरण</p>
+      <h2 class="st sr sr-u d1">Two Paths to Dharmic Truth</h2>
+      <p class="bt sr sr-u d2" style="text-align:center">Choose your path — seek justice through the Ancient Oracle, or seek inner wisdom through the Eternal Guide.</p>
+    </div>
+    <div class="cg">
+      <!-- Card 1 -->
+      <div class="fc sr sr-l">
+        <div class="c-wm">⚖</div>
+        <span class="c-badge">⚖ Dharmic Oracle</span>
+        <span class="c-icon">⚖️</span>
+        <h3 class="c-t">Dharma Nyaya</h3>
+        <p class="c-d">धर्म न्याय — The Ancient Court of Justice</p>
+        <p class="c-p">Present your case before the eternal court. The Ancient Oracle of Dharmic Justice weighs your dispute through the lens of the Vedas and Shastras — delivering verdicts grounded in Manusmriti and Arthashastra. Plaintiff, defendant, facts — speak, and the ancient law shall answer.</p>
+        <div class="c-tags">
+          <span class="c-tag">Vedic Law</span>
+          <span class="c-tag">AI Verdict</span>
+          <span class="c-tag">Manusmriti</span>
+          <span class="c-tag">Arthashastra</span>
+          <span class="c-tag">Sanskrit Jurisprudence</span>
+        </div>
+        <a href="https://dharma-verdict-livid.vercel.app/" target="_blank" class="c-lnk lg">Invoke the Oracle →</a>
+      </div>
+      <!-- Card 2 -->
+      <div class="fc sr sr-r d2">
+        <div class="c-wm">🪷</div>
+        <span class="c-badge">🪷 Wisdom Guide</span>
+        <span class="c-icon">🪷</span>
+        <h3 class="c-t">Dharma Upadeshak</h3>
+        <p class="c-d">धर्म उपदेशक — Your Spiritual Companion</p>
+        <p class="c-p">Share what weighs upon your heart with Dharma Upadeshak — your companion on the path of wisdom. Drawing from the Bhagavad Gita, Hitopadesha, Vidura Niti, and Chanakya Niti, find courage, clarity and peace for life's deepest questions.</p>
+        <div class="c-tags">
+          <span class="c-tag">Bhagavad Gita</span>
+          <span class="c-tag">Chanakya Niti</span>
+          <span class="c-tag">Vidura Niti</span>
+          <span class="c-tag">Hitopadesha</span>
+          <span class="c-tag">Voice Input</span>
+        </div>
+        <a href="https://chatbot-1-three.vercel.app/" target="_blank" class="c-lnk ls">Seek Wisdom →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- QUOTE BAND -->
+<div id="qband">
+  <div class="qbi">
+    <div class="qo sr sr-s">✦ ॐ ✦ 🪷 ✦ ॐ ✦</div>
+    <p class="qd sr sr-u d1">"सत्यमेव जयते"</p>
+    <p class="qe sr sr-u d2">Truth Alone Triumphs</p>
+    <p class="qs sr sr-u d3">— Mundaka Upanishad · National Motto of Bharat</p>
+    <div class="qo sr sr-s d4">✦ ⚖ ✦ 🪷 ✦ ⚖ ✦</div>
+  </div>
+</div>
+
+<!-- SCRIPTURES -->
+<section id="scriptures">
+  <div class="sw">
+    <div class="shd">
+      <p class="ey sr sr-u">The Sacred Foundation</p>
+      <h2 class="st sr sr-u d1">Built on Four Eternal Pillars</h2>
+    </div>
+    <div class="sgrid">
+      <div class="sc-c sr sr-u d1"><span class="sc-i">📖</span><div class="sc-n">Bhagavad Gita</div><p class="sc-p">The divine song of duty, righteousness, and the eternal self — guidance for every seeker on every path.</p></div>
+      <div class="sc-c sr sr-u d2"><span class="sc-i">⚖️</span><div class="sc-n">Manusmriti</div><p class="sc-p">The ancient code of Dharmic law — principles governing justice, society, and the cosmic order of life.</p></div>
+      <div class="sc-c sr sr-u d3"><span class="sc-i">🦅</span><div class="sc-n">Chanakya Niti</div><p class="sc-p">The statesman's wisdom — mastery of statecraft, strategy, ethics, and the art of righteous governance.</p></div>
+      <div class="sc-c sr sr-u d4"><span class="sc-i">🌸</span><div class="sc-n">Vidura Niti</div><p class="sc-p">Pragmatic virtue from the Mahabharata — the counsel of the wisest minister of ancient Hastinapur.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- MODERN LAW CTA -->
+<section id="modern-law-cta" style="padding:5rem 0;text-align:center;position:relative;z-index:2;background:linear-gradient(135deg,rgba(232,131,26,.06),rgba(201,168,76,.04),rgba(232,131,26,.06))">
+  <div style="max-width:700px;margin:0 auto;padding:0 2rem">
+    <p class="ey sr sr-u" style="justify-content:center">⚖ Modern India · आधुनिक न्याय</p>
+    <h2 class="st sr sr-u d1" style="margin-bottom:1.2rem">Navigate the Modern Indian Law System</h2>
+    <p class="bt sr sr-u d2" style="text-align:center;margin-bottom:2.5rem;max-width:560px;margin-left:auto;margin-right:auto">Bridge the eternal wisdom of the Dharma with the Constitution, IPC, and the courts of modern Bharat. Discover your rights, understand the law, and find your path to justice.</p>
+    <div class="sr sr-u d3">
+      <a href="modern-law.html" class="btn btn-g" style="font-size:.82rem;padding:1.1rem 3rem">Explore Modern Indian Law &nbsp;→</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <span class="ft-om">ॐ</span>
+  <div class="ft-br">Nyay Mitra</div>
+  <p class="ft-sb">न्याय मित्र · Friend of Justice · Companion of Dharma</p>
+  <div class="ft-gl"></div>
+  <div class="ft-lk">
+    <a href="https://dharma-verdict-livid.vercel.app/" target="_blank">Dharma Nyaya — धर्म न्याय</a>
+    <a href="https://chatbot-1-three.vercel.app/" target="_blank">Dharma Upadeshak — धर्म उपदेशक</a>
+  </div>
+  <p class="ft-cp">© 2025 Nyay Mitra · Crafted with Dharma &amp; Devotion · यतो धर्मस्ततो जयः</p>
+</footer>
+
+<script>
+/* ── CURSOR ── */
+const cur=document.getElementById('cur'),crng=document.getElementById('cur-r');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cur.style.left=mx+'px';cur.style.top=my+'px'});
+(function lc(){rx+=(mx-rx)*.12;ry+=(my-ry)*.12;crng.style.left=rx+'px';crng.style.top=ry+'px';requestAnimationFrame(lc)})();
+document.querySelectorAll('a,button').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{crng.style.width='58px';crng.style.height='58px';crng.style.borderColor='rgba(201,168,76,.85)';cur.style.transform='translate(-50%,-50%) scale(0)'});
+  el.addEventListener('mouseleave',()=>{crng.style.width='34px';crng.style.height='34px';crng.style.borderColor='rgba(201,168,76,.5)';cur.style.transform='translate(-50%,-50%) scale(1)'});
+});
+
+/* ── CANVAS ── */
+const cv=document.getElementById('cv'),ctx=cv.getContext('2d');
+let W,H;
+function rsz(){W=cv.width=innerWidth;H=cv.height=innerHeight}rsz();
+addEventListener('resize',rsz);
+
+const STARS=Array.from({length:280},()=>({x:Math.random(),y:Math.random(),r:Math.random()*1.4+.2,o:Math.random()*.55+.08,ph:Math.random()*Math.PI*2,sp:Math.random()*.0013+.0003}));
+
+class Ember{
+  constructor(){this.reset(true)}
+  reset(init){
+    this.x=(Math.random()*.7+.15)*W;
+    this.y=init?Math.random()*H:H+20;
+    this.vx=(Math.random()-.5)*.55;
+    this.vy=-(Math.random()*1.3+.35);
+    this.r=Math.random()*2.2+.4;
+    this.life=0;this.max=Math.random()*200+130;
+    this.hue=Math.random()*22+32;
+  }
+  upd(){this.x+=this.vx;this.y+=this.vy;this.vx+=(Math.random()-.5)*.04;this.life++;if(this.life>=this.max||this.y<-10)this.reset()}
+  draw(c){c.save();c.globalAlpha=(1-this.life/this.max)*.38;c.beginPath();c.arc(this.x,this.y,this.r,0,Math.PI*2);c.fillStyle=`hsl(${this.hue},${document.documentElement.classList.contains('light-mode')?'95':'90'}%,${document.documentElement.classList.contains('light-mode')?'50':'65'}%)`;c.shadowBlur=document.documentElement.classList.contains('light-mode')?12:9;c.shadowColor=`hsl(${this.hue},100%,${document.documentElement.classList.contains('light-mode')?'50':'60'}%)`;c.fill();c.restore()}
+}
+const EMBERS=Array.from({length:60},()=>new Ember());
+let pmx=W/2,pmy=H/2;
+addEventListener('mousemove',e=>{pmx=e.clientX;pmy=e.clientY});
+
+function frame(){
+  ctx.clearRect(0,0,W,H);
+  // Nebula
+  [[.25,.3,.4,'76,168,201'],[.8,.65,.32,'131,26,232'],[.5,.1,.22,'168,76,201']].forEach(([x,y,r,c])=>{
+    const g=ctx.createRadialGradient(x*W,y*H,0,x*W,y*H,r*W);
+    g.addColorStop(0,`rgba(${c},.045)`);g.addColorStop(1,'transparent');
+    ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
+  });
+  const ox=(pmx/W-.5)*28,oy=(pmy/H-.5)*16;
+  STARS.forEach(s=>{
+    s.ph+=s.sp;
+    const gw=s.o+Math.sin(s.ph)*.16;
+    ctx.beginPath();ctx.arc(s.x*W+ox,s.y*H+oy,s.r,0,Math.PI*2);
+    ctx.fillStyle=`rgba(${document.documentElement.classList.contains('light-mode')?'201,168,76':'240,212,130'},${gw})`;
+    if(s.r>1){ctx.shadowBlur=8;ctx.shadowColor=`rgba(${document.documentElement.classList.contains('light-mode')?'232,131,26,.6':'201,168,76'}, .6)`}
+    ctx.fill();ctx.shadowBlur=0;
+  });
+  EMBERS.forEach(e=>{e.upd();e.draw(ctx)});
+  requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+
+/* ── NAV ── */
+const nav=document.getElementById('nav');
+addEventListener('scroll',()=>nav.classList.toggle('stuck',scrollY>60));
+
+/* ── SCROLL REVEAL ── */
+const srEls=document.querySelectorAll('.sr');
+const sro=new IntersectionObserver(en=>{en.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');sro.unobserve(e.target)}})},{threshold:.1,rootMargin:'0px 0px -55px 0px'});
+srEls.forEach(el=>sro.observe(el));
+
+/* ── COUNTERS ── */
+const co=new IntersectionObserver(en=>{en.forEach(e=>{
+  if(e.isIntersecting){
+    const el=e.target,t=+el.dataset.t,s=el.dataset.s||'',dur=1850,st=performance.now();
+    (function tick(n){const p=Math.min((n-st)/dur,1),ease=1-Math.pow(1-p,3);el.textContent=Math.round(ease*t).toLocaleString()+s;if(p<1)requestAnimationFrame(tick)})(performance.now());
+    co.unobserve(el);
+  }
+})},{threshold:.5});
+document.querySelectorAll('.sn').forEach(el=>co.observe(el));
+
+/* ── CARD TILT ── */
+document.querySelectorAll('.fc').forEach(card=>{
+  card.addEventListener('mousemove',e=>{
+    const r=card.getBoundingClientRect();
+    const dx=(e.clientX-r.left-r.width/2)/(r.width/2);
+    const dy=(e.clientY-r.top-r.height/2)/(r.height/2);
+    card.style.transition='box-shadow .5s,border-color .5s,background .5s';
+    card.style.transform=`translateY(-14px) rotateY(${dx*6}deg) rotateX(${-dy*4}deg)`;
+  });
+  card.addEventListener('mouseleave',()=>{
+    card.style.transition='transform .6s cubic-bezier(.22,1,.36,1),box-shadow .5s,border-color .5s';
+    card.style.transform='';
+  });
+});
+
+/* ── PARALLAX MANDALA ── */
+const mw=document.querySelector('.mandala-wrap');
+addEventListener('scroll',()=>{if(mw)mw.style.transform=`translate(-50%,calc(-50% + ${scrollY*.18}px))`});
+
+/* ── SMOOTH ANCHORS ── */
+document.querySelectorAll('a[href^="#"]').forEach(a=>{
+  a.addEventListener('click',e=>{e.preventDefault();document.querySelector(a.getAttribute('href'))?.scrollIntoView({behavior:'smooth'})});
+});
+
+/* ── THEME TOGGLE ── */
+const themeToggle=document.getElementById('theme-toggle');const html=document.documentElement;const savedTheme=localStorage.getItem('theme')||'dark-mode';if(savedTheme==='light-mode'){html.classList.add('light-mode')}themeToggle.addEventListener('click',()=>{html.classList.toggle('light-mode');const isLight=html.classList.contains('light-mode');localStorage.setItem('theme',isLight?'light-mode':'dark-mode')});
+</script>
+<script src="audio-sounds.js"></script>
+</body>
+</html>

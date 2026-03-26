@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Yuga Events — The Four Ages · Nyay Mitra</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;500;600;700&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Noto+Serif+Devanagari:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root{--gold:#C9A84C;--gold-lt:#F0D483;--gold-dk:#7A6230;--saffron:#E8831A;--saffron-lt:#FF9933;--cream:#F5E8CA;--cream-dim:#C4AA80;--ink:#080604;--ink2:#100C06;--ink3:#1A1308;--ink4:#231A0A;--bg-main:#080604;--text-main:#F5E8CA;--text-dim:#C4AA80;--card-bg:#1A1308;--card-border:rgba(201,168,76,.13);--nav-bg:rgba(8,6,4,.95);--overlay-light:rgba(201,168,76,.07);--star-color:rgba(240,212,130,.6);--ember-color:hsl(38,90%,65%)}html.light-mode{--bg-main:#FFFEF9;--text-main:#1A1410;--text-dim:#4A4540;--card-bg:#FFFFFF;--card-border:rgba(201,168,76,.35);--nav-bg:rgba(255,254,249,.98);--overlay-light:rgba(201,168,76,.12);--star-color:rgba(201,168,76,.7);--ember-color:rgba(232,131,26,.8)}html.light-mode body::after{opacity:.15}html.light-mode .dv-g{filter:drop-shadow(0 0 4px rgba(232,131,26,.5)) !important}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}html{scroll-behavior:smooth}
+body{background:var(--bg-main);color:var(--text-main);font-family:'EB Garamond',serif;overflow-x:hidden;cursor:none;transition:background .4s,color .4s}
+#cur{position:fixed;width:10px;height:10px;background:var(--gold);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:transform .1s}
+#cur-r{position:fixed;width:34px;height:34px;border:1px solid rgba(201,168,76,.5);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:transform .18s cubic-bezier(.22,1,.36,1),width .3s,height .3s}
+#cv{position:fixed;inset:0;z-index:0;pointer-events:none}
+body::after{content:'';position:fixed;inset:0;z-index:1;pointer-events:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");opacity:.45}
+#nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:center;justify-content:space-between;padding:1.3rem 5rem;transition:all .5s}
+#nav.stuck{background:var(--nav-bg);border-bottom:1px solid rgba(201,168,76,.18);backdrop-filter:blur(14px);padding:.9rem 5rem}
+.nav-brand{font-family:'Cinzel Decorative',serif;font-size:1.1rem;letter-spacing:.04em;background:linear-gradient(120deg,var(--gold-lt),var(--gold),var(--saffron-lt));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;filter:drop-shadow(0 0 20px rgba(201,168,76,.35));text-decoration:none}
+.nav-links{display:flex;gap:2.5rem;list-style:none}
+.nav-links a{font-family:'Cinzel',serif;font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:var(--text-dim);text-decoration:none;position:relative;transition:color .3s}
+.nav-links a::before{content:'';position:absolute;bottom:-4px;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);transform:scaleX(0);transition:transform .4s cubic-bezier(.22,1,.36,1)}
+.nav-links a:hover,.nav-links a.active{color:var(--gold-lt)}.nav-links a:hover::before,.nav-links a.active::before{transform:scaleX(1)}
+#theme-toggle{background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.3);color:var(--gold);padding:.4rem .8rem;border-radius:20px;cursor:pointer;font-family:'Cinzel',serif;font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;transition:all .3s;display:flex;align-items:center;gap:.5rem}#theme-toggle:hover{background:rgba(201,168,76,.2);border-color:rgba(201,168,76,.5)}#theme-toggle::before{content:'🌙';display:inline-block;transition:opacity .3s}html.light-mode #theme-toggle::before{content:'☀️'}
+.ph{position:relative;min-height:60vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:10rem 2rem 6rem;z-index:2;overflow:hidden}
+.ph::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 60% at 50% 40%,rgba(201,168,76,.07),transparent)}
+.ph-pill{display:inline-flex;align-items:center;gap:.6rem;font-family:'Cinzel',serif;font-size:.67rem;letter-spacing:.26em;text-transform:uppercase;color:var(--saffron);border:1px solid rgba(232,131,26,.32);padding:.38rem 1.2rem;margin-bottom:1.8rem;background:rgba(232,131,26,.05);animation:fd .8s .2s both}
+@keyframes fd{from{opacity:0;transform:translateY(-18px)}to{opacity:1;transform:translateY(0)}}
+.ph-title{font-family:'Cinzel Decorative',serif;font-size:clamp(2.8rem,7vw,6rem);font-weight:900;line-height:1;background:linear-gradient(135deg,var(--gold-lt) 0%,var(--gold) 35%,var(--saffron-lt) 60%,var(--gold-lt) 100%);background-size:300%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:tu 1s .5s cubic-bezier(.22,1,.36,1) both,sh 6s 1.5s linear infinite;filter:drop-shadow(0 4px 50px rgba(201,168,76,.4));margin-bottom:.8rem}
+@keyframes tu{from{opacity:0;transform:translateY(40px) skewY(3deg)}to{opacity:1;transform:none}}
+@keyframes sh{0%{background-position:0% 50%}100%{background-position:300% 50%}}
+.ph-sub{font-family:'Noto Serif Devanagari',serif;font-size:clamp(1rem,2vw,1.4rem);color:var(--saffron-lt);letter-spacing:.1em;margin-bottom:1.2rem;opacity:.82;animation:tu .9s .7s cubic-bezier(.22,1,.36,1) both}
+.ph-desc{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(1rem,1.6vw,1.3rem);color:var(--text-dim);line-height:1.8;max-width:640px;animation:tu .9s .85s cubic-bezier(.22,1,.36,1) both}
+/* YUGA NAV */
+.yuga-nav{display:flex;justify-content:center;gap:1rem;flex-wrap:wrap;padding:2rem 2rem 0;position:relative;z-index:2}
+.yn-btn{font-family:'Cinzel',serif;font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;padding:.7rem 1.6rem;border:1px solid rgba(201,168,76,.2);background:rgba(201,168,76,.04);color:var(--text-dim);cursor:pointer;clip-path:polygon(10px 0%,100% 0%,calc(100% - 10px) 100%,0% 100%);transition:all .3s;text-decoration:none}
+.yn-btn:hover{background:rgba(201,168,76,.12);border-color:rgba(201,168,76,.4);color:var(--gold-lt)}
+section{position:relative;z-index:2}
+.sw{max-width:1100px;margin:0 auto;padding:0 2.5rem}
+.ey{font-family:'Cinzel',serif;font-size:.67rem;letter-spacing:.3em;text-transform:uppercase;color:var(--saffron);margin-bottom:1rem;display:flex;align-items:center;gap:.8rem}
+.ey::before,.ey::after{content:'';width:26px;height:1px;background:var(--saffron);opacity:.45}
+.bt{font-size:clamp(1rem,1.3vw,1.2rem);line-height:1.95;color:var(--text-dim);margin-bottom:1.3rem}
+/* YUGA BLOCK */
+.yuga-blk{padding:8rem 0}
+.yuga-blk:nth-child(even){background:linear-gradient(135deg,rgba(201,168,76,.03),transparent)}
+.yb-inner{display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:start}
+.yb-inner.rev{direction:rtl}.yb-inner.rev > *{direction:ltr}
+.yb-glyph{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.5rem}
+.yb-icon{font-size:7rem;filter:drop-shadow(0 0 40px rgba(201,168,76,.4));animation:fl 5s ease-in-out infinite}
+@keyframes fl{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
+.dharma-bar-wrap{width:100%;max-width:260px}
+.dharma-label{font-family:'Cinzel',serif;font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold-dk);margin-bottom:.5rem;display:flex;justify-content:space-between}
+.dharma-bar{height:8px;background:rgba(201,168,76,.12);border-radius:4px;overflow:hidden}
+.dharma-fill{height:100%;border-radius:4px;transition:width 1.5s cubic-bezier(.22,1,.36,1)}
+.yb-num{font-family:'Cinzel Decorative',serif;font-size:6rem;font-weight:900;background:linear-gradient(135deg,var(--gold-lt),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;opacity:.12;position:absolute;right:0;top:-2rem;pointer-events:none;user-select:none;line-height:1}
+.yb-content{position:relative}
+.yb-badge{display:inline-flex;align-items:center;gap:.6rem;font-family:'Cinzel',serif;font-size:.67rem;letter-spacing:.22em;text-transform:uppercase;color:var(--saffron);border:1px solid rgba(232,131,26,.28);padding:.3rem 1rem;margin-bottom:1.2rem;background:rgba(232,131,26,.05)}
+.yb-t{font-family:'Cinzel Decorative',serif;font-size:clamp(1.8rem,3.5vw,3.2rem);font-weight:900;line-height:1.05;background:linear-gradient(135deg,var(--gold-lt),var(--gold),var(--saffron-lt));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;filter:drop-shadow(0 2px 20px rgba(201,168,76,.3));margin-bottom:.3rem}
+.yb-deva{font-family:'Noto Serif Devanagari',serif;font-size:1rem;color:var(--saffron-lt);opacity:.72;margin-bottom:1.2rem;letter-spacing:.06em}
+.yb-p{font-size:clamp(1rem,1.15vw,1.15rem);line-height:1.95;color:var(--text-dim);margin-bottom:1.5rem}
+/* EVENTS LIST */
+.ev-list{margin:1.5rem 0;display:flex;flex-direction:column;gap:.7rem}
+.ev-item{display:flex;align-items:flex-start;gap:.9rem;padding:.8rem 1rem;background:rgba(201,168,76,.04);border:1px solid rgba(201,168,76,.1);clip-path:polygon(8px 0%,100% 0%,calc(100% - 8px) 100%,0% 100%)}
+.ev-dot{font-size:1.1rem;flex-shrink:0;margin-top:.05rem}
+.ev-text{font-size:.97rem;line-height:1.72;color:var(--text-dim)}
+.ev-text strong{color:var(--gold);font-family:'Cinzel',serif;font-size:.75rem;letter-spacing:.1em;text-transform:uppercase;display:block;margin-bottom:.15rem}
+/* TAKEAWAY */
+.takeaway{margin-top:2rem;padding:1.5rem 1.8rem;background:linear-gradient(135deg,rgba(232,131,26,.07),rgba(201,168,76,.05));border-left:3px solid var(--saffron);position:relative}
+.takeaway::before{content:'👉';position:absolute;left:-1.2rem;top:50%;transform:translateY(-50%);font-size:1.4rem;filter:drop-shadow(0 0 10px rgba(232,131,26,.5))}
+.takeaway-t{font-family:'Cinzel',serif;font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;color:var(--saffron);margin-bottom:.6rem}
+.takeaway-p{font-size:.97rem;line-height:1.8;color:var(--text-dim)}
+/* TIMELINE BAR */
+.timeline{display:flex;align-items:center;gap:0;margin:5rem 0;overflow-x:auto;padding:1rem 2rem;position:relative;z-index:2}
+.tl-seg{flex:1;min-width:140px;text-align:center;position:relative;padding:1.5rem .5rem .5rem}
+.tl-seg::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,transparent,var(--gold-dk))}
+.tl-seg:nth-child(1)::before{background:linear-gradient(90deg,transparent,#FFD700)}
+.tl-seg:nth-child(2)::before{background:linear-gradient(90deg,transparent,#C9A84C)}
+.tl-seg:nth-child(3)::before{background:linear-gradient(90deg,transparent,#E8831A)}
+.tl-seg:nth-child(4)::before{background:linear-gradient(90deg,transparent,#8B4513)}
+.tl-icon{font-size:2rem;display:block;margin-bottom:.5rem}
+.tl-name{font-family:'Cinzel Decorative',serif;font-size:.95rem;font-weight:700;background:linear-gradient(135deg,var(--gold-lt),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:.2rem}
+.tl-dur{font-family:'Cinzel',serif;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text-dim);opacity:.6}
+.tl-d{font-size:.8rem;color:var(--gold-dk);margin-top:.3rem;font-family:'Noto Serif Devanagari',serif;opacity:.7}
+/* CONCLUSION */
+.concl{padding:7rem 0;background:linear-gradient(135deg,rgba(201,168,76,.05),rgba(232,131,26,.03))}
+.concl-in{max-width:800px;margin:0 auto;text-align:center}
+.st{font-family:'Cinzel Decorative',serif;font-size:clamp(1.7rem,3.5vw,3rem);font-weight:700;line-height:1.15;margin-bottom:1.5rem;background:linear-gradient(135deg,var(--gold-lt),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.dv{display:flex;align-items:center;gap:1.8rem;max-width:950px;margin:0 auto;padding:0 2rem;position:relative;z-index:2}
+.dv-l{flex:1;height:1px;background:linear-gradient(to right,transparent,rgba(201,168,76,.32),transparent)}
+.dv-g{font-size:1.2rem;filter:drop-shadow(0 0 8px rgba(201,168,76,.6));animation:pg 3s ease-in-out infinite}
+@keyframes pg{0%,100%{filter:drop-shadow(0 0 8px rgba(201,168,76,.4))}50%{filter:drop-shadow(0 0 22px rgba(201,168,76,.9)) drop-shadow(0 0 40px rgba(232,131,26,.4))}}
+footer{position:relative;z-index:2;padding:5rem 2.5rem 2.5rem;border-top:1px solid rgba(201,168,76,.12);text-align:center}
+.ft-om{font-family:'Noto Serif Devanagari',serif;font-size:3.5rem;background:linear-gradient(135deg,var(--gold-lt),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;filter:drop-shadow(0 0 20px rgba(201,168,76,.4));animation:pg 4s ease-in-out infinite;display:block;margin-bottom:.8rem}
+.ft-br{font-family:'Cinzel Decorative',serif;font-size:2rem;margin-bottom:.5rem;background:linear-gradient(120deg,var(--gold-lt),var(--gold),var(--saffron-lt));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.ft-sb{font-family:'Noto Serif Devanagari',serif;font-size:1rem;color:var(--gold-dk);opacity:.68;letter-spacing:.08em;margin-bottom:2.5rem}
+.ft-gl{width:min(600px,90%);height:1px;margin:0 auto 2.5rem;background:linear-gradient(90deg,transparent,var(--gold-dk) 30%,var(--saffron) 50%,var(--gold-dk) 70%,transparent)}
+.ft-lk{display:flex;justify-content:center;gap:3rem;margin-bottom:2.5rem;flex-wrap:wrap}
+.ft-lk a{font-family:'Cinzel',serif;font-size:.72rem;letter-spacing:.15em;text-transform:uppercase;color:var(--text-dim);text-decoration:none;transition:color .3s}
+.ft-lk a:hover{color:var(--gold-lt)}
+.ft-cp{font-size:.85rem;color:var(--gold-dk);opacity:.42;letter-spacing:.07em}
+.sr{opacity:0;transition:opacity .9s cubic-bezier(.22,1,.36,1),transform .9s cubic-bezier(.22,1,.36,1)}
+.sr-u{transform:translateY(55px)}.sr-l{transform:translateX(-65px)}.sr-r{transform:translateX(65px)}.sr-s{transform:scale(.9)}
+.sr.in{opacity:1;transform:none!important}
+.d1{transition-delay:.12s}.d2{transition-delay:.25s}.d3{transition-delay:.38s}.d4{transition-delay:.51s}.d5{transition-delay:.64s}
+@media(max-width:900px){#nav{padding:1rem 1.5rem}#nav.stuck{padding:.9rem 1.5rem}.nav-links{display:none}.yb-inner{grid-template-columns:1fr;gap:2.5rem}.yb-inner.rev{direction:ltr}.yb-glyph{flex-direction:row;justify-content:flex-start}}
+</style>
+</head>
+<body>
+<div id="cur"></div><div id="cur-r"></div><canvas id="cv"></canvas>
+
+<nav id="nav">
+  <a href="index.html" class="nav-brand">Nyay&nbsp;Mitra</a>
+  <ul class="nav-links">
+    <li><a href="index.html#about">About</a></li>
+    <li><a href="index.html#features">Features</a></li>
+    <li><a href="studies.html">Studies</a></li>
+    <li><a href="yuga-events.html" class="active">Yugas</a></li>
+    <li><a href="texts-hub.html">Texts Hub</a></li>
+    <li><a href="modern-law.html">Modern Law</a></li>
+  </ul>
+  <button id="theme-toggle">Mode</button>
+</nav>
+
+<div class="ph">
+  <div class="ph-pill">🌀 The Four Ages · चार युग</div>
+  <h1 class="ph-title">Yuga Events</h1>
+  <p class="ph-sub">सत्य · त्रेता · द्वापर · कलि</p>
+  <p class="ph-desc">From the age of perfect truth to the present age of strife — the cosmic cycle of Dharma, its key events, and what they teach us for today's world.</p>
+</div>
+
+<!-- QUICK NAV -->
+<div class="yuga-nav">
+  <a href="#satya" class="yn-btn">✦ Satya Yuga</a>
+  <a href="#treta" class="yn-btn">🏹 Treta Yuga</a>
+  <a href="#dvapara" class="yn-btn">📜 Dvapara Yuga</a>
+  <a href="#kali" class="yn-btn">⏳ Kali Yuga</a>
+</div>
+
+<!-- TIMELINE BAR -->
+<div class="timeline" style="max-width:900px;margin:4rem auto 0">
+  <div class="tl-seg"><span class="tl-icon">☀️</span><div class="tl-name">Satya Yuga</div><div class="tl-dur">1,728,000 Years</div><div class="tl-d">धर्म 100%</div></div>
+  <div class="tl-seg"><span class="tl-icon">🌤️</span><div class="tl-name">Treta Yuga</div><div class="tl-dur">1,296,000 Years</div><div class="tl-d">धर्म 75%</div></div>
+  <div class="tl-seg"><span class="tl-icon">🌥️</span><div class="tl-name">Dvapara Yuga</div><div class="tl-dur">864,000 Years</div><div class="tl-d">धर्म 50%</div></div>
+  <div class="tl-seg"><span class="tl-icon">🌑</span><div class="tl-name">Kali Yuga</div><div class="tl-dur">432,000 Years</div><div class="tl-d">धर्म 25%</div></div>
+</div>
+
+<div class="dv sr sr-u" style="margin-top:4rem"><div class="dv-l"></div><span class="dv-g">🌀</span><div class="dv-l"></div></div>
+
+<!-- SATYA YUGA -->
+<section class="yuga-blk" id="satya">
+  <div class="sw">
+    <div class="yb-inner">
+      <div class="yb-glyph sr sr-l">
+        <div class="yb-icon">☀️</div>
+        <div class="dharma-bar-wrap">
+          <div class="dharma-label"><span>Dharma</span><span>100%</span></div>
+          <div class="dharma-bar"><div class="dharma-fill" style="width:100%;background:linear-gradient(90deg,#FFD700,#F0D483)"></div></div>
+        </div>
+      </div>
+      <div class="yb-content sr sr-r">
+        <div class="yb-num">01</div>
+        <div class="yb-badge">✦ Age One · प्रथम युग</div>
+        <h2 class="yb-t">Satya Yuga</h2>
+        <p class="yb-deva">सत्य युग · The Age of Truth &amp; Pure Goodness</p>
+        <p class="bt">The first and greatest of the four ages. Dharma stands on all four legs — truth, compassion, austerity, and charity. Humans live for thousands of years, possess great spiritual power, and live in direct awareness of the Divine. There are no wars, no disease, no injustice. The very air is charged with truth.</p>
+        <div class="ev-list">
+          <div class="ev-item"><span class="ev-dot">🐟</span><div class="ev-text"><strong>Matsya Avatar</strong>Vishnu descends as a great fish to save Manu (the first man) and the sacred Vedas from the cosmic deluge. The first Avatar — the preservation of knowledge against total dissolution.</div></div>
+          <div class="ev-item"><span class="ev-dot">🐢</span><div class="ev-text"><strong>Kurma Avatar</strong>Vishnu as the cosmic tortoise supports Mount Mandara as the gods and asuras churn the cosmic ocean (Samudra Manthan) to obtain Amrita — the nectar of immortality. From this churning emerge all of creation's treasures.</div></div>
+          <div class="ev-item"><span class="ev-dot">🐗</span><div class="ev-text"><strong>Varaha Avatar</strong>The demon Hiranyaksha submerges the Earth beneath the cosmic ocean. Vishnu descends as a colossal boar, slays Hiranyaksha in a cosmic battle, and lifts the Earth on his tusks — restoring dharmic order.</div></div>
+          <div class="ev-item"><span class="ev-dot">🦁</span><div class="ev-text"><strong>Narasimha &amp; Prahlada</strong>The tyrant Hiranyakashipu declares himself God and terrorises the three worlds. His own son Prahlada refuses to abandon his devotion to Vishnu. Vishnu descends as Narasimha (half-man, half-lion) and destroys the tyrant — vindicating Prahlada's courage and truth.</div></div>
+          <div class="ev-item"><span class="ev-dot">👣</span><div class="ev-text"><strong>Vamana &amp; King Bali</strong>The virtuous demon king Bali's power grows so vast it threatens cosmic balance. Vishnu descends as Vamana, a dwarf brahmin, and asks for three steps of land. In three strides he measures all the worlds — demonstrating that dharmic humility transcends even the greatest worldly power.</div></div>
+        </div>
+        <div class="takeaway">
+          <div class="takeaway-t">Moral Takeaway for Today</div>
+          <p class="takeaway-p">The Satya Yuga teaches that truth is not merely a virtue — it is the <em>structural foundation</em> of a just society. When institutions are built on truth (Satya), they endure; when they are built on convenience and power, they collapse. The courage of Prahlada — maintaining one's dharmic conviction even against the most powerful authority — mirrors the principle of judicial independence and the duty of a citizen to uphold the constitution against a tyrannical state.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="dv sr sr-s"><div class="dv-l"></div><span class="dv-g">🏹</span><div class="dv-l"></div></div>
+
+<!-- TRETA YUGA -->
+<section class="yuga-blk" id="treta">
+  <div class="sw">
+    <div class="yb-inner rev">
+      <div class="yb-glyph sr sr-r">
+        <div class="yb-icon" style="animation-delay:.5s">🌤️</div>
+        <div class="dharma-bar-wrap">
+          <div class="dharma-label"><span>Dharma</span><span>75%</span></div>
+          <div class="dharma-bar"><div class="dharma-fill" style="width:75%;background:linear-gradient(90deg,#C9A84C,#F0D483)"></div></div>
+        </div>
+      </div>
+      <div class="yb-content sr sr-l">
+        <div class="yb-num">02</div>
+        <div class="yb-badge">🏹 Age Two · द्वितीय युग</div>
+        <h2 class="yb-t">Treta Yuga</h2>
+        <p class="yb-deva">त्रेता युग · The Age of Three-Fourths Dharma</p>
+        <p class="bt">The second age. Dharma stands on three legs; one quarter — dishonesty — has crept into the world. Good still dominates, but evil now exists and must be actively combated. Life spans shorten. The age produces India's first and most beloved grand epic: the Ramayana.</p>
+        <div class="ev-list">
+          <div class="ev-item"><span class="ev-dot">🏹</span><div class="ev-text"><strong>Birth of Lord Rama</strong>The seventh Avatar of Vishnu, born as the prince of Ayodhya to King Dasharatha. The ideal human being — perfectly virtuous son, husband, king, and warrior. His life is the standard of dharmic conduct against which all rulers and persons are measured.</div></div>
+          <div class="ev-item"><span class="ev-dot">🌿</span><div class="ev-text"><strong>The 14-Year Exile</strong>Bound by his father's oath and his own dharma as a son, Rama accepts exile without complaint. This episode encodes the principle that the ruler must be above personal interest and political self-preservation — a selfless servant of dharma even at personal cost.</div></div>
+          <div class="ev-item"><span class="ev-dot">🦁</span><div class="ev-text"><strong>Devotion of Hanuman</strong>Hanuman — the ultimate devotee — crosses the ocean, finds Sita, burns Lanka, and sustains the army through his selfless service. He embodies Seva (service) as the highest form of dharmic action: strength placed entirely in the service of truth and justice.</div></div>
+          <div class="ev-item"><span class="ev-dot">⚔️</span><div class="ev-text"><strong>The Lanka War &amp; Victory of Good</strong>The abduction of Sita by Ravana — king of Lanka, a learned Brahmin who violated dharma — represents the corruption of knowledge divorced from virtue. Ram's war against Lanka is not merely a military campaign; it is a dharmic restoration — evil, however powerful and learned, cannot endure against truth.</div></div>
+          <div class="ev-item"><span class="ev-dot">👑</span><div class="ev-text"><strong>Ram Rajya</strong>Rama's rule becomes the gold standard of the just state: no subject suffers injustice, every voice is heard, and the ruler places public welfare above personal happiness. It is cited in India's Constitution debates and in Supreme Court judgments as the ideal of governance.</div></div>
+        </div>
+        <div class="takeaway">
+          <div class="takeaway-t">Moral Takeaway for Today</div>
+          <p class="takeaway-p">The Ramayana teaches that <em>dharma demands personal sacrifice from those in power</em>. A ruler who privileges personal comfort over public justice has already lost the mandate of dharma. For modern jurists, the lesson is clear: the rule of law must stand above convenience, relationship, and even emotion. Ravana's fate shows that knowledge and power without ethical restraint are self-destroying. The concept of Ram Rajya directly informs India's Directive Principles of State Policy — the constitutional vision of a just, welfare state.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="dv sr sr-s"><div class="dv-l"></div><span class="dv-g">📜</span><div class="dv-l"></div></div>
+
+<!-- DVAPARA YUGA -->
+<section class="yuga-blk" id="dvapara">
+  <div class="sw">
+    <div class="yb-inner">
+      <div class="yb-glyph sr sr-l">
+        <div class="yb-icon" style="animation-delay:1s">🌥️</div>
+        <div class="dharma-bar-wrap">
+          <div class="dharma-label"><span>Dharma</span><span>50%</span></div>
+          <div class="dharma-bar"><div class="dharma-fill" style="width:50%;background:linear-gradient(90deg,#E8831A,#C9A84C)"></div></div>
+        </div>
+      </div>
+      <div class="yb-content sr sr-r">
+        <div class="yb-num">03</div>
+        <div class="yb-badge">📜 Age Three · तृतीय युग</div>
+        <h2 class="yb-t">Dvapara Yuga</h2>
+        <p class="yb-deva">द्वापर युग · The Age of Balanced and Contested Dharma</p>
+        <p class="bt">The third age. Good and evil stand at equal strength. Dharma becomes contested — not self-evident but argued, negotiated, and won through wisdom and sacrifice. This age produces the most complex, nuanced, and morally demanding epic in all of human literature: the Mahabharata.</p>
+        <div class="ev-list">
+          <div class="ev-item"><span class="ev-dot">🦚</span><div class="ev-text"><strong>Life of Lord Krishna</strong>The eighth Avatar of Vishnu — the supreme philosopher-king-friend. Unlike Rama's perfection, Krishna operates in a world of moral complexity, political intrigue, and competing loyalties. His teaching is not "be good and all will be well" but rather: understand dharma in its full complexity and act with wisdom and without attachment.</div></div>
+          <div class="ev-item"><span class="ev-dot">🎲</span><div class="ev-text"><strong>The Dice Game &amp; Draupadi's Dishonour</strong>The rigged game of dice in which Yudhishthira gambles away his brothers, himself, and finally his wife Draupadi — and the court's silence as Draupadi is publicly humiliated — is the Mahabharata's central act of injustice. It represents the failure of institutions and bystanders in the face of power. Every observer who stayed silent was complicit.</div></div>
+          <div class="ev-item"><span class="ev-dot">⚔️</span><div class="ev-text"><strong>The Kurukshetra War</strong>Eighteen days. Eleven akshauhinis of armies destroyed. The war tests every dharmic principle — when may one kill one's own teacher? Can a righteous end justify dishonourable means? What is the duty of a soldier who knows both sides? It is the original treatise on just war theory.</div></div>
+          <div class="ev-item"><span class="ev-dot">📖</span><div class="ev-text"><strong>The Bhagavad Gita</strong>On the first day of battle, Arjuna refuses to fight, paralysed by grief and moral confusion. Krishna's response — 18 chapters of philosophy — is the Bhagavad Gita. It covers duty, selfless action, knowledge, devotion, and the nature of the self. It remains the most read philosophical text in the world.</div></div>
+          <div class="ev-item"><span class="ev-dot">🕊️</span><div class="ev-text"><strong>Shantiparva — Bhishma's Final Counsel</strong>Mortally wounded on his arrows, Bhishma waits to die, and Yudhishthira approaches to learn the art of governance. Bhishma's vast discourse on kingship, justice, economics, and ethics — the Shantiparva — is one of the world's oldest and most complete treatises on political philosophy.</div></div>
+        </div>
+        <div class="takeaway">
+          <div class="takeaway-t">Moral Takeaway for Today</div>
+          <p class="takeaway-p">The Dvapara Yuga teaches that when dharma becomes contested, institutions must be strong enough to resist the powerful. The silence of Bhishma, Drona, and Vidura during Draupadi's humiliation is the eternal warning against institutional cowardice — when those with authority choose neutrality over justice, evil wins. For modern constitutionalism, the Mahabharata's central question — <em>what must the individual do when the state itself is unjust?</em> — maps directly onto the jurisprudence of civil disobedience, judicial review, and the right to resist tyranny.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="dv sr sr-s"><div class="dv-l"></div><span class="dv-g">⏳</span><div class="dv-l"></div></div>
+
+<!-- KALI YUGA -->
+<section class="yuga-blk" id="kali">
+  <div class="sw">
+    <div class="yb-inner rev">
+      <div class="yb-glyph sr sr-r">
+        <div class="yb-icon" style="animation-delay:1.5s">🌑</div>
+        <div class="dharma-bar-wrap">
+          <div class="dharma-label"><span>Dharma</span><span>25%</span></div>
+          <div class="dharma-bar"><div class="dharma-fill" style="width:25%;background:linear-gradient(90deg,#8B4513,#E8831A)"></div></div>
+        </div>
+      </div>
+      <div class="yb-content sr sr-l">
+        <div class="yb-num">04</div>
+        <div class="yb-badge">⏳ The Present Age · कलि युग</div>
+        <h2 class="yb-t">Kali Yuga</h2>
+        <p class="yb-deva">कलि युग · The Age of Discord &amp; Materialism</p>
+        <p class="bt">The fourth and present age, begun after the departure of Lord Krishna (traditionally ~3102 BCE). Dharma stands on only one leg: truth, barely. The age is characterised by the ascendancy of materialism, the shortening of life, the erosion of virtue, and the corruption of institutions. And yet — it also holds a unique promise.</p>
+        <div class="ev-list">
+          <div class="ev-item"><span class="ev-dot">🚶</span><div class="ev-text"><strong>Departure of Krishna &amp; Onset of Kali</strong>As Krishna departed the world, the age of discord descended. The Pandavas renounced their kingdom and undertook the Mahaprasthana (great departure). Parikshit, the last Kuru king, encountered Kali personified trying to harm a cow — the first symbolic act of the new age: the powerful preying on the defenceless.</div></div>
+          <div class="ev-item"><span class="ev-dot">📉</span><div class="ev-text"><strong>Decline of Dharma in Institutions</strong>The Puranas describe Kali Yuga as an age where rulers become thieves, priests become merchants, and merchants become robbers. Truthfulness, compassion, cleanliness, and charity — the four pillars of dharma — progressively weaken. This is not merely prophecy; it is a framework for recognising and resisting institutional decay.</div></div>
+          <div class="ev-item"><span class="ev-dot">⚡</span><div class="ev-text"><strong>The Promise of Kali Yuga</strong>Paradoxically, the texts also say that in Kali Yuga, liberation is more accessible than in any other age — because even a small sincere effort yields great fruit. The darkness makes even a small lamp visible from far. It is the age of maximum challenge and maximum opportunity for genuine dharmic action.</div></div>
+          <div class="ev-item"><span class="ev-dot">🐴</span><div class="ev-text"><strong>The Coming of Kalki</strong>At the nadir of the age — when darkness is total, when kings openly rob their people, when dharma has been all but extinguished — Vishnu descends as Kalki: mounted on a white horse, sword in hand, to destroy the forces of adharma and restart the great cycle. The age ends not in despair but in renewal.</div></div>
+        </div>
+        <div class="takeaway">
+          <div class="takeaway-t">Moral Takeaway for Today</div>
+          <p class="takeaway-p">The Kali Yuga framework is the most immediately applicable of all the Yugas. We are living it. The Puranic warning — that <em>when institutions designed to protect the weak instead serve the powerful, the foundations of civilisation are in danger</em> — is the central challenge of modern constitutional democracy. The promise is equally clear: even in the darkest age, a single individual who upholds dharma with courage sets off a chain reaction. Every honest judge, every truthful witness, every citizen who refuses to accept injustice silently, is an act of resistance against Kali. Nyay Mitra is built in this spirit.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="dv sr sr-s"><div class="dv-l"></div><span class="dv-g">🌀</span><div class="dv-l"></div></div>
+
+<!-- CONCLUSION -->
+<section class="concl">
+  <div class="sw">
+    <div class="concl-in">
+      <p class="ey sr sr-u" style="justify-content:center">Timeless Wisdom · शाश्वत ज्ञान</p>
+      <h2 class="st sr sr-u d1">Applying the Yuga Framework Today</h2>
+      <p class="bt sr sr-u d2" style="text-align:center">The Yuga cycle is not merely a cosmological theory. It is a living map of the dynamics of justice, power, and institutional integrity across time. The four Yugas describe four stages in the decay of trust — and the necessary response to each stage.</p>
+      <p class="bt sr sr-u d3" style="text-align:center">In Satya Yuga, truth is self-evident. In Treta Yuga, it requires the courage of one ideal king. In Dvapara Yuga, it requires the sacrifice of an entire generation. In Kali Yuga — our age — it requires every individual to become a guardian of dharma in their own sphere, however small.</p>
+      <p class="bt sr sr-u d4" style="text-align:center">The most important insight the texts offer: <strong style="color:var(--gold)">the arc of the moral universe is long, but it bends toward truth</strong> — because the cycle always returns to Satya. Justice, ultimately, is not optional. It is cosmological.</p>
+      <div style="margin-top:3rem;display:flex;gap:1.5rem;justify-content:center;flex-wrap:wrap" class="sr sr-u d4">
+        <a href="studies.html" style="position:relative;overflow:hidden;font-family:'Cinzel',serif;font-size:.78rem;letter-spacing:.18em;text-transform:uppercase;padding:.95rem 2.6rem;text-decoration:none;display:inline-block;clip-path:polygon(14px 0%,100% 0%,calc(100% - 14px) 100%,0% 100%);transition:transform .35s cubic-bezier(.22,1,.36,1),box-shadow .35s;font-weight:700;cursor:pointer;border:none;background:linear-gradient(135deg,var(--gold-lt),var(--gold),#b8862a);color:var(--ink)">Study the Texts →</a>
+        <a href="texts-hub.html" style="position:relative;overflow:hidden;font-family:'Cinzel',serif;font-size:.78rem;letter-spacing:.18em;text-transform:uppercase;padding:.95rem 2.6rem;text-decoration:none;display:inline-block;clip-path:polygon(14px 0%,100% 0%,calc(100% - 14px) 100%,0% 100%);transition:transform .35s cubic-bezier(.22,1,.36,1),box-shadow .35s;font-weight:700;cursor:pointer;border:none;background:transparent;color:var(--gold);box-shadow:inset 0 0 0 1px var(--gold-dk)">Explore Texts Hub →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <span class="ft-om">ॐ</span>
+  <div class="ft-br">Nyay Mitra</div>
+  <p class="ft-sb">न्याय मित्र · Friend of Justice · Companion of Dharma</p>
+  <div class="ft-gl"></div>
+  <div class="ft-lk">
+    <a href="index.html">Home</a>
+    <a href="studies.html">Studies</a>
+    <a href="yuga-events.html">Yuga Events</a>
+    <a href="texts-hub.html">Texts Hub</a>
+    <a href="modern-law.html">Modern Law</a>
+    <a href="https://dharma-verdict-livid.vercel.app/" target="_blank">Dharma Nyaya</a>
+    <a href="https://chatbot-1-three.vercel.app/" target="_blank">Dharma Upadeshak</a>
+  </div>
+  <p class="ft-cp">© 2025 Nyay Mitra · Crafted with Dharma &amp; Devotion · यतो धर्मस्ततो जयः</p>
+</footer>
+
+<script>
+const cur=document.getElementById('cur'),crng=document.getElementById('cur-r');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cur.style.left=mx+'px';cur.style.top=my+'px'});
+(function lc(){rx+=(mx-rx)*.12;ry+=(my-ry)*.12;crng.style.left=rx+'px';crng.style.top=ry+'px';requestAnimationFrame(lc)})();
+document.querySelectorAll('a,button').forEach(el=>{el.addEventListener('mouseenter',()=>{crng.style.width='58px';crng.style.height='58px';crng.style.borderColor='rgba(201,168,76,.85)';cur.style.transform='translate(-50%,-50%) scale(0)'});el.addEventListener('mouseleave',()=>{crng.style.width='34px';crng.style.height='34px';crng.style.borderColor='rgba(201,168,76,.5)';cur.style.transform='translate(-50%,-50%) scale(1)'})});
+const cv=document.getElementById('cv'),ctx=cv.getContext('2d');
+let W,H;function rsz(){W=cv.width=innerWidth;H=cv.height=innerHeight}rsz();addEventListener('resize',rsz);
+const STARS=Array.from({length:260},()=>({x:Math.random(),y:Math.random(),r:Math.random()*1.4+.2,o:Math.random()*.55+.08,ph:Math.random()*Math.PI*2,sp:Math.random()*.0013+.0003}));
+class Ember{constructor(){this.reset(true)}reset(init){this.x=(Math.random()*.7+.15)*W;this.y=init?Math.random()*H:H+20;this.vx=(Math.random()-.5)*.55;this.vy=-(Math.random()*1.3+.35);this.r=Math.random()*2.2+.4;this.life=0;this.max=Math.random()*200+130;this.hue=Math.random()*22+32}upd(){this.x+=this.vx;this.y+=this.vy;this.vx+=(Math.random()-.5)*.04;this.life++;if(this.life>=this.max||this.y<-10)this.reset()}draw(c){c.save();c.globalAlpha=(1-this.life/this.max)*.38;c.beginPath();c.arc(this.x,this.y,this.r,0,Math.PI*2);c.fillStyle=`hsl(${this.hue},${document.documentElement.classList.contains('light-mode')?'95':'90'}%,${document.documentElement.classList.contains('light-mode')?'50':'65'}%)`;c.shadowBlur=document.documentElement.classList.contains('light-mode')?12:9;c.shadowColor=`hsl(${this.hue},100%,${document.documentElement.classList.contains('light-mode')?'50':'60'}%)`;c.fill();c.restore()}}
+const EMBERS=Array.from({length:55},()=>new Ember());
+let pmx=W/2,pmy=H/2;addEventListener('mousemove',e=>{pmx=e.clientX;pmy=e.clientY});
+function frame(){ctx.clearRect(0,0,W,H);[[.25,.3,.4,'76,168,201'],[.8,.65,.32,'131,26,232'],[.5,.1,.22,'168,76,201']].forEach(([x,y,r,c])=>{const g=ctx.createRadialGradient(x*W,y*H,0,x*W,y*H,r*W);g.addColorStop(0,`rgba(${c},.045)`);g.addColorStop(1,'transparent');ctx.fillStyle=g;ctx.fillRect(0,0,W,H)});const ox=(pmx/W-.5)*28,oy=(pmy/H-.5)*16;STARS.forEach(s=>{s.ph+=s.sp;const gw=s.o+Math.sin(s.ph)*.16;ctx.beginPath();ctx.arc(s.x*W+ox,s.y*H+oy,s.r,0,Math.PI*2);ctx.fillStyle=`rgba(${document.documentElement.classList.contains('light-mode')?'201,168,76':'240,212,130'},${gw})`;if(s.r>1){ctx.shadowBlur=8;ctx.shadowColor=`rgba(${document.documentElement.classList.contains('light-mode')?'232,131,26,.6':'201,168,76'}, .6)`}ctx.fill();ctx.shadowBlur=0});EMBERS.forEach(e=>{e.upd();e.draw(ctx)});requestAnimationFrame(frame)}
+requestAnimationFrame(frame);
+const nav=document.getElementById('nav');addEventListener('scroll',()=>nav.classList.toggle('stuck',scrollY>60));
+const srEls=document.querySelectorAll('.sr');const sro=new IntersectionObserver(en=>{en.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');sro.unobserve(e.target)}})},{threshold:.1,rootMargin:'0px 0px -55px 0px'});srEls.forEach(el=>sro.observe(el));
+// Animate dharma bars on scroll
+const bars=document.querySelectorAll('.dharma-fill');const bo=new IntersectionObserver(en=>{en.forEach(e=>{if(e.isIntersecting){e.target.style.width=e.target.style.width;bo.unobserve(e.target)}})},{threshold:.5});bars.forEach(b=>{const w=b.style.width;b.style.width='0';setTimeout(()=>bo.observe(b),100)});
+// Theme toggle
+const themeToggle=document.getElementById('theme-toggle');const html=document.documentElement;const savedTheme=localStorage.getItem('theme')||'dark-mode';if(savedTheme==='light-mode'){html.classList.add('light-mode')}themeToggle.addEventListener('click',()=>{html.classList.toggle('light-mode');const isLight=html.classList.contains('light-mode');localStorage.setItem('theme',isLight?'light-mode':'dark-mode')});
+// Smooth anchor nav
+document.querySelectorAll('a[href^="#"]').forEach(a=>{a.addEventListener('click',e=>{e.preventDefault();document.querySelector(a.getAttribute('href'))?.scrollIntoView({behavior:'smooth'})})});
+</script>
+<script src="audio-sounds.js"></script>
+</body>
+</html>
