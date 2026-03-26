@@ -185,7 +185,7 @@ section{position:relative;z-index:2}
 #contributors{padding:5rem 0;position:relative;z-index:2;background:linear-gradient(135deg,rgba(201,168,76,.03),rgba(232,131,26,.02),rgba(201,168,76,.03))}
 .contr-hd{text-align:center;margin-bottom:3.5rem}
 .contr-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:2.5rem;max-width:1200px;margin:0 auto}
-.contr-card{background:linear-gradient(135deg,rgba(26,19,8,.6),rgba(35,26,10,.7));border:1px solid rgba(201,168,76,.15);clip-path:polygon(16px 0%,100% 0%,calc(100% - 16px) 100%,0% 100%);padding:2rem;text-align:center;transition:all .4s cubic-bezier(.22,1,.36,1);position:relative;overflow:hidden}
+.contr-card{background:linear-gradient(135deg,rgba(26,19,8,.6),rgba(35,26,10,.7));border:1px solid rgba(201,168,76,.15);clip-path:polygon(16px 0%,100% 0%,calc(100% - 16px) 100%,0% 100%);padding:1.8rem 1.5rem;text-align:center;transition:all .4s cubic-bezier(.22,1,.36,1);position:relative;overflow:hidden}
 .contr-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,transparent,rgba(201,168,76,.1),transparent);opacity:0;transition:opacity .4s;pointer-events:none}
 .contr-card:hover{border-color:rgba(201,168,76,.35);box-shadow:0 20px 60px rgba(201,168,76,.3),inset 0 1px 0 rgba(201,168,76,.15);transform:translateY(-8px)}
 .contr-card:hover::before{opacity:1}
@@ -193,16 +193,8 @@ section{position:relative;z-index:2}
 .contr-card:hover .contr-img{border-color:rgba(201,168,76,.6);box-shadow:0 0 30px rgba(201,168,76,.35)}
 .contr-name{font-family:'Cinzel',serif;font-size:1.1rem;letter-spacing:.08em;text-transform:uppercase;color:var(--gold-lt);margin-bottom:.4rem;display:block}
 .contr-role{font-family:'Noto Serif Devanagari',serif;font-size:.8rem;color:var(--saffron);letter-spacing:.06em;margin-bottom:1.2rem;opacity:.85}
-.contr-info{font-size:.85rem;line-height:1.8;color:var(--text-dim);margin-bottom:.8rem}
-.contr-info-row{display:flex;align-items:center;gap:.6rem;margin-bottom:.6rem;justify-content:center}
-.contr-info-row span:first-child{min-width:20px;text-align:center;color:var(--saffron);opacity:.7}
-.contr-email{color:var(--gold);text-decoration:none;word-break:break-all;transition:color .3s}
-.contr-email:hover{color:var(--gold-lt)}
-.contr-dept{color:var(--text-dim)}
-.contr-college{color:var(--saffron-lt);font-weight:500}
-.contr-social{display:flex;justify-content:center;gap:1rem;margin-top:1.5rem;padding-top:1.5rem;border-top:1px solid rgba(201,168,76,.1)}
-.contr-social a{width:36px;height:36px;border-radius:50%;border:1px solid rgba(201,168,76,.25);display:flex;align-items:center;justify-content:center;color:var(--gold);transition:all .3s;font-size:.9rem}
-.contr-social a:hover{background:rgba(201,168,76,.15);border-color:rgba(201,168,76,.5);box-shadow:0 0 15px rgba(201,168,76,.25);transform:scale(1.15)}
+.contr-info{display:none}
+.contr-social{display:none}
 
 /* ── FOOTER ── */
 footer{position:relative;z-index:2;padding:5rem 2.5rem 2.5rem;border-top:1px solid rgba(201,168,76,.12);text-align:center}
@@ -555,78 +547,21 @@ footer{position:relative;z-index:2;padding:5rem 2.5rem 2.5rem;border-top:1px sol
     <div class="contr-grid">
       <!-- Contributor 1 -->
       <div class="contr-card sr sr-u">
-        <div class="contr-img">👨‍💼</div>
-        <span class="contr-name">Contributor Name</span>
-        <span class="contr-role">Full Stack Developer</span>
-        <div class="contr-info">
-          <div class="contr-info-row">
-            <span>📧</span>
-            <a href="mailto:example@college.edu" class="contr-email">example@college.edu</a>
-          </div>
-          <div class="contr-info-row">
-            <span>🏫</span>
-            <span class="contr-dept">Computer Science</span>
-          </div>
-          <div class="contr-info-row">
-            <span>🎓</span>
-            <span class="contr-college">Your College Name</span>
-          </div>
-        </div>
-        <div class="contr-social">
-          <a href="#" title="GitHub" target="_blank">GH</a>
-          <a href="#" title="LinkedIn" target="_blank">LI</a>
-          <a href="#" title="Twitter" target="_blank">TW</a>
-        </div>
+        <div class="contr-img" style="background-image:url('Preetesh Kumar Singha.jpeg');background-size:cover;background-position:center"></div>
+        <span class="contr-name">Preetesh Kumar Singha</span>
+        <span class="contr-role">Visionary & Developer</span>
       </div>
       <!-- Contributor 2 -->
       <div class="contr-card sr sr-u d2">
-        <div class="contr-img">👩‍💼</div>
-        <span class="contr-name">Contributor Name</span>
-        <span class="contr-role">UI/UX Designer</span>
-        <div class="contr-info">
-          <div class="contr-info-row">
-            <span>📧</span>
-            <a href="mailto:example@college.edu" class="contr-email">example@college.edu</a>
-          </div>
-          <div class="contr-info-row">
-            <span>🏫</span>
-            <span class="contr-dept">Design & IT</span>
-          </div>
-          <div class="contr-info-row">
-            <span>🎓</span>
-            <span class="contr-college">Your College Name</span>
-          </div>
-        </div>
-        <div class="contr-social">
-          <a href="#" title="GitHub" target="_blank">GH</a>
-          <a href="#" title="LinkedIn" target="_blank">LI</a>
-          <a href="#" title="Twitter" target="_blank">TW</a>
-        </div>
+        <div class="contr-img" style="background-image:url('Rajat Kumar Panda .jpeg');background-size:cover;background-position:center"></div>
+        <span class="contr-name">Rajat Kumar Panda</span>
+        <span class="contr-role">Creator & Architect</span>
       </div>
       <!-- Contributor 3 -->
       <div class="contr-card sr sr-u d3">
-        <div class="contr-img">👨‍🎓</div>
-        <span class="contr-name">Contributor Name</span>
-        <span class="contr-role">Content Curator</span>
-        <div class="contr-info">
-          <div class="contr-info-row">
-            <span>📧</span>
-            <a href="mailto:example@college.edu" class="contr-email">example@college.edu</a>
-          </div>
-          <div class="contr-info-row">
-            <span>🏫</span>
-            <span class="contr-dept">Philosophy & Law</span>
-          </div>
-          <div class="contr-info-row">
-            <span>🎓</span>
-            <span class="contr-college">Your College Name</span>
-          </div>
-        </div>
-        <div class="contr-social">
-          <a href="#" title="GitHub" target="_blank">GH</a>
-          <a href="#" title="LinkedIn" target="_blank">LI</a>
-          <a href="#" title="Twitter" target="_blank">TW</a>
-        </div>
+        <div class="contr-img" style="background-image:url('Sk Sadat Hossen.jpeg');background-size:cover;background-position:center"></div>
+        <span class="contr-name">Sk Sadat Hossen</span>
+        <span class="contr-role">Builder & Innovator</span>
       </div>
     </div>
   </div>
