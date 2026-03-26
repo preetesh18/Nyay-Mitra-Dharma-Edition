@@ -193,7 +193,13 @@ section{position:relative;z-index:2}
 .contr-card:hover .contr-img{border-color:rgba(201,168,76,.6);box-shadow:0 0 30px rgba(201,168,76,.35)}
 .contr-name{font-family:'Cinzel',serif;font-size:1.1rem;letter-spacing:.08em;text-transform:uppercase;color:var(--gold-lt);margin-bottom:.4rem;display:block}
 .contr-role{font-family:'Noto Serif Devanagari',serif;font-size:.8rem;color:var(--saffron);letter-spacing:.06em;margin-bottom:1.2rem;opacity:.85}
-.contr-info{display:none}
+.contr-info{font-size:.85rem;line-height:1.8;color:var(--text-dim);margin-bottom:.8rem}
+.contr-info-row{display:flex;align-items:center;gap:.6rem;margin-bottom:.6rem;justify-content:center}
+.contr-info-row span:first-child{min-width:20px;text-align:center;color:var(--saffron);opacity:.7}
+.contr-email{color:var(--gold);text-decoration:none;word-break:break-all;transition:color .3s;font-size:.8rem}
+.contr-email:hover{color:var(--gold-lt)}
+.contr-dept{color:var(--text-dim)}
+.contr-college{color:var(--saffron-lt);font-weight:500}
 .contr-social{display:none}
 
 /* ── FOOTER ── */
@@ -545,23 +551,57 @@ footer{position:relative;z-index:2;padding:5rem 2.5rem 2.5rem;border-top:1px sol
       <p class="bt sr sr-u d2" style="text-align:center;max-width:600px;margin:0 auto">The visionaries and creators who bring the dharmic wisdom and justice education to life through their dedication and expertise.</p>
     </div>
     <div class="contr-grid">
-      <!-- Contributor 1 -->
+      <!-- Contributor 1 - Team Lead -->
       <div class="contr-card sr sr-u">
         <div class="contr-img" style="background-image:url('Preetesh Kumar Singha.jpeg');background-size:cover;background-position:center"></div>
         <span class="contr-name">Preetesh Kumar Singha</span>
-        <span class="contr-role">Visionary & Developer</span>
+        <span class="contr-role">Team Lead · Vision & Integration</span>
+        <div class="contr-info">
+          <p style="font-size:.75rem;color:var(--text-dim);line-height:1.5;margin-bottom:.8rem">Feature Integration, Architecture & Development</p>
+          <div class="contr-info-row">
+            <span>📧</span>
+            <a href="mailto:preeteshsingha66@gmail.com" class="contr-email">preeteshsingha66@gmail.com</a>
+          </div>
+        </div>
       </div>
-      <!-- Contributor 2 -->
+      <!-- Contributor 2 - Feature Builder -->
       <div class="contr-card sr sr-u d2">
+        <div class="contr-img" style="background-image:url('Srijan Kundu .jpeg');background-size:cover;background-position:center"></div>
+        <span class="contr-name">Srijan Kundu</span>
+        <span class="contr-role">Feature Builder</span>
+        <div class="contr-info">
+          <p style="font-size:.75rem;color:var(--text-dim);line-height:1.5;margin-bottom:.8rem">New Features & Functionality</p>
+          <div class="contr-info-row">
+            <span>📧</span>
+            <a href="mailto:srijankundu14@gmail.com" class="contr-email">srijankundu14@gmail.com</a>
+          </div>
+        </div>
+      </div>
+      <!-- Contributor 3 - Feature Builder & Tester -->
+      <div class="contr-card sr sr-u d3">
         <div class="contr-img" style="background-image:url('Rajat Kumar Panda .jpeg');background-size:cover;background-position:center"></div>
         <span class="contr-name">Rajat Kumar Panda</span>
-        <span class="contr-role">Creator & Architect</span>
+        <span class="contr-role">Feature Builder & Tester</span>
+        <div class="contr-info">
+          <p style="font-size:.75rem;color:var(--text-dim);line-height:1.5;margin-bottom:.8rem">Features Development & QA Testing</p>
+          <div class="contr-info-row">
+            <span>📧</span>
+            <a href="mailto:22052923@kiit.ac.in" class="contr-email">22052923@kiit.ac.in</a>
+          </div>
+        </div>
       </div>
-      <!-- Contributor 3 -->
-      <div class="contr-card sr sr-u d3">
+      <!-- Contributor 4 - Technical Writer -->
+      <div class="contr-card sr sr-u d4">
         <div class="contr-img" style="background-image:url('Sk Sadat Hossen.jpeg');background-size:cover;background-position:center"></div>
         <span class="contr-name">Sk Sadat Hossen</span>
-        <span class="contr-role">Builder & Innovator</span>
+        <span class="contr-role">Technical Writer</span>
+        <div class="contr-info">
+          <p style="font-size:.75rem;color:var(--text-dim);line-height:1.5;margin-bottom:.8rem">Documentation & Technical Content</p>
+          <div class="contr-info-row">
+            <span>📧</span>
+            <a href="mailto:sadathossen12345@gmail.com" class="contr-email">sadathossen12345@gmail.com</a>
+          </div>
+        </div>
       </div>
     </div>
   </div>
