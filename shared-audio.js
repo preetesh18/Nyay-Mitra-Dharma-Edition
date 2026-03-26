@@ -93,6 +93,9 @@ class SharedAudioManager{
     if(!this.isMuted){
       this.audioElement.volume=this.volume;
     }
+    if(document.getElementById('vol-slider')){
+      document.getElementById('vol-slider').value=Math.round(this.volume*100);
+    }
     this.saveAudioState();
   }
 

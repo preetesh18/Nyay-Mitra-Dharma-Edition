@@ -255,7 +255,7 @@ class SoundSystem {
   volumeUp() {
     const audio = document.getElementById('bg-music');
     if (!audio) return;
-    const newVol = Math.min(audio.volume + 0.1, 0.5);
+    const newVol = Math.min(audio.volume + 0.1, 1);
     this.setVolume(newVol);
     this.playClickSound('soft');
   }
@@ -272,7 +272,7 @@ class SoundSystem {
     const audio = document.getElementById('bg-music');
     if (!audio) return;
     
-    this.bgMusicVolume = Math.max(0, Math.min(vol, 0.5));
+    this.bgMusicVolume = Math.max(0, Math.min(vol, 1));
     if (!this.isMuted) {
       audio.volume = this.bgMusicVolume;
     }
