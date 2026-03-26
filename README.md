@@ -55,7 +55,7 @@ A beautifully designed, immersive web application dedicated to exploring dharmic
    - Pure static HTML, CSS, and JavaScript
 
 3. **Test Login:**
-   - Username: `demo`
+   - Username: `Admin`
    - Password: `password123`
    - Or register a new account
 
