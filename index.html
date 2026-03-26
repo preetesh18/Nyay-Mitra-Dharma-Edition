@@ -231,7 +231,10 @@ footer{position:relative;z-index:2;padding:5rem 2.5rem 2.5rem;border-top:1px sol
     <li><a href="yuga-events.html">Yugas</a></li>
     <li><a href="texts-hub.html">Texts Hub</a></li>
   </ul>
-  <button id="theme-toggle"></button>
+  <div style="display:flex;gap:1rem;align-items:center">
+    <button id="logout-btn" style="background:rgba(232,131,26,.15);border:1px solid rgba(232,131,26,.3);color:var(--saffron);padding:.4rem .8rem;border-radius:20px;cursor:pointer;font-family:'Cinzel',serif;font-size:.65rem;letter-spacing:.12em;text-transform:uppercase;transition:all .3s;display:none">Logout</button>
+    <button id="theme-toggle"></button>
+  </div>
 </nav>
 
 <!-- HERO -->
@@ -631,6 +634,19 @@ document.querySelectorAll('a[href^="#"]').forEach(a=>{
 
 /* ── THEME TOGGLE ── */
 const themeToggle=document.getElementById('theme-toggle');const html=document.documentElement;const savedTheme=localStorage.getItem('theme')||'dark-mode';if(savedTheme==='light-mode'){html.classList.add('light-mode')}themeToggle.addEventListener('click',()=>{html.classList.toggle('light-mode');const isLight=html.classList.contains('light-mode');localStorage.setItem('theme',isLight?'light-mode':'dark-mode')});
+</script>
+<script src="auth.js"></script>
+<script src="shared-audio.js"></script>
+<script>
+// ── AUTH CHECK ──
+if(!isLoggedIn()){window.location.href='login.html'}
+window.addEventListener('load',()=>{
+  const logoutBtn=document.getElementById('logout-btn');
+  if(isLoggedIn()){logoutBtn.style.display='block'}
+  logoutBtn.addEventListener('click',logout);
+  initializeSharedAudio();
+  getSharedAudio().start();
+});
 </script>
 <script src="audio-sounds.js"></script>
 </body>

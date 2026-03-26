@@ -1,0 +1,9 @@
+{
+  "rewrites": [
+    { "source": "/modern-law", "destination": "/modern-law.html" },
+    { "source": "/studies", "destination": "/studies.html" },
+    { "source": "/yuga-events", "destination": "/yuga-events.html" },
+    { "source": "/texts-hub", "destination": "/texts-hub.html" },
+    { "source": "/login", "destination": "/login.html" }
+  ]
+}
