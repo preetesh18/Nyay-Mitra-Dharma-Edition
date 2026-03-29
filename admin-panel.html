@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Panel - Nyay Mitra</title>
+  <style>
+    :root {
+      --gold: #C9A84C;
+      --gold-lt: #F0D483;
+      --saffron: #E8831A;
+      --cream: #F5E8CA;
+      --ink: #080604;
+      --ink2: #100C06;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: linear-gradient(135deg, #0a0410, #0f0614);
+      color: var(--cream);
+      font-family: 'EB Garamond', serif;
+      min-height: 100vh;
+    }
+
+    .navbar {
+      background: rgba(26, 19, 8, 0.9);
+      border-bottom: 1px solid rgba(201, 168, 76, 0.3);
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .navbar-brand {
+      font-size: 1.5rem;
+      color: var(--gold-lt);
+      font-weight: bold;
+    }
+
+    .nav-buttons {
+      display: flex;
+      gap: 1rem;
+    }
+
+    .btn {
+      padding: 0.6rem 1.2rem;
+      background: linear-gradient(135deg, var(--gold-lt), var(--gold));
+      color: var(--ink);
+      border: none;
+      cursor: pointer;
+      font-family: 'Cinzel', serif;
+      font-weight: 600;
+      border-radius: 4px;
+      transition: all 0.3s;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(201, 168, 76, 0.4);
+    }
+
+    .btn-danger {
+      background: linear-gradient(135deg, #E8831A, #FF9933);
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .card {
+      background: linear-gradient(135deg, rgba(26, 19, 8, 0.8), rgba(35, 26, 10, 0.9));
+      border: 1px solid rgba(201, 168, 76, 0.25);
+      padding: 1.5rem;
+      border-radius: 8px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    }
+
+    .stat-card {
+      border-top: 3px solid var(--gold);
+    }
+
+    .stat-number {
+      font-size: 2.5rem;
+      color: var(--gold-lt);
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+    }
+
+    .stat-label {
+      color: var(--cream);
+      font-size: 0.9rem;
+      opacity: 0.8;
+    }
+
+    .section-title {
+      font-size: 1.5rem;
+      color: var(--gold-lt);
+      margin-bottom: 1rem;
+      border-bottom: 2px solid rgba(201, 168, 76, 0.3);
+      padding-bottom: 0.5rem;
+    }
+
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+      font-size: 0.9rem;
+    }
+
+    .data-table thead {
+      background: rgba(201, 168, 76, 0.1);
+      border-bottom: 2px solid var(--gold);
+    }
+
+    .data-table th {
+      padding: 1rem;
+      text-align: left;
+      color: var(--gold-lt);
+      font-weight: bold;
+    }
+
+    .data-table td {
+      padding: 0.8rem 1rem;
+      border-bottom: 1px solid rgba(201, 168, 76, 0.15);
+    }
+
+    .data-table tbody tr:hover {
+      background: rgba(201, 168, 76, 0.05);
+    }
+
+    .tabs {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+      border-bottom: 1px solid rgba(201, 168, 76, 0.2);
+      flex-wrap: wrap;
+    }
+
+    .tab-btn {
+      padding: 0.8rem 1.2rem;
+      background: transparent;
+      color: var(--cream);
+      border: none;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: all 0.3s;
+      font-family: 'Cinzel', serif;
+    }
+
+    .tab-btn.active {
+      color: var(--gold-lt);
+      border-bottom-color: var(--gold);
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    .chart-container {
+      background: rgba(0, 0, 0, 0.3);
+      padding: 1.5rem;
+      border-radius: 8px;
+      margin-bottom: 1.5rem;
+    }
+
+    .search-box {
+      margin-bottom: 1rem;
+    }
+
+    .search-box input {
+      width: 100%;
+      padding: 0.8rem;
+      background: rgba(255, 254, 249, 0.05);
+      border: 1px solid rgba(201, 168, 76, 0.2);
+      color: var(--cream);
+      border-radius: 4px;
+    }
+
+    .search-box input::placeholder {
+      color: rgba(196, 170, 128, 0.5);
+    }
+
+    .success-msg, .error-msg {
+      padding: 1rem;
+      border-radius: 4px;
+      margin-bottom: 1rem;
+      animation: slideIn 0.4s ease;
+    }
+
+    .success-msg {
+      background: rgba(201, 168, 76, 0.2);
+      border: 1px solid rgba(201, 168, 76, 0.4);
+      color: var(--gold-lt);
+    }
+
+    .error-msg {
+      background: rgba(232, 131, 26, 0.2);
+      border: 1px solid rgba(232, 131, 26, 0.4);
+      color: var(--saffron);
+    }
+
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 2rem;
+      opacity: 0.6;
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-bottom: 1rem;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        padding: 1rem;
+      }
+      .dashboard-grid {
+        grid-template-columns: 1fr;
+      }
+      .data-table {
+        font-size: 0.8rem;
+      }
+      .data-table th, .data-table td {
+        padding: 0.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<div class="navbar">
+  <div class="navbar-brand">ॐ Admin Panel - Nyay Mitra</div>
+  <div class="nav-buttons">
+    <button class="btn" onclick="exportData()">📥 Export Data</button>
+    <button class="btn btn-danger" onclick="logout()">🚪 Logout</button>
+  </div>
+</div>
+
+<!-- CONTAINER -->
+<div class="container">
+  <!-- MESSAGE -->
+  <div id="message"></div>
+
+  <!-- STATS DASHBOARD -->
+  <div class="dashboard-grid">
+    <div class="card stat-card">
+      <div class="stat-number" id="totalLogins">0</div>
+      <div class="stat-label">Total Login Sessions</div>
+    </div>
+    <div class="card stat-card">
+      <div class="stat-number" id="uniqueUsers">0</div>
+      <div class="stat-label">Unique Users</div>
+    </div>
+    <div class="card stat-card">
+      <div class="stat-number" id="cachedQueries">0</div>
+      <div class="stat-label">Cached Queries</div>
+    </div>
+    <div class="card stat-card">
+      <div class="stat-number" id="totalQueries">0</div>
+      <div class="stat-label">Training Records</div>
+    </div>
+    <div class="card stat-card">
+      <div class="stat-number" id="avgSatisfaction">0</div>
+      <div class="stat-label">Avg Satisfaction (1-5)</div>
+    </div>
+    <div class="card stat-card">
+      <div class="stat-number" id="avgResponseTime">0ms</div>
+      <div class="stat-label">Avg Response Time</div>
+    </div>
+  </div>
+
+  <!-- TABS -->
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab(event, 'overview')">📊 Overview</button>
+    <button class="tab-btn" onclick="switchTab(event, 'login-logs')">🔐 Login Logs</button>
+    <button class="tab-btn" onclick="switchTab(event, 'query-cache')">⚡ Query Cache</button>
+    <button class="tab-btn" onclick="switchTab(event, 'training-data')">🎓 Training Data</button>
+    <button class="tab-btn" onclick="switchTab(event, 'analytics')">📈 Analytics</button>
+  </div>
+
+  <!-- TAB: OVERVIEW -->
+  <div id="overview" class="tab-content active">
+    <h2 class="section-title">System Overview</h2>
+    
+    <div class="card">
+      <h3 style="color: var(--gold-lt); margin-bottom: 1rem;">🔍 Quick Stats</h3>
+      
+      <div class="chart-container">
+        <h4 style="color: var(--gold); margin-bottom: 1rem;">Login Statistics</h4>
+        <p><strong>Total Sessions:</strong> <span id="overview-totalLogins">-</span></p>
+        <p><strong>Unique Users:</strong> <span id="overview-uniqueUsers">-</span></p>
+        <p><strong>Last Updated:</strong> <span id="overview-lastUpdated">-</span></p>
+      </div>
+
+      <div class="chart-container">
+        <h4 style="color: var(--gold); margin-bottom: 1rem;">Query Statistics</h4>
+        <p><strong>Total Queries:</strong> <span id="overview-totalQueries">-</span></p>
+        <p><strong>Cached Solutions:</strong> <span id="overview-cachedQueries">-</span></p>
+        <p><strong>Cache Hit Rate:</strong> <span id="overview-cacheHitRate">-</span>%</p>
+      </div>
+
+      <div class="chart-container">
+        <h4 style="color: var(--gold); margin-bottom: 1rem;">Performance Metrics</h4>
+        <p><strong>Avg Response Time:</strong> <span id="overview-avgResponseTime">-</span> ms</p>
+        <p><strong>Avg User Satisfaction:</strong> <span id="overview-avgSatisfaction">-</span> / 5</p>
+        <p><strong>Error Rate:</strong> <span id="overview-errorRate">-</span>%</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB: LOGIN LOGS -->
+  <div id="login-logs" class="tab-content">
+    <h2 class="section-title">🔐 User Login Logs</h2>
+    
+    <div class="card">
+      <div class="action-buttons">
+        <button class="btn" onclick="refreshLoginLogs()">🔄 Refresh</button>
+        <button class="btn btn-danger" onclick="clearLoginLogs()">🗑️ Clear Logs</button>
+      </div>
+
+      <div class="search-box">
+        <input type="text" id="loginSearch" placeholder="Search by username..." onkeyup="filterTable('loginTable', 'loginSearch')">
+      </div>
+
+      <table class="data-table" id="loginTable">
+        <thead>
+          <tr>
+            <th>Username</th>
+            <th>Login Time</th>
+            <th>Logout Time</th>
+            <th>Duration (sec)</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="loginTableBody">
+          <tr><td colspan="5" class="empty-state">Loading login logs...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- TAB: QUERY CACHE -->
+  <div id="query-cache" class="tab-content">
+    <h2 class="section-title">⚡ Query Cache & Solutions</h2>
+    
+    <div class="card">
+      <div class="action-buttons">
+        <button class="btn" onclick="refreshQueryCache()">🔄 Refresh</button>
+        <button class="btn btn-danger" onclick="clearQueryCache()">🗑️ Clear Cache</button>
+      </div>
+
+      <div class="search-box">
+        <input type="text" id="cacheSearch" placeholder="Search queries..." onkeyup="filterTable('cacheTable', 'cacheSearch')">
+      </div>
+
+      <table class="data-table" id="cacheTable">
+        <thead>
+          <tr>
+            <th>Query</th>
+            <th>Category</th>
+            <th>Usage Count</th>
+            <th>Users Accessed</th>
+            <th>Relevance</th>
+          </tr>
+        </thead>
+        <tbody id="cacheTableBody">
+          <tr><td colspan="5" class="empty-state">Loading query cache...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- TAB: TRAINING DATA -->
+  <div id="training-data" class="tab-content">
+    <h2 class="section-title">🎓 ML Training Data</h2>
+    
+    <div class="card">
+      <div class="action-buttons">
+        <button class="btn" onclick="refreshTrainingData()">🔄 Refresh</button>
+      </div>
+
+      <div class="search-box">
+        <input type="text" id="trainingSearch" placeholder="Search queries..." onkeyup="filterTable('trainingTable', 'trainingSearch')">
+      </div>
+
+      <table class="data-table" id="trainingTable">
+        <thead>
+          <tr>
+            <th>Query Text</th>
+            <th>Query Type</th>
+            <th>Category</th>
+            <th>Satisfaction</th>
+            <th>Response Time (ms)</th>
+          </tr>
+        </thead>
+        <tbody id="trainingTableBody">
+          <tr><td colspan="5" class="empty-state">Loading training data...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- TAB: ANALYTICS -->
+  <div id="analytics" class="tab-content">
+    <h2 class="section-title">📈 Analytics & Insights</h2>
+    
+    <div class="card">
+      <div class="chart-container">
+        <h4 style="color: var(--gold); margin-bottom: 1rem;">Query Types Distribution</h4>
+        <div id="queryTypeChart"></div>
+      </div>
+
+      <div class="chart-container">
+        <h4 style="color: var(--gold); margin-bottom: 1rem;">Category Distribution</h4>
+        <div id="categoryChart"></div>
+      </div>
+
+      <div class="chart-container">
+        <h4 style="color: var(--gold); margin-bottom: 1rem;">Top Features Used</h4>
+        <div id="featuresChart"></div>
+      </div>
+
+      <div class="chart-container">
+        <h4 style="color: var(--gold); margin-bottom: 1rem;">User Engagement</h4>
+        <div id="engagementChart"></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- SCRIPTS -->
+<script src="auth.js"></script>
+<script>
+// Check if admin
+window.addEventListener('load', () => {
+  if(!isAdmin()){
+    alert('⛔ Access Denied: Admin access required');
+    window.location.href = 'login.html';
+    return;
+  }
+  
+  loadDashboardData();
+  
+  // Auto-refresh every 30 seconds
+  setInterval(loadDashboardData, 30000);
+});
+
+// Load all dashboard data
+function loadDashboardData(){
+  updateStats();
+  refreshLoginLogs();
+  refreshQueryCache();
+  refreshTrainingData();
+  generateAnalytics();
+}
+
+// UPDATE STATS
+function updateStats(){
+  const logs = getLoginLogs();
+  const cache = getQueryCache();
+  const training = getTrainingData();
+  
+  if(logs){
+    document.getElementById('totalLogins').textContent = logs.summary?.totalLogins || 0;
+    document.getElementById('uniqueUsers').textContent = logs.summary?.uniqueUsers || 0;
+    document.getElementById('overview-totalLogins').textContent = logs.summary?.totalLogins || 0;
+    document.getElementById('overview-uniqueUsers').textContent = logs.summary?.uniqueUsers || 0;
+    document.getElementById('overview-lastUpdated').textContent = formatDate(logs.summary?.lastUpdated);
+  }
+  
+  if(cache){
+    document.getElementById('cachedQueries').textContent = cache.metadata?.totalCacheItems || 0;
+    document.getElementById('overview-cachedQueries').textContent = cache.metadata?.totalCacheItems || 0;
+    document.getElementById('overview-cacheHitRate').textContent = ((cache.metadata?.hitRate || 0) * 100).toFixed(1);
+  }
+  
+  if(training){
+    document.getElementById('totalQueries').textContent = training.statistics?.totalQueries || 0;
+    document.getElementById('avgSatisfaction').textContent = (training.statistics?.averageSatisfactionScore || 0).toFixed(2);
+    document.getElementById('avgResponseTime').textContent = Math.round(training.statistics?.averageResponseTime || 0) + 'ms';
+    
+    document.getElementById('overview-totalQueries').textContent = training.statistics?.totalQueries || 0;
+    document.getElementById('overview-avgSatisfaction').textContent = (training.statistics?.averageSatisfactionScore || 0).toFixed(2);
+    document.getElementById('overview-avgResponseTime').textContent = Math.round(training.statistics?.averageResponseTime || 0);
+    document.getElementById('overview-errorRate').textContent = ((training.statistics?.errorRate || 0) * 100).toFixed(2);
+  }
+}
+
+// LOGIN LOGS
+function refreshLoginLogs(){
+  const logs = getLoginLogs();
+  const tbody = document.getElementById('loginTableBody');
+  
+  if(!logs || logs.logs.length === 0){
+    tbody.innerHTML = '<tr><td colspan="5" class="empty-state">No login logs found</td></tr>';
+    return;
+  }
+  
+  tbody.innerHTML = logs.logs.map(log => `
+    <tr>
+      <td>${escapeHtml(log.username)}</td>
+      <td>${formatDate(log.loginTime)}</td>
+      <td>${log.logoutTime ? formatDate(log.logoutTime) : 'Still logged in'}</td>
+      <td>${log.sessionDuration ? Math.round(log.sessionDuration) : '-'}</td>
+      <td><span style="color: var(--gold-lt);">${log.status}</span></td>
+    </tr>
+  `).join('');
+}
+
+// QUERY CACHE
+function refreshQueryCache(){
+  const cache = getQueryCache();
+  const tbody = document.getElementById('cacheTableBody');
+  
+  if(!cache || cache.cache.length === 0){
+    tbody.innerHTML = '<tr><td colspan="5" class="empty-state">No cached queries found</td></tr>';
+    return;
+  }
+  
+  tbody.innerHTML = cache.cache.map(item => `
+    <tr>
+      <td>${escapeHtml(item.query.substring(0, 50))}...</td>
+      <td>${item.category}</td>
+      <td>${item.usageCount}</td>
+      <td>${item.usersAccessed.join(', ')}</td>
+      <td>${(item.relevanceScore * 100).toFixed(0)}%</td>
+    </tr>
+  `).join('');
+}
+
+// TRAINING DATA
+function refreshTrainingData(){
+  const training = getTrainingData();
+  const tbody = document.getElementById('trainingTableBody');
+  
+  if(!training || training.trainingData.length === 0){
+    tbody.innerHTML = '<tr><td colspan="5" class="empty-state">No training data found</td></tr>';
+    return;
+  }
+  
+  tbody.innerHTML = training.trainingData.map(item => `
+    <tr>
+      <td>${escapeHtml(item.queryText.substring(0, 50))}...</td>
+      <td>${item.queryType}</td>
+      <td>${item.category}</td>
+      <td>${item.userSatisfaction}/5</td>
+      <td>${item.responseTime}</td>
+    </tr>
+  `).join('');
+}
+
+// GENERATE ANALYTICS
+function generateAnalytics(){
+  const training = getTrainingData();
+  
+  if(!training) return;
+  
+  // Query Types
+  const queryTypes = training.queryTypeDistribution;
+  let queryTypeHtml = '<ul style="list-style: none; padding: 0;">';
+  for(let type in queryTypes){
+    queryTypeHtml += `<li style="padding: 0.3rem;"><strong>${type}</strong>: ${queryTypes[type]}</li>`;
+  }
+  queryTypeHtml += '</ul>';
+  document.getElementById('queryTypeChart').innerHTML = queryTypeHtml;
+  
+  // Categories
+  const categories = training.categoryDistribution;
+  let categoryHtml = '<ul style="list-style: none; padding: 0;">';
+  for(let cat in categories){
+    categoryHtml += `<li style="padding: 0.3rem;"><strong>${cat}</strong>: ${categories[cat]}</li>`;
+  }
+  categoryHtml += '</ul>';
+  document.getElementById('categoryChart').innerHTML = categoryHtml;
+  
+  // Features
+  const features = training.statistics?.topFeatures || [];
+  let featuresHtml = '<ul style="list-style: none; padding: 0;">';
+  features.forEach(f => {
+    featuresHtml += `<li style="padding: 0.3rem;">📌 ${f}</li>`;
+  });
+  featuresHtml += '</ul>';
+  document.getElementById('featuresChart').innerHTML = featuresHtml || '<p>No feature data</p>';
+  
+  // Engagement
+  const engagementHtml = `
+    <p><strong>Total Queries:</strong> ${training.statistics?.totalQueries}</p>
+    <p><strong>Avg Response Time:</strong> ${Math.round(training.statistics?.averageResponseTime || 0)}ms</p>
+    <p><strong>Cache Hit Rate:</strong> ${((training.statistics?.cacheHitRate || 0) * 100).toFixed(1)}%</p>
+    <p><strong>User Satisfaction:</strong> ${(training.statistics?.averageSatisfactionScore || 0).toFixed(2)}/5</p>
+  `;
+  document.getElementById('engagementChart').innerHTML = engagementHtml;
+}
+
+// TAB SWITCHING
+function switchTab(e, tabName){
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  
+  document.getElementById(tabName).classList.add('active');
+  e.target.classList.add('active');
+}
+
+// CLEAR FUNCTIONS
+function clearLoginLogs(){
+  if(confirm('⚠️ Clear all login logs? This cannot be undone.')){
+    localStorage.setItem('nyay-login-logs', JSON.stringify({logs: [], summary: {totalLogins: 0, uniqueUsers: 0, lastUpdated: new Date().toISOString()}}));
+    showMessage('✅ Login logs cleared', 'success');
+    refreshLoginLogs();
+    updateStats();
+  }
+}
+
+function clearQueryCache(){
+  if(confirm('⚠️ Clear all cached queries? This cannot be undone.')){
+    const emptyCache = {
+      cache: [],
+      metadata: {
+        totalCacheItems: 0,
+        hitRate: 0,
+        lastUpdated: new Date().toISOString()
+      }
+    };
+    localStorage.setItem('nyay-query-cache', JSON.stringify(emptyCache));
+    showMessage('✅ Query cache cleared', 'success');
+    refreshQueryCache();
+    updateStats();
+  }
+}
+
+// UTILITY FUNCTIONS
+function formatDate(dateStr){
+  if(!dateStr) return '-';
+  return new Date(dateStr).toLocaleString();
+}
+
+function escapeHtml(text){
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
+
+function filterTable(tableId, searchId){
+  const input = document.getElementById(searchId);
+  const filter = input.value.toLowerCase();
+  const table = document.getElementById(tableId);
+  const rows = table.getElementsByTagName('tr');
+  
+  for(let i = 1; i < rows.length; i++){
+    const text = rows[i].textContent.toLowerCase();
+    rows[i].style.display = text.includes(filter) ? '' : 'none';
+  }
+}
+
+function showMessage(msg, type){
+  const msgDiv = document.getElementById('message');
+  msgDiv.innerHTML = `<div class="${type}-msg">${msg}</div>`;
+  setTimeout(() => msgDiv.innerHTML = '', 3000);
+}
+
+function exportData(){
+  exportAllData();
+  showMessage('📥 Exporting data...', 'success');
+}
+
+function logout(){
+  if(confirm('Logout?')){
+    logUserLogout();
+    localStorage.removeItem('nyay-admin-logged-in');
+    window.location.href = 'login.html';
+  }
+}
+</script>
+
+</body>
+</html>

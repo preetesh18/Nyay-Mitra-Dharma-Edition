@@ -73,8 +73,13 @@ function handleLogin(){
     logUserLogin(username);
     showMessage(messageDiv,'✓ Login successful! Redirecting...','success');
     startSharedAudio();
+    
+    // Check if admin and redirect accordingly
+    const isAdminUser = users[username].role === 'administrator';
+    const redirectUrl = isAdminUser ? 'admin-panel.html' : 'index.html';
+    
     setTimeout(()=>{
-      window.location.href='index.html';
+      window.location.href = redirectUrl;
     },800);
   }else{
     console.log('❌ Login failed - Invalid credentials');
