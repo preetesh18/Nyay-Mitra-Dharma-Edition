@@ -9,7 +9,7 @@
 
 ### 1. Admin Account
 - **Username:** `admin`
-- **Password:** `admin7978`
+- **Password:** `admin123`
 - **Role:** Administrator
 - **Credentials stored in:** `admin-config.json` (base64 encoded password)
 
@@ -294,7 +294,7 @@ training-data.json         → Training data backup
 ### Login as Admin
 ```
 Username: admin
-Password: admin7978
+Password: admin123
 ```
 
 ### Check Admin Status (Browser Console)
@@ -421,7 +421,7 @@ See `integration-guide.md` for 10 detailed patterns.
 
 ## 📋 Checklist
 
-- ✅ Admin account created (admin/admin7978)
+- ✅ Admin account created (admin/admin123)
 - ✅ Login logs system implemented
 - ✅ Query cache system implemented
 - ✅ Training data collection implemented

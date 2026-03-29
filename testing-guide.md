@@ -5,7 +5,7 @@
 1. Visit login page
 2. Enter credentials:
    - Username: `admin`
-   - Password: `admin7978`
+   - Password: `admin123`
 3. Verify login successful
 4. Should see admin access in browser console
 
@@ -273,7 +273,7 @@ const users = JSON.parse(localStorage.getItem('nyay-users'));
 console.log(users);
 
 // Should show:
-// admin: password is "YWRtaW43OTc4" (base64 of admin7978)
+// admin: password is "YWRtaW4xMjM=" (base64 of admin123)
 // demo: password is "cGFzc3dvcmQxMjM=" (base64 of password123)
 ```
 

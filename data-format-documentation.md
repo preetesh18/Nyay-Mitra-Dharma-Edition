@@ -4,7 +4,7 @@
 
 ```
 Username: admin
-Password: admin7978
+Password: admin123
 Role: administrator
 ```
 

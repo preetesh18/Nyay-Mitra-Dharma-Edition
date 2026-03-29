@@ -4,7 +4,7 @@
 
 | Account | Username | Password |
 |---------|----------|----------|
-| Admin | `admin` | `admin7978` |
+| Admin | `admin` | `admin123` |
 | Demo | `demo` | `password123` |
 
 ---

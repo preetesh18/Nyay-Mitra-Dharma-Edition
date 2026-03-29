@@ -31,7 +31,7 @@
 
 ```
 Username: admin
-Password: admin7978
+Password: admin123
 ```
 
 ✅ **Stored in localStorage on first load**  
@@ -76,7 +76,7 @@ All data stored in **JSON format only**:
 
 - [ ] **Test Login as Admin**
   - [ ] Navigate to login page
-  - [ ] Enter: admin / admin7978
+  - [ ] Enter: admin / admin123
   - [ ] Should login successfully
   
 - [ ] **Test Login Logging**
@@ -197,7 +197,7 @@ nyay-last-query         → Last query made
 
 ## 🎯 Features Verified
 
-- [x] Admin account created (admin/admin7978)
+- [x] Admin account created (admin/admin123)
 - [x] Admin credentials stored (base64 encoded)
 - [x] Login logging implemented (auto-called)
 - [x] Query caching implemented
@@ -319,7 +319,7 @@ Before deploying, verify:
 ```
 Status: ✅ READY FOR DEPLOYMENT
 
-✅ Admin account: admin/admin7978
+✅ Admin account: admin/admin123
 ✅ Login logging: ACTIVE
 ✅ Query caching: ACTIVE
 ✅ Training data: ACTIVE

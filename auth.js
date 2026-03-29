@@ -18,7 +18,7 @@ function initializeAuth(){
   if(!users['admin']){
     users['admin']={
       username:'admin',
-      password:btoa('admin7978'),
+      password:btoa('admin123'),
       createdAt:new Date().toISOString(),
       role:'administrator',
       permissions:['view_login_logs','view_query_cache','view_training_data','manage_users','export_data','clear_cache']

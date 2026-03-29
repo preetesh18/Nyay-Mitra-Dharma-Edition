@@ -10,7 +10,7 @@
 ### Admin Login
 ```
 Username: admin
-Password: admin7978
+Password: admin123
 ```
 
 ### Access Admin Features (Browser Console - F12)
