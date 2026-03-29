@@ -1,0 +1,18 @@
+{
+  "admin": {
+    "username": "admin",
+    "password": "YWRtaW43OTc4",
+    "role": "administrator",
+    "createdAt": "2026-03-30T00:00:00Z",
+    "lastLogin": null,
+    "loginCount": 0,
+    "permissions": [
+      "view_login_logs",
+      "view_query_cache",
+      "view_training_data",
+      "manage_users",
+      "export_data",
+      "clear_cache"
+    ]
+  }
+}

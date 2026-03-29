@@ -1,0 +1,20 @@
+{
+  "logs": [
+    {
+      "id": 1,
+      "username": "demo",
+      "loginTime": "2026-03-30T10:00:00Z",
+      "logoutTime": null,
+      "status": "success",
+      "ipAddress": "local",
+      "userAgent": "browser",
+      "sessionDuration": null
+    }
+  ],
+  "summary": {
+    "totalLogins": 1,
+    "uniqueUsers": 1,
+    "failedAttempts": 0,
+    "lastUpdated": "2026-03-30T10:00:00Z"
+  }
+}

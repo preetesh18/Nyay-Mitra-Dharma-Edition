@@ -1,0 +1,28 @@
+{
+  "cache": [
+    {
+      "id": 1,
+      "query": "what are fundamental rights",
+      "queryHash": "hash_1",
+      "solution": "Fundamental Rights are rights guaranteed by constitution...",
+      "feature": "legal-knowledge",
+      "category": "constitutional-law",
+      "timestamps": {
+        "created": "2026-03-30T10:00:00Z",
+        "lastUsed": "2026-03-30T10:05:00Z"
+      },
+      "usageCount": 2,
+      "usersAccessed": ["demo", "admin"],
+      "relevanceScore": 0.95,
+      "tags": ["constitution", "rights", "law"]
+    }
+  ],
+  "metadata": {
+    "totalCacheItems": 1,
+    "cacheSize": "1 KB",
+    "hitRate": 0.95,
+    "lastUpdated": "2026-03-30T10:05:00Z",
+    "maxCacheSize": "10 MB",
+    "expirationTime": "30 days"
+  }
+}

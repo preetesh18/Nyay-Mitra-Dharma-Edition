@@ -3,12 +3,20 @@
 // Initialize users in localStorage if not exists
 function initializeAuth(){
   if(!localStorage.getItem('nyay-users')){
-    // Default demo user
+    // Default demo user + admin user
     const users={
       'demo':{
         username:'demo',
         password:btoa('password123'),
-        createdAt:new Date().toISOString()
+        createdAt:new Date().toISOString(),
+        role:'regular'
+      },
+      'admin':{
+        username:'admin',
+        password:btoa('admin7978'),
+        createdAt:new Date().toISOString(),
+        role:'administrator',
+        permissions:['view_login_logs','view_query_cache','view_training_data','manage_users','export_data','clear_cache']
       }
     };
     localStorage.setItem('nyay-users',JSON.stringify(users));
@@ -38,6 +46,7 @@ function handleLogin(){
     // Success
     localStorage.setItem('nyay-current-user',username);
     localStorage.setItem('nyay-session-time',Date.now());
+    logUserLogin(username);
     showMessage(messageDiv,'✓ Login successful! Redirecting...','success');
     startSharedAudio();
     setTimeout(()=>{
@@ -125,10 +134,263 @@ function getCurrentUser(){
 
 // Logout
 function logout(){
+  const currentUser = localStorage.getItem('nyay-current-user');
+  if(currentUser){
+    logUserLogout(currentUser);
+  }
   localStorage.removeItem('nyay-current-user');
   localStorage.removeItem('nyay-session-time');
+  localStorage.removeItem('nyay-session-id');
   stopSharedAudio();
   window.location.href='login.html';
+}
+
+// ─── ADMIN & LOGGING SYSTEM ───
+
+// Check if user is admin
+function isAdmin(){
+  const currentUser = localStorage.getItem('nyay-current-user');
+  return currentUser === 'admin';
+}
+
+// Log user login
+function logUserLogin(username){
+  try {
+    const logData = JSON.parse(localStorage.getItem('nyay-login-logs') || '{"logs":[],"summary":{"totalLogins":0,"uniqueUsers":0,"failedAttempts":0,"lastUpdated":""}}');
+    
+    const loginEntry = {
+      id: logData.logs.length + 1,
+      username: username,
+      loginTime: new Date().toISOString(),
+      logoutTime: null,
+      status: 'success',
+      ipAddress: 'local',
+      userAgent: navigator.userAgent.substring(0, 100),
+      sessionDuration: null
+    };
+    
+    logData.logs.push(loginEntry);
+    
+    // Update summary
+    logData.summary.totalLogins = logData.logs.length;
+    logData.summary.uniqueUsers = new Set(logData.logs.map(l => l.username)).size;
+    logData.summary.lastUpdated = new Date().toISOString();
+    
+    localStorage.setItem('nyay-login-logs', JSON.stringify(logData));
+    localStorage.setItem('nyay-session-id', loginEntry.id);
+  } catch(e) {
+    console.error('Error logging login:', e);
+  }
+}
+
+// Log user logout
+function logUserLogout(username){
+  try {
+    const logData = JSON.parse(localStorage.getItem('nyay-login-logs') || '{"logs":[]}');
+    const sessionId = parseInt(localStorage.getItem('nyay-session-id') || '0');
+    const sessionStart = parseInt(localStorage.getItem('nyay-session-time') || Date.now());
+    
+    if(logData.logs.length > 0){
+      const lastLog = logData.logs[logData.logs.length - 1];
+      if(lastLog.username === username && !lastLog.logoutTime){
+        lastLog.logoutTime = new Date().toISOString();
+        lastLog.sessionDuration = Math.round((Date.now() - sessionStart) / 1000); // in seconds
+        logData.summary.lastUpdated = new Date().toISOString();
+        localStorage.setItem('nyay-login-logs', JSON.stringify(logData));
+      }
+    }
+  } catch(e) {
+    console.error('Error logging logout:', e);
+  }
+}
+
+// Cache query-solution pair
+function cacheQuerySolution(query, solution, feature, category){
+  try {
+    const cacheData = JSON.parse(localStorage.getItem('nyay-query-cache') || '{"cache":[],"metadata":{"totalCacheItems":0,"cacheSize":"0 KB","hitRate":0,"maxCacheSize":"10 MB"}}');
+    
+    // Check if query exists
+    const existingIndex = cacheData.cache.findIndex(c => c.query.toLowerCase() === query.toLowerCase());
+    const currentUser = localStorage.getItem('nyay-current-user');
+    
+    if(existingIndex !== -1){
+      // Update existing cache entry
+      cacheData.cache[existingIndex].usageCount++;
+      cacheData.cache[existingIndex].timestamps.lastUsed = new Date().toISOString();
+      
+      if(!cacheData.cache[existingIndex].usersAccessed.includes(currentUser)){
+        cacheData.cache[existingIndex].usersAccessed.push(currentUser);
+      }
+    } else {
+      // Create new cache entry
+      const cacheEntry = {
+        id: cacheData.cache.length + 1,
+        query: query,
+        queryHash: 'hash_' + Date.now(),
+        solution: solution,
+        feature: feature,
+        category: category,
+        timestamps: {
+          created: new Date().toISOString(),
+          lastUsed: new Date().toISOString()
+        },
+        usageCount: 1,
+        usersAccessed: [currentUser],
+        relevanceScore: 0.9,
+        tags: extractTags(query)
+      };
+      cacheData.cache.push(cacheEntry);
+    }
+    
+    cacheData.metadata.totalCacheItems = cacheData.cache.length;
+    cacheData.metadata.lastUpdated = new Date().toISOString();
+    
+    localStorage.setItem('nyay-query-cache', JSON.stringify(cacheData));
+  } catch(e) {
+    console.error('Error caching query:', e);
+  }
+}
+
+// Log query to training data
+function logQueryToTraining(query, solution, queryType, category, feature, responseTime, userSatisfaction){
+  try {
+    const trainingData = JSON.parse(localStorage.getItem('nyay-training-data') || '{"trainingData":[],"statistics":{"totalQueries":0,"averageResponseTime":0,"averageSatisfactionScore":0,"uniqueCategories":0,"errorRate":0},"queryTypeDistribution":{},"categoryDistribution":{}}');
+    
+    const currentUser = localStorage.getItem('nyay-current-user');
+    const sessionId = localStorage.getItem('nyay-session-id') || 'session_' + Date.now();
+    
+    const trainingEntry = {
+      id: trainingData.trainingData.length + 1,
+      timestamp: new Date().toISOString(),
+      user: currentUser,
+      queryText: query,
+      queryType: queryType,
+      category: category,
+      feature: feature,
+      solutionGenerated: solution,
+      solutionType: 'generated',
+      responseTime: responseTime,
+      userSatisfaction: userSatisfaction || 5,
+      userFeedback: null,
+      followUpQueries: 0,
+      sessionId: sessionId,
+      context: {
+        previousQuery: localStorage.getItem('nyay-last-query') || null,
+        userRole: isAdmin() ? 'admin' : 'regular',
+        deviceType: getDeviceType()
+      }
+    };
+    
+    trainingData.trainingData.push(trainingEntry);
+    
+    // Update statistics
+    trainingData.statistics.totalQueries = trainingData.trainingData.length;
+    trainingData.statistics.averageResponseTime = Math.round(
+      trainingData.trainingData.reduce((sum, t) => sum + t.responseTime, 0) / trainingData.trainingData.length
+    );
+    trainingData.statistics.averageSatisfactionScore = (
+      trainingData.trainingData.reduce((sum, t) => sum + t.userSatisfaction, 0) / trainingData.trainingData.length
+    ).toFixed(2);
+    trainingData.statistics.uniqueCategories = new Set(trainingData.trainingData.map(t => t.category)).size;
+    trainingData.statistics.lastUpdated = new Date().toISOString();
+    
+    // Update distributions
+    if(!trainingData.queryTypeDistribution[queryType]){
+      trainingData.queryTypeDistribution[queryType] = 0;
+    }
+    trainingData.queryTypeDistribution[queryType]++;
+    
+    if(!trainingData.categoryDistribution[category]){
+      trainingData.categoryDistribution[category] = 0;
+    }
+    trainingData.categoryDistribution[category]++;
+    
+    localStorage.setItem('nyay-training-data', JSON.stringify(trainingData));
+    localStorage.setItem('nyay-last-query', query);
+  } catch(e) {
+    console.error('Error logging training data:', e);
+  }
+}
+
+// Extract tags from query
+function extractTags(query){
+  const commonTerms = ['rights', 'law', 'constitution', 'court', 'judge', 'case', 'claim', 'evidence', 'liability', 'contract'];
+  const tags = commonTerms.filter(term => query.toLowerCase().includes(term));
+  return tags.length > 0 ? tags : ['general'];
+}
+
+// Get device type
+function getDeviceType(){
+  if(/mobile|android|iphone|ipad|phone/i.test(navigator.userAgent)){
+    return 'mobile';
+  }
+  if(/tablet|ipad/i.test(navigator.userAgent)){
+    return 'tablet';
+  }
+  return 'desktop';
+}
+
+// Get login logs (for admin)
+function getLoginLogs(){
+  if(!isAdmin()){
+    console.warn('Unauthorized: Only admin can access login logs');
+    return null;
+  }
+  return JSON.parse(localStorage.getItem('nyay-login-logs') || '{"logs":[],"summary":{}}');
+}
+
+// Get query cache (for admin)
+function getQueryCache(){
+  if(!isAdmin()){
+    console.warn('Unauthorized: Only admin can access query cache');
+    return null;
+  }
+  return JSON.parse(localStorage.getItem('nyay-query-cache') || '{"cache":[],"metadata":{}}');
+}
+
+// Get training data (for admin)
+function getTrainingData(){
+  if(!isAdmin()){
+    console.warn('Unauthorized: Only admin can access training data');
+    return null;
+  }
+  return JSON.parse(localStorage.getItem('nyay-training-data') || '{"trainingData":[],"statistics":{}}');
+}
+
+// Clear cache (admin only)
+function clearQueryCache(){
+  if(!isAdmin()){
+    console.warn('Unauthorized: Only admin can clear cache');
+    return false;
+  }
+  localStorage.setItem('nyay-query-cache', JSON.stringify({"cache":[],"metadata":{"totalCacheItems":0,"lastUpdated":new Date().toISOString()}}));
+  return true;
+}
+
+// Export data to JSON (admin only)
+function exportAllData(){
+  if(!isAdmin()){
+    console.warn('Unauthorized: Only admin can export data');
+    return null;
+  }
+  
+  const exportData = {
+    exportDate: new Date().toISOString(),
+    loginLogs: JSON.parse(localStorage.getItem('nyay-login-logs') || '{}'),
+    queryCache: JSON.parse(localStorage.getItem('nyay-query-cache') || '{}'),
+    trainingData: JSON.parse(localStorage.getItem('nyay-training-data') || '{}')
+  };
+  
+  // Trigger download
+  const dataStr = JSON.stringify(exportData, null, 2);
+  const dataBlob = new Blob([dataStr], {type: 'application/json'});
+  const url = URL.createObjectURL(dataBlob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = 'nyay-mitra-data-export-' + new Date().getTime() + '.json';
+  link.click();
+  
+  return exportData;
 }
 
 // Initialize on page load

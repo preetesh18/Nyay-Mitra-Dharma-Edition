@@ -1,0 +1,55 @@
+{
+  "trainingData": [
+    {
+      "id": 1,
+      "timestamp": "2026-03-30T10:00:00Z",
+      "user": "demo",
+      "queryText": "what are fundamental rights",
+      "queryType": "definition",
+      "category": "constitutional-law",
+      "feature": "legal-knowledge",
+      "solutionGenerated": "Fundamental Rights are rights guaranteed by constitution...",
+      "solutionType": "definition",
+      "responseTime": 245,
+      "userSatisfaction": 5,
+      "userFeedback": null,
+      "followUpQueries": 0,
+      "sessionId": "session_001",
+      "context": {
+        "previousQuery": null,
+        "userRole": "regular",
+        "deviceType": "desktop"
+      }
+    }
+  ],
+  "statistics": {
+    "totalQueries": 1,
+    "averageResponseTime": 245,
+    "averageSatisfactionScore": 5,
+    "uniqueCategories": 1,
+    "uniqueQueryTypes": 1,
+    "topFeatures": ["legal-knowledge"],
+    "topCategories": ["constitutional-law"],
+    "topQueryTypes": ["definition"],
+    "userEngagementRate": 1.0,
+    "cacheHitRate": 0.0,
+    "errorRate": 0.0,
+    "lastUpdated": "2026-03-30T10:00:00Z"
+  },
+  "queryTypeDistribution": {
+    "definition": 1,
+    "procedure": 0,
+    "comparison": 0,
+    "analysis": 0,
+    "application": 0,
+    "other": 0
+  },
+  "categoryDistribution": {
+    "constitutional-law": 1,
+    "civil-law": 0,
+    "criminal-law": 0,
+    "corporate-law": 0,
+    "family-law": 0,
+    "other": 0
+  }
+}
