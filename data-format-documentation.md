@@ -2,11 +2,10 @@
 
 ## Admin Account Credentials
 
-```
-Username: admin
-Password: admin123
-Role: administrator
-```
+Admin credentials are stored securely in the system and managed internally.
+
+**Note:** Credentials are not displayed in documentation for security purposes.  
+Contact administrator for login details.
 
 ---
 

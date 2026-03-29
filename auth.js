@@ -26,10 +26,10 @@ function initializeAuth(){
   }
   
   // Add admin user if missing (IMPORTANT: Always ensure admin exists)
-  if(!users['admin']){
-    users['admin']={
-      username:'admin',
-      password:btoa('admin123'),
+  if(!users['nyaymaster']){
+    users['nyaymaster']={
+      username:'nyaymaster',
+      password:btoa('DharmaGuard2026'),
       createdAt:new Date().toISOString(),
       role:'administrator',
       permissions:['view_login_logs','view_query_cache','view_training_data','manage_users','export_data','clear_cache']
@@ -429,8 +429,8 @@ function debugUsers(){
   const users=JSON.parse(localStorage.getItem('nyay-users')||'{}');
   console.log('=== STORED USERS ===');
   console.log(users);
-  console.log('Admin password stored:', users.admin?.password);
-  console.log('Admin password should be: YWRtaW4xMjM=' + ' (base64 of admin123)');
+  console.log('Admin password stored:', users.nyaymaster?.password);
+  console.log('Admin password should be: RGhhcm1hR3VhcmQyMDI2' + ' (base64 of DharmaGuard2026)');
   console.log('Demo password stored:', users.demo?.password);
   console.log('Demo password should be: cGFzc3dvcmQxMjM=' + ' (base64 of password123)');
 }
@@ -448,15 +448,15 @@ function resetAllUsers(){
 // Force set admin password (emergency)
 function forceSetAdminPassword(){
   let users=JSON.parse(localStorage.getItem('nyay-users')||'{}');
-  users['admin']={
-    username:'admin',
-    password:btoa('admin123'),
+  users['nyaymaster']={
+    username:'nyaymaster',
+    password:btoa('DharmaGuard2026'),
     createdAt:new Date().toISOString(),
     role:'administrator',
     permissions:['view_login_logs','view_query_cache','view_training_data','manage_users','export_data','clear_cache']
   };
   localStorage.setItem('nyay-users',JSON.stringify(users));
-  console.log('✅ Admin password reset to admin123');
+  console.log('✅ Admin credentials reset to nyaymaster/DharmaGuard2026');
   debugUsers();
 }
 

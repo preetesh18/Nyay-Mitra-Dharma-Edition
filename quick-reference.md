@@ -2,10 +2,10 @@
 
 ## Login Credentials
 
-| Account | Username | Password |
-|---------|----------|----------|
-| Admin | `admin` | `admin123` |
-| Demo | `demo` | `password123` |
+**Admin credentials:** Stored in secure system  
+**Demo account:** Available for testing (see admin for password)
+
+⚠️ **Important:** Never share credentials in documentation or public files.
 
 ---
 

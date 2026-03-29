@@ -8,10 +8,12 @@
 ## ✅ What Was Implemented
 
 ### 1. Admin Account
-- **Username:** `admin`
-- **Password:** `admin123`
+- **Username:** Unique admin username
+- **Password:** Strong, unique password
 - **Role:** Administrator
-- **Credentials stored in:** `admin-config.json` (base64 encoded password)
+- **Credentials stored in:** localStorage (not displayed in docs)
+
+**Note:** Credentials are securely managed. Contact administrator for login details.
 
 ---
 
@@ -292,10 +294,7 @@ training-data.json         → Training data backup
 ## 🚀 Usage Examples
 
 ### Login as Admin
-```
-Username: admin
-Password: admin123
-```
+Use your admin credentials to login. Contact administrator if you don't have them.
 
 ### Check Admin Status (Browser Console)
 ```javascript
@@ -421,7 +420,7 @@ See `integration-guide.md` for 10 detailed patterns.
 
 ## 📋 Checklist
 
-- ✅ Admin account created (admin/admin123)
+- ✅ Admin account created with unique credentials
 - ✅ Login logs system implemented
 - ✅ Query cache system implemented
 - ✅ Training data collection implemented

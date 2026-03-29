@@ -3,9 +3,7 @@
 ## Test 1: Admin Login
 
 1. Visit login page
-2. Enter credentials:
-   - Username: `admin`
-   - Password: `admin123`
+2. Enter admin credentials (from secure source, not in docs)
 3. Verify login successful
 4. Should see admin access in browser console
 
@@ -272,9 +270,8 @@ In Browser Console:
 const users = JSON.parse(localStorage.getItem('nyay-users'));
 console.log(users);
 
-// Should show:
-// admin: password is "YWRtaW4xMjM=" (base64 of admin123)
-// demo: password is "cGFzc3dvcmQxMjM=" (base64 of password123)
+// Should show users array with usernames and encrypted passwords
+// Note: Passwords are base64 encoded (not for production - use bcrypt in production)
 ```
 
 ---

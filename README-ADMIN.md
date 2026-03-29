@@ -8,10 +8,9 @@
 ## 🚀 Quick Start
 
 ### Admin Login
-```
-Username: admin
-Password: admin123
-```
+Check your secure credentials document or contact your administrator for login details.
+
+**Note:** Admin credentials are stored securely in localStorage and not displayed in documentation.
 
 ### Access Admin Features (Browser Console - F12)
 ```javascript

@@ -29,13 +29,11 @@
 
 ## 🔐 Admin Credentials
 
-```
-Username: admin
-Password: admin123
-```
+Admin credentials are stored securely and not displayed in documentation files.
 
 ✅ **Stored in localStorage on first load**  
-✅ **Also stored in admin-config.json (base64 encoded)**
+✅ **Also stored in admin-config.json (base64 encoded)**  
+✅ **Contact administrator for credentials**
 
 ---
 
@@ -76,7 +74,7 @@ All data stored in **JSON format only**:
 
 - [ ] **Test Login as Admin**
   - [ ] Navigate to login page
-  - [ ] Enter: admin / admin123
+  - [ ] Enter admin credentials (from secure source)
   - [ ] Should login successfully
   
 - [ ] **Test Login Logging**
@@ -197,8 +195,8 @@ nyay-last-query         → Last query made
 
 ## 🎯 Features Verified
 
-- [x] Admin account created (admin/admin123)
-- [x] Admin credentials stored (base64 encoded)
+- [x] Admin account created with unique credentials
+- [x] Admin credentials stored securely
 - [x] Login logging implemented (auto-called)
 - [x] Query caching implemented
 - [x] Training data collection implemented
@@ -319,7 +317,7 @@ Before deploying, verify:
 ```
 Status: ✅ READY FOR DEPLOYMENT
 
-✅ Admin account: admin/admin123
+✅ Admin account: Unique credentials (secure)
 ✅ Login logging: ACTIVE
 ✅ Query caching: ACTIVE
 ✅ Training data: ACTIVE

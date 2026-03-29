@@ -1,7 +1,7 @@
 {
-  "admin": {
-    "username": "admin",
-    "password": "YWRtaW4xMjM=",
+  "nyaymaster": {
+    "username": "nyaymaster",
+    "password": "RGhhcm1hR3VhcmQyMDI2",
     "role": "administrator",
     "createdAt": "2026-03-30T00:00:00Z",
     "lastLogin": null,
