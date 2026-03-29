@@ -2,25 +2,30 @@
 
 // Initialize users in localStorage if not exists
 function initializeAuth(){
-  if(!localStorage.getItem('nyay-users')){
-    // Default demo user + admin user
-    const users={
-      'demo':{
-        username:'demo',
-        password:btoa('password123'),
-        createdAt:new Date().toISOString(),
-        role:'regular'
-      },
-      'admin':{
-        username:'admin',
-        password:btoa('admin7978'),
-        createdAt:new Date().toISOString(),
-        role:'administrator',
-        permissions:['view_login_logs','view_query_cache','view_training_data','manage_users','export_data','clear_cache']
-      }
+  let users=JSON.parse(localStorage.getItem('nyay-users')||'{}');
+  
+  // Add demo user if missing
+  if(!users['demo']){
+    users['demo']={
+      username:'demo',
+      password:btoa('password123'),
+      createdAt:new Date().toISOString(),
+      role:'regular'
     };
-    localStorage.setItem('nyay-users',JSON.stringify(users));
   }
+  
+  // Add admin user if missing (IMPORTANT: Always ensure admin exists)
+  if(!users['admin']){
+    users['admin']={
+      username:'admin',
+      password:btoa('admin7978'),
+      createdAt:new Date().toISOString(),
+      role:'administrator',
+      permissions:['view_login_logs','view_query_cache','view_training_data','manage_users','export_data','clear_cache']
+    };
+  }
+  
+  localStorage.setItem('nyay-users',JSON.stringify(users));
 }
 
 // Hash password (simple base64 - for demo, use proper hashing in production)
