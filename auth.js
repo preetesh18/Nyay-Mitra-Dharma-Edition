@@ -1,7 +1,18 @@
 /* ── AUTHENTICATION SYSTEM ── */
 
+// VERSION - Increment this when updating auth system to force localStorage reset
+const AUTH_VERSION = '2.0';
+
 // Initialize users in localStorage if not exists
 function initializeAuth(){
+  // Check if version changed (Vercel deployment) - force reset old data
+  const storedVersion = localStorage.getItem('nyay-auth-version');
+  if(storedVersion !== AUTH_VERSION){
+    console.log('🔄 Auth version changed. Clearing old data...');
+    localStorage.clear();
+    localStorage.setItem('nyay-auth-version', AUTH_VERSION);
+  }
+  
   let users=JSON.parse(localStorage.getItem('nyay-users')||'{}');
   
   // Add demo user if missing
@@ -47,8 +58,16 @@ function handleLogin(){
   initializeAuth();
   const users=JSON.parse(localStorage.getItem('nyay-users')||'{}');
   
+  // Debug logging (visible in browser console)
+  console.log('🔐 Login attempt:', username);
+  console.log('📊 Available users:', Object.keys(users));
+  console.log('Admin user exists:', !!users['admin']);
+  console.log('Entered password hash:', hashPassword(password));
+  console.log('Stored password hash:', users[username]?.password);
+  
   if(users[username]&&users[username].password===hashPassword(password)){
     // Success
+    console.log('✅ Login successful');
     localStorage.setItem('nyay-current-user',username);
     localStorage.setItem('nyay-session-time',Date.now());
     logUserLogin(username);
@@ -58,6 +77,11 @@ function handleLogin(){
       window.location.href='index.html';
     },800);
   }else{
+    console.log('❌ Login failed - Invalid credentials');
+    console.log('User exists:', !!users[username]);
+    if(users[username]){
+      console.log('Password match:', users[username].password===hashPassword(password));
+    }
     showMessage(messageDiv,'Invalid username or password','error');
     document.getElementById('login-password').value='';
   }
@@ -396,6 +420,44 @@ function exportAllData(){
   link.click();
   
   return exportData;
+}
+
+// ─── DEBUG & RESET FUNCTIONS ───
+
+// View current stored users (for debugging)
+function debugUsers(){
+  const users=JSON.parse(localStorage.getItem('nyay-users')||'{}');
+  console.log('=== STORED USERS ===');
+  console.log(users);
+  console.log('Admin password stored:', users.admin?.password);
+  console.log('Admin password should be: YWRtaW4xMjM=' + ' (base64 of admin123)');
+  console.log('Demo password stored:', users.demo?.password);
+  console.log('Demo password should be: cGFzc3dvcmQxMjM=' + ' (base64 of password123)');
+}
+
+// Force RESET all users (clear everything)
+function resetAllUsers(){
+  console.warn('⚠️ RESETTING ALL USERS AND DATA...');
+  localStorage.clear();
+  initializeAuth();
+  debugUsers();
+  console.log('✅ Reset complete! Refresh the page now.');
+  alert('✅ All data cleared and reset! Please refresh the page (F5)');
+}
+
+// Force set admin password (emergency)
+function forceSetAdminPassword(){
+  let users=JSON.parse(localStorage.getItem('nyay-users')||'{}');
+  users['admin']={
+    username:'admin',
+    password:btoa('admin123'),
+    createdAt:new Date().toISOString(),
+    role:'administrator',
+    permissions:['view_login_logs','view_query_cache','view_training_data','manage_users','export_data','clear_cache']
+  };
+  localStorage.setItem('nyay-users',JSON.stringify(users));
+  console.log('✅ Admin password reset to admin123');
+  debugUsers();
 }
 
 // Initialize on page load
