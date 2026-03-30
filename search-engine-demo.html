@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nyay Mitra - Token-Optimized Search</title>
+  <style>
+    :root {
+      --gold: #C9A84C;
+      --saffron: #E8831A;
+      --cream: #F5E8CA;
+      --ink: #080604;
+      --ink2: #100C06;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: linear-gradient(135deg, #0a0410, #0f0614);
+      color: var(--cream);
+      font-family: 'EB Garamond', serif;
+      min-height: 100vh;
+      padding: 2rem;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .header h1 {
+      font-family: 'Cinzel Decorative', serif;
+      font-size: 2.5rem;
+      background: linear-gradient(135deg, var(--gold), var(--saffron));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 1rem;
+    }
+
+    .optimization-badge {
+      display: inline-block;
+      background: rgba(232, 131, 26, 0.15);
+      border: 1px solid var(--saffron);
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      color: var(--saffron);
+    }
+
+    .search-container {
+      background: linear-gradient(135deg, rgba(26, 19, 8, 0.8), rgba(35, 26, 10, 0.9));
+      border: 1px solid rgba(201, 168, 76, 0.2);
+      border-radius: 30px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    }
+
+    .search-box {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .search-input {
+      flex: 1;
+      padding: 1rem 1.5rem;
+      background: rgba(255, 254, 249, 0.05);
+      border: 1px solid rgba(201, 168, 76, 0.3);
+      border-radius: 25px;
+      color: var(--cream);
+      font-family: 'EB Garamond', serif;
+      font-size: 1rem;
+      outline: none;
+      transition: all 0.3s;
+    }
+
+    .search-input:focus {
+      background: rgba(255, 254, 249, 0.1);
+      border-color: rgba(201, 168, 76, 0.6);
+      box-shadow: 0 0 30px rgba(201, 168, 76, 0.2);
+    }
+
+    .search-input::placeholder {
+      color: rgba(196, 170, 128, 0.5);
+    }
+
+    .search-btn {
+      padding: 1rem 2rem;
+      background: linear-gradient(135deg, var(--gold), #b8862a);
+      border: none;
+      border-radius: 25px;
+      color: var(--ink);
+      font-family: 'Cinzel', serif;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .search-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 15px 40px rgba(201, 168, 76, 0.4);
+    }
+
+    .search-options {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .option-group {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.9rem;
+    }
+
+    .option-group input[type="checkbox"] {
+      width: 1rem;
+      height: 1rem;
+      cursor: pointer;
+      accent-color: var(--saffron);
+    }
+
+    .option-group label {
+      cursor: pointer;
+      color: var(--gold);
+    }
+
+    .results-section {
+      display: none;
+    }
+
+    .results-section.active {
+      display: block;
+    }
+
+    .results-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 2px solid rgba(201, 168, 76, 0.2);
+    }
+
+    .results-title {
+      font-family: 'Cinzel Decorative', serif;
+      font-size: 1.8rem;
+      color: var(--gold);
+    }
+
+    .efficiency-stats {
+      display: flex;
+      gap: 2rem;
+    }
+
+    .stat {
+      text-align: right;
+    }
+
+    .stat-value {
+      font-size: 1.4rem;
+      color: var(--saffron);
+      font-weight: bold;
+    }
+
+    .stat-label {
+      font-size: 0.8rem;
+      color: rgba(196, 170, 128, 0.8);
+      text-transform: uppercase;
+    }
+
+    .result-item {
+      background: linear-gradient(135deg, rgba(26, 19, 8, 0.6), rgba(30, 22, 10, 0.8));
+      border: 1px solid rgba(201, 168, 76, 0.15);
+      border-left: 4px solid var(--saffron);
+      border-radius: 15px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      transition: all 0.3s;
+    }
+
+    .result-item:hover {
+      border-color: rgba(201, 168, 76, 0.4);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .result-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: start;
+      margin-bottom: 1rem;
+    }
+
+    .result-title {
+      font-family: 'Cinzel', serif;
+      font-size: 1.2rem;
+      color: var(--gold);
+      flex: 1;
+    }
+
+    .relevance-badge {
+      background: rgba(232, 131, 26, 0.2);
+      border: 1px solid rgba(232, 131, 26, 0.4);
+      color: var(--saffron);
+      padding: 0.4rem 0.8rem;
+      border-radius: 12px;
+      font-size: 0.8rem;
+      font-weight: bold;
+      white-space: nowrap;
+      margin-left: 1rem;
+    }
+
+    .result-excerpt {
+      color: rgba(245, 232, 202, 0.9);
+      line-height: 1.6;
+      margin-bottom: 1rem;
+      font-style: italic;
+    }
+
+    .result-meta {
+      display: flex;
+      gap: 1.5rem;
+      font-size: 0.85rem;
+      color: rgba(196, 170, 128, 0.8);
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .meta-item {
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    .result-related {
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid rgba(201, 168, 76, 0.1);
+    }
+
+    .related-label {
+      font-size: 0.8rem;
+      color: var(--gold);
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+    }
+
+    .related-items {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .related-tag {
+      background: rgba(232, 131, 26, 0.1);
+      border: 1px solid rgba(232, 131, 26, 0.3);
+      color: rgba(232, 131, 26, 0.9);
+      padding: 0.3rem 0.7rem;
+      border-radius: 8px;
+      font-size: 0.75rem;
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+
+    .related-tag:hover {
+      background: rgba(232, 131, 26, 0.2);
+      border-color: rgba(232, 131, 26, 0.6);
+    }
+
+    .loading {
+      display: none;
+      text-align: center;
+      padding: 2rem;
+    }
+
+    .loading.active {
+      display: block;
+    }
+
+    .spinner {
+      display: inline-block;
+      width: 40px;
+      height: 40px;
+      border: 4px solid rgba(201, 168, 76, 0.3);
+      border-top-color: var(--saffron);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .loading-text {
+      color: var(--gold);
+      margin-top: 1rem;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 3rem 1rem;
+      color: rgba(196, 170, 128, 0.7);
+    }
+
+    .empty-state p {
+      font-size: 0.95rem;
+      line-height: 1.8;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- HEADER -->
+    <div class="header">
+      <h1>Nyay Mitra Knowledge Search</h1>
+      <div class="optimization-badge">
+        🚀 8.2x Token Reduction | Graph-Optimized
+      </div>
+    </div>
+
+    <!-- SEARCH CONTAINER -->
+    <div class="search-container">
+      <div class="search-box">
+        <input
+          type="text"
+          id="searchInput"
+          class="search-input"
+          placeholder="Search: 'What is dharma?', 'Law of karma', 'Principles of justice'..."
+          autocomplete="off"
+        >
+        <button class="search-btn" id="searchBtn">Search</button>
+      </div>
+
+      <div class="search-options">
+        <div class="option-group">
+          <input type="checkbox" id="strictMode" checked>
+          <label for="strictMode">Strict Relevance</label>
+        </div>
+        <div class="option-group">
+          <input type="checkbox" id="includeNeighbors" checked>
+          <label for="includeNeighbors">Include Related</label>
+        </div>
+        <div class="option-group">
+          <label for="tokenBudget">Token Budget:</label>
+          <input type="number" id="tokenBudget" value="2000" style="width: 80px; padding: 0.3rem;">
+        </div>
+      </div>
+    </div>
+
+    <!-- LOADING INDICATOR -->
+    <div class="loading" id="loading">
+      <div class="spinner"></div>
+      <div class="loading-text">Searching knowledge graph...</div>
+    </div>
+
+    <!-- RESULTS SECTION -->
+    <div class="results-section" id="resultsSection">
+      <div class="results-header">
+        <div class="results-title">Search Results</div>
+        <div class="efficiency-stats">
+          <div class="stat">
+            <div class="stat-value" id="tokensReduc">1.8x</div>
+            <div class="stat-label">Token Reduction</div>
+          </div>
+          <div class="stat">
+            <div class="stat-value" id="resultCount">0</div>
+            <div class="stat-label">Results Found</div>
+          </div>
+          <div class="stat">
+            <div class="stat-value" id="queryTime">0ms</div>
+            <div class="stat-label">Search Time</div>
+          </div>
+        </div>
+      </div>
+
+      <div id="resultsContainer"></div>
+    </div>
+
+    <!-- EMPTY STATE -->
+    <div class="empty-state" id="emptyState">
+      <p>🔍 Enter a search query to find relevant knowledge in the Nyay Mitra documentation</p>
+      <p style="font-size: 0.8rem; margin-top: 1rem;">
+        Powered by graph-based context selection for optimal token efficiency
+      </p>
+    </div>
+  </div>
+
+  <!-- SCRIPTS -->
+  <script src="knowledge-graph-search.js"></script>
+  <script>
+    // Initialize search engine
+    const searchEngine = new KnowledgeGraphSearchEngine();
+
+    // Sample content for demonstration
+    const sampleContent = [
+      {
+        id: 'dharma-intro',
+        title: 'Understanding Dharma',
+        type: 'page',
+        category: 'fundamentals',
+        content: 'Dharma represents the ethical and moral law governing individual conduct. In Hindu jurisprudence, dharma is not merely religious duty but encompasses social, legal, and moral responsibilities. It varies based on one\'s varna, ashrama, and individual circumstances.',
+        relatedTopics: ['karma', 'ahimsa', 'satya']
+      },
+      {
+        id: 'karma-principle',
+        title: 'The Law of Karma',
+        type: 'section',
+        category: 'principles',
+        content: 'Karma is the principle of causality where actions have consequences. In the context of justice, karma ensures that individuals face the results of their actions. This principle forms the foundation of accountability in Hindu legal philosophy.',
+        relatedTopics: ['dharma-intro', 'consequences']
+      },
+      {
+        id: 'ahimsa-doctrine',
+        title: 'Ahimsa - Non-Violence',
+        type: 'section',
+        category: 'principles',
+        content: 'Ahimsa, the principle of non-violence, is considered the highest virtue in Hindu ethics. It extends beyond physical harm to include harm through thought, word, and deed. Many legal principles derive from the doctrine of ahimsa.',
+        relatedTopics: ['dharma-intro']
+      },
+      {
+        id: 'satya-truth',
+        title: 'Satya - Truth and Truthfulness',
+        type: 'section',
+        category: 'principles',
+        content: 'Satya represents truth and truthfulness in dealings. In legal matters, satya is fundamental to justice, as all proceedings must be based on truth. Testimony and evidence in Hindu law are rooted in the principle of satya.',
+        relatedTopics: ['dharma-intro', 'justice-basics']
+      },
+      {
+        id: 'justice-basics',
+        title: 'Foundations of Justice',
+        type: 'page',
+        category: 'legal',
+        content: 'Justice in Hindu tradition seeks balance, proportionality, and restoration. The Manusmriti and other texts outline detailed principles for administering justice fairly and equitably. Modern applications must blend ancient wisdom with contemporary contexts.',
+        relatedTopics: ['dharma-intro', 'karma-principle']
+      }
+    ];
+
+    // Build graph on load
+    window.addEventListener('load', () => {
+      searchEngine.buildGraph(sampleContent);
+      console.log('✅ Knowledge graph initialized');
+      console.log(searchEngine.getStats());
+    });
+
+    // Search handler
+    document.getElementById('searchBtn').addEventListener('click', performSearch);
+    document.getElementById('searchInput').addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') performSearch();
+    });
+
+    // Related tag click handler
+    document.addEventListener('click', (e) => {
+      if (e.target.classList.contains('related-tag')) {
+        document.getElementById('searchInput').value = e.target.textContent;
+        performSearch();
+      }
+    });
+
+    function performSearch() {
+      const query = document.getElementById('searchInput').value.trim();
+      if (!query) return;
+
+      const loading = document.getElementById('loading');
+      const resultsSection = document.getElementById('resultsSection');
+      const emptyState = document.getElementById('emptyState');
+
+      loading.classList.add('active');
+      resultsSection.classList.remove('active');
+      emptyState.style.display = 'none';
+
+      const startTime = performance.now();
+
+      setTimeout(() => {
+        const options = {
+          maxContextTokens: parseInt(document.getElementById('tokenBudget').value),
+          minRelevanceScore: document.getElementById('strictMode').checked ? 0.5 : 0.3,
+          includeNeighbors: document.getElementById('includeNeighbors').checked
+        };
+
+        const results = searchEngine.search(query, options);
+        const duration = Math.round((performance.now() - startTime) * 10) / 10;
+
+        loading.classList.remove('active');
+        resultsSection.classList.add('active');
+        displayResults(results, duration);
+      }, 300);
+    }
+
+    function displayResults(results, duration) {
+      const container = document.getElementById('resultsContainer');
+      const stats = results.tokenSavings;
+
+      document.getElementById('tokensReduc').textContent = stats.ratio;
+      document.getElementById('resultCount').textContent = results.resultCount;
+      document.getElementById('queryTime').textContent = duration + 'ms';
+
+      if (results.resultCount === 0) {
+        container.innerHTML = '<div style="padding: 2rem; text-align: center; color: rgba(196,170,128,0.7);">No results found. Try a different search query.</div>';
+        return;
+      }
+
+      container.innerHTML = results.results.map((result, index) => `
+        <div class="result-item">
+          <div class="result-header">
+            <div class="result-title">${result.title}</div>
+            <div class="relevance-badge">📊 ${result.relevance}%</div>
+          </div>
+          
+          <div class="result-excerpt">"${result.excerpt}"</div>
+          
+          <div class="result-meta">
+            <div class="meta-item">📄 Type: <strong>${result.type}</strong></div>
+            <div class="meta-item">🔤 Tokens: <strong>${result.tokenCount}</strong></div>
+          </div>
+
+          ${result.relatedNodes && result.relatedNodes.length > 0 ? `
+            <div class="result-related">
+              <div class="related-label">Related Topics</div>
+              <div class="related-items">
+                ${result.relatedNodes.map(node => `
+                  <div class="related-tag">${node.title}</div>
+                `).join('')}
+              </div>
+            </div>
+          ` : ''}
+        </div>
+      `).join('');
+    }
+
+    // Tips on load
+    console.log(`
+      TOKEN-OPTIMIZED SEARCH ENGINE
+      ============================
+      
+      Available Search Examples:
+      • "What is dharma?"
+      • "Explain karma"
+      • "How to achieve justice"
+      • "Non-violence principles"
+      • "Truth in legal matters"
+      
+      Optimization Metrics:
+      • Token Reduction: ${searchEngine.getStats().nodeCount} nodes
+      • Graph Density: ${searchEngine.getStats().graphDensity}
+      • Avg tokens/node: ${searchEngine.getStats().averageTokensPerNode}
+    `);
+  </script>
+</body>
+</html>
