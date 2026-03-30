@@ -70,226 +70,495 @@ body::after{
   opacity:.2;
 }
 
+/* ── NEUMORPHIC THEME VARIABLES ── */
+:root {
+  --neuro-shadow-dark: rgba(0, 0, 0, 0.6);
+  --neuro-shadow-light: rgba(201, 168, 76, 0.08);
+  --neuro-border: rgba(201, 168, 76, 0.15);
+}
+
 /* ── CONTAINER ── */
-#login-container{
-  position:relative;
-  z-index:10;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  min-height:100vh;
-  padding:2rem;
+#login-container {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 2rem;
 }
 
-.login-wrapper{
-  width:100%;
-  max-width:500px;
-  background:linear-gradient(135deg,rgba(26,19,8,.88),rgba(35,26,10,.92));
-  border:1px solid rgba(201,168,76,.25);
-  backdrop-filter:blur(25px);
-  padding:3.5rem 3rem;
-  clip-path:polygon(20px 0%,100% 0%,calc(100% - 20px) 100%,0% 100%);
-  box-shadow:0 30px 80px rgba(0,0,0,.9),inset 0 1px 0 rgba(201,168,76,.1),0 0 40px rgba(201,168,76,.15);
-  animation:slideIn .8s cubic-bezier(.22,1,.36,1);
+.login-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 768px;
+  height: 520px;
+  background: linear-gradient(135deg, rgba(26, 19, 8, 0.92), rgba(35, 26, 10, 0.96));
+  border-radius: 40px;
+  border: 1px solid rgba(201, 168, 76, 0.2);
+  overflow: hidden;
+  box-shadow: 
+    20px 20px 60px var(--neuro-shadow-dark),
+    -20px -20px 60px var(--neuro-shadow-light),
+    inset 0 1px 0 rgba(201, 168, 76, 0.1);
+  backdrop-filter: blur(30px);
+  animation: slideIn 0.8s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-@keyframes slideIn{
-  from{opacity:0;transform:translateY(40px) scale(.95)}
-  to{opacity:1;transform:none}
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(40px) scale(0.95); }
+  to { opacity: 1; transform: none; }
 }
 
-.login-header{
-  text-align:center;
-  margin-bottom:2.8rem;
-  animation:slideIn .8s .15s cubic-bezier(.22,1,.36,1) both;
+/* ── FORM CONTAINERS ── */
+.form-container {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+  text-align: center;
+  background: linear-gradient(135deg, rgba(26, 19, 8, 0.95), rgba(30, 22, 10, 0.98));
+  transition: all 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  z-index: 2;
 }
 
-.logo-dharma{
-  font-family:'Noto Serif Devanagari',serif;
-  font-size:2.2rem;
-  margin-bottom:.6rem;
-  background:linear-gradient(135deg,var(--gold-lt),var(--gold),var(--saffron));
-  -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;
-  background-clip:text;
-  filter:drop-shadow(0 0 20px rgba(201,168,76,.5));
-  animation:glow 4s ease-in-out infinite;
+.sign-in-container {
+  left: 0;
+  opacity: 1;
+  z-index: 2;
 }
 
-@keyframes glow{
-  0%,100%{filter:drop-shadow(0 0 20px rgba(201,168,76,.5))}
-  50%{filter:drop-shadow(0 0 40px rgba(232,131,26,.8))}
+.sign-up-container {
+  left: 0;
+  opacity: 0;
+  z-index: 1;
 }
 
-.logo-text{
-  font-family:'Cinzel Decorative',serif;
-  font-size:1.4rem;
-  letter-spacing:.06em;
-  background:linear-gradient(120deg,var(--gold-lt),var(--gold),var(--saffron-lt));
-  -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;
-  background-clip:text;
-  margin-bottom:.3rem;
+.login-wrapper.right-panel-active .sign-in-container {
+  transform: translateX(100%);
+  opacity: 0;
+  z-index: 1;
 }
 
-.logo-sub{
-  font-family:'Noto Serif Devanagari',serif;
-  font-size:.85rem;
-  color:var(--saffron-lt);
-  letter-spacing:.15em;
-  opacity:.75;
+.login-wrapper.right-panel-active .sign-up-container {
+  transform: translateX(100%);
+  opacity: 1;
+  z-index: 5;
+  animation: show 0.6s;
 }
 
-/* ── TABS ── */
-.tab-toggle{
-  display:flex;
-  gap:0;
-  margin-bottom:2rem;
-  border-bottom:1px solid rgba(201,168,76,.15);
-  animation:slideIn .8s .2s cubic-bezier(.22,1,.36,1) both;
+@keyframes show {
+  0%, 49.99% { opacity: 0; z-index: 1; }
+  50%, 100% { opacity: 1; z-index: 5; }
 }
 
-.tab-btn{
-  flex:1;
-  padding:1rem;
-  background:transparent;
-  border:none;
-  color:#C4AA80;
-  font-family:'Cinzel',serif;
-  font-size:.75rem;
-  letter-spacing:.18em;
-  text-transform:uppercase;
-  cursor:pointer;
-  transition:all .3s;
-  position:relative;
-  border-bottom:2px solid transparent;
+/* ── OVERLAY PANEL ── */
+.overlay-container {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 50%;
+  height: 100%;
+  overflow: hidden;
+  z-index: 100;
+  border-top-left-radius: 50px;
+  border-bottom-left-radius: 50px;
+  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1), border-radius 0.6s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.tab-btn::after{
-  content:'';
-  position:absolute;
-  bottom:-1px;
-  left:0;
-  right:0;
-  height:2px;
-  background:linear-gradient(90deg,transparent,var(--gold),transparent);
-  transform:scaleX(0);
-  transition:transform .4s cubic-bezier(.22,1,.36,1);
+.login-wrapper.right-panel-active .overlay-container {
+  transform: translateX(-100%);
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  border-top-right-radius: 50px;
+  border-bottom-right-radius: 50px;
 }
 
-.tab-btn.active{
-  color:var(--gold-lt);
+.overlay {
+  background: linear-gradient(135deg, var(--saffron), var(--gold));
+  height: 100%;
+  width: 200%;
+  position: relative;
+  left: -100%;
+  color: white;
+  transform: translateX(0);
+  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.tab-btn.active::after{
-  transform:scaleX(1);
+.login-wrapper.right-panel-active .overlay {
+  transform: translateX(50%);
 }
 
-/* ── FORM ── */
-.form-container{
-  animation:slideIn .8s .25s cubic-bezier(.22,1,.36,1) both;
+.overlay-panel {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  padding: 0 40px;
+  text-align: center;
+  top: 0;
+  height: 100%;
+  width: 50%;
+  transform: translateX(0);
+  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.form-group{
-  margin-bottom:1.6rem;
+.overlay-left {
+  transform: translateX(-20%);
 }
 
-.form-group label{
-  display:block;
-  font-family:'Cinzel',serif;
-  font-size:.75rem;
-  letter-spacing:.15em;
-  text-transform:uppercase;
-  color:var(--gold);
-  margin-bottom:.6rem;
-  transition:color .3s;
+.login-wrapper.right-panel-active .overlay-left {
+  transform: translateX(0);
 }
 
-.form-group input{
-  width:100%;
-  padding:1rem 1.2rem;
-  background:rgba(255,254,249,.03);
-  border:1px solid rgba(201,168,76,.2);
-  color:var(--cream);
-  font-family:'EB Garamond',serif;
-  font-size:1rem;
-  clip-path:polygon(8px 0%,100% 0%,calc(100% - 8px) 100%,0% 100%);
-  transition:all .3s;
+.overlay-right {
+  right: 0;
+  transform: translateX(0);
 }
 
-.form-group input::placeholder{
-  color:rgba(196,170,128,.5);
+.login-wrapper.right-panel-active .overlay-right {
+  transform: translateX(20%);
 }
 
-.form-group input:focus{
-  outline:none;
-  background:rgba(255,254,249,.06);
-  border-color:rgba(201,168,76,.4);
-  box-shadow:0 0 30px rgba(201,168,76,.15);
+.overlay-panel h1 {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: 2rem;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  margin-bottom: 1rem;
+}
+
+.overlay-panel p {
+  font-family: 'EB Garamond', serif;
+  font-size: 0.95rem;
+  margin-bottom: 2rem;
+  opacity: 0.95;
+}
+
+/* ── HEADER ── */
+.login-header {
+  text-align: center;
+  margin-bottom: 2rem;
+  animation: slideIn 0.8s 0.15s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.logo-dharma {
+  font-family: 'Noto Serif Devanagari', serif;
+  font-size: 2.2rem;
+  margin-bottom: 0.6rem;
+  background: linear-gradient(135deg, var(--gold-lt), var(--gold), var(--saffron));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: drop-shadow(0 0 20px rgba(201, 168, 76, 0.5));
+  animation: glow 4s ease-in-out infinite;
+}
+
+@keyframes glow {
+  0%, 100% { filter: drop-shadow(0 0 20px rgba(201, 168, 76, 0.5)); }
+  50% { filter: drop-shadow(0 0 40px rgba(232, 131, 26, 0.8)); }
+}
+
+.logo-text {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: 1.4rem;
+  letter-spacing: 0.06em;
+  background: linear-gradient(120deg, var(--gold-lt), var(--gold), var(--saffron-lt));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 0.3rem;
+}
+
+.logo-sub {
+  font-family: 'Noto Serif Devanagari', serif;
+  font-size: 0.85rem;
+  color: var(--saffron-lt);
+  letter-spacing: 0.15em;
+  opacity: 0.75;
+}
+
+/* ── FORM CONTENT ── */
+.form-group {
+  width: 100%;
+  margin-bottom: 1.5rem;
+  text-align: left;
+  position: relative;
+}
+
+.form-group label {
+  display: block;
+  font-family: 'Cinzel', serif;
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 0.6rem;
+  transition: color 0.3s;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 12px 15px 12px 45px;
+  background: linear-gradient(135deg, rgba(26, 19, 8, 0.6), rgba(30, 22, 10, 0.7));
+  border: 1px solid rgba(201, 168, 76, 0.2);
+  border-radius: 50px;
+  color: var(--cream);
+  font-family: 'EB Garamond', serif;
+  font-size: 1rem;
+  box-shadow: 
+    inset 8px 8px 16px var(--neuro-shadow-dark),
+    inset -2px -2px 8px var(--neuro-shadow-light);
+  transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  outline: none;
+}
+
+.form-group input::placeholder {
+  color: rgba(196, 170, 128, 0.5);
+}
+
+.form-group input:focus {
+  background: linear-gradient(135deg, rgba(26, 19, 8, 0.8), rgba(30, 22, 10, 0.9));
+  border-color: rgba(201, 168, 76, 0.4);
+  box-shadow: 
+    inset 4px 4px 8px var(--neuro-shadow-dark),
+    inset -4px -4px 8px var(--neuro-shadow-light),
+    0 0 30px rgba(201, 168, 76, 0.2);
+}
+
+.form-group i {
+  position: absolute;
+  left: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--gold);
+  font-size: 1rem;
+  transition: color 0.3s;
+  margin-top: 8px;
+}
+
+.form-group input:focus + i {
+  color: var(--saffron-lt);
 }
 
 /* ── BUTTONS ── */
-.form-btn{
-  width:100%;
-  padding:1.1rem;
-  background:linear-gradient(135deg,var(--gold-lt),var(--gold),#b8862a);
-  color:var(--ink);
-  border:none;
-  font-family:'Cinzel',serif;
-  font-size:.85rem;
-  letter-spacing:.18em;
-  text-transform:uppercase;
-  font-weight:700;
-  cursor:pointer;
-  clip-path:polygon(12px 0%,100% 0%,calc(100% - 12px) 100%,0% 100%);
-  transition:all .3s;
-  margin-bottom:1rem;
-  animation:slideIn .8s .3s cubic-bezier(.22,1,.36,1) both;
+.form-btn {
+  width: 100%;
+  padding: 12px 45px;
+  background: linear-gradient(135deg, var(--gold-lt), var(--gold), #b8862a);
+  color: var(--ink);
+  border: none;
+  border-radius: 20px;
+  font-family: 'Cinzel', serif;
+  font-size: 0.85rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  box-shadow: 
+    12px 12px 24px var(--neuro-shadow-dark),
+    -2px -2px 8px var(--neuro-shadow-light);
+  margin-top: 1rem;
+  animation: slideIn 0.8s 0.3s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
-.form-btn:hover{
-  transform:translateY(-3px);
-  box-shadow:0 20px 50px rgba(201,168,76,.5),0 0 0 1px rgba(201,168,76,.3);
+.form-btn:hover {
+  transform: translateY(-4px);
+  box-shadow: 
+    16px 16px 40px var(--neuro-shadow-dark),
+    -4px -4px 12px var(--neuro-shadow-light),
+    0 0 30px rgba(201, 168, 76, 0.3);
+}
+
+.form-btn:active {
+  transform: scale(0.95);
+  box-shadow: 
+    inset 6px 6px 12px var(--neuro-shadow-dark),
+    inset -2px -2px 6px var(--neuro-shadow-light);
+}
+
+.btn.ghost {
+  background: transparent;
+  border: 2px solid white;
+  color: white;
+  box-shadow: none;
+  padding: 12px 35px;
+  transition: all 0.3s ease;
+}
+
+.btn.ghost:hover {
+  background: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+}
+
+.btn.ghost:active {
+  box-shadow: 
+    inset 4px 4px 8px rgba(0, 0, 0, 0.3),
+    inset -2px -2px 6px rgba(255, 255, 255, 0.1);
 }
 
 /* ── STATUS MESSAGES ── */
-.message{
-  padding:1rem;
-  border-radius:4px;
-  margin-bottom:1rem;
-  font-size:.9rem;
-  animation:slideIn .4s cubic-bezier(.22,1,.36,1) both;
-  clip-path:polygon(6px 0%,100% 0%,calc(100% - 6px) 100%,0% 100%);
+.message {
+  padding: 1rem;
+  border-radius: 20px;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+  animation: slideIn 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+  box-shadow: 
+    8px 8px 16px var(--neuro-shadow-dark),
+    -2px -2px 8px var(--neuro-shadow-light);
 }
 
-.message.error{
-  background:rgba(232,131,26,.15);
-  border:1px solid rgba(232,131,26,.3);
-  color:var(--saffron-lt);
+.message.error {
+  background: rgba(232, 131, 26, 0.15);
+  border: 1px solid rgba(232, 131, 26, 0.3);
+  color: var(--saffron-lt);
 }
 
-.message.success{
-  background:rgba(201,168,76,.15);
-  border:1px solid rgba(201,168,76,.3);
-  color:var(--gold-lt);
+.message.success {
+  background: rgba(201, 168, 76, 0.15);
+  border: 1px solid rgba(201, 168, 76, 0.3);
+  color: var(--gold-lt);
 }
 
 /* ── PASSWORD TOGGLE ── */
-.password-toggle{
-  position:absolute;
-  right:1.2rem;
-  top:3.8rem;
-  background:none;
-  border:none;
-  color:var(--gold);
-  cursor:pointer;
-  font-size:1.1rem;
-  padding:.3rem .6rem;
-  transition:color .3s;
+.password-toggle {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: var(--gold);
+  cursor: pointer;
+  font-size: 1.1rem;
+  padding: 0.3rem 0.6rem;
+  transition: color 0.3s;
+  margin-top: 8px;
 }
 
-.password-toggle:hover{
-  color:var(--gold-lt);
+.password-toggle:hover {
+  color: var(--saffron-lt);
+}
+
+/* ── SOCIAL BUTTONS ── */
+.social-login {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin: 1.5rem 0;
+}
+
+.social-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--gold);
+  text-decoration: none;
+  font-size: 1rem;
+  background: linear-gradient(135deg, rgba(26, 19, 8, 0.7), rgba(30, 22, 10, 0.8));
+  border: 1px solid rgba(201, 168, 76, 0.2);
+  box-shadow: 
+    6px 6px 12px var(--neuro-shadow-dark),
+    -2px -2px 6px var(--neuro-shadow-light);
+  transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.social-btn:hover {
+  color: var(--saffron-lt);
+  transform: translateY(-3px);
+  box-shadow: 
+    10px 10px 20px var(--neuro-shadow-dark),
+    -2px -2px 8px var(--neuro-shadow-light);
+}
+
+.social-btn:active {
+  box-shadow: 
+    inset 4px 4px 8px var(--neuro-shadow-dark),
+    inset -2px -2px 6px var(--neuro-shadow-light);
+  transform: translateY(0);
+}
+
+/* ── FOOTER LINK ── */
+.footer-link {
+  font-size: 0.85rem;
+  color: var(--gold);
+  text-decoration: none;
+  transition: color 0.3s;
+  display: inline-block;
+  margin-top: 1rem;
+}
+
+.footer-link:hover {
+  color: var(--saffron-lt);
+}
+
+.mobile-toggle {
+  display: none;
+  color: var(--gold);
+  cursor: pointer;
+  font-weight: bold;
+  margin-top: 1.5rem;
+  font-size: 0.9rem;
+  transition: color 0.3s;
+}
+
+.mobile-toggle:hover {
+  color: var(--saffron-lt);
+}
+
+/* ── RESPONSIVE ── */
+@media(max-width: 768px) {
+  .login-wrapper {
+    max-width: 100%;
+    height: auto;
+    overflow: visible;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .form-container {
+    position: relative;
+    width: 100%;
+    height: auto;
+    opacity: 1;
+    transform: none !important;
+    left: auto;
+    top: auto;
+  }
+
+  .sign-up-container {
+    display: none;
+  }
+
+  .login-wrapper.right-panel-active .sign-up-container {
+    display: flex;
+    opacity: 1;
+  }
+
+  .login-wrapper.right-panel-active .sign-in-container {
+    display: none;
+  }
+
+  .overlay-container {
+    display: none;
+  }
+
+  .mobile-toggle {
+    display: block;
+  }
 }
 
 /* ── AUDIO INDICATOR ── */
@@ -353,54 +622,93 @@ body::after{
 
 <!-- LOGIN CONTAINER -->
 <div id="login-container">
-  <div class="login-wrapper">
-    <!-- HEADER -->
-    <div class="login-header">
-      <div class="logo-dharma">ॐ</div>
-      <div class="logo-text">Nyay Mitra</div>
-      <div class="logo-sub">न्याय मित्र · Friend of Justice</div>
-    </div>
-
-    <!-- TAB TOGGLES -->
-    <div class="tab-toggle">
-      <button class="tab-btn active" data-tab="login">Login</button>
-      <button class="tab-btn" data-tab="register">Register</button>
-    </div>
-
+  <div class="login-wrapper" id="container">
+    
     <!-- LOGIN FORM -->
-    <div class="form-container" id="login-form">
-      <div id="login-message"></div>
-      <div class="form-group">
-        <label for="login-username">Username</label>
-        <input type="text" id="login-username" placeholder="Enter your username" autocomplete="username">
+    <div class="form-container sign-in-container">
+      <div class="login-header">
+        <div class="logo-dharma">ॐ</div>
+        <div class="logo-text">Nyay Mitra</div>
+        <div class="logo-sub">न्याय मित्र · Friend of Justice</div>
       </div>
-      <div class="form-group" style="position:relative">
-        <label for="login-password">Password</label>
-        <input type="password" id="login-password" placeholder="Enter your password" autocomplete="current-password">
-        <button class="password-toggle" type="button" onclick="togglePassword('login-password')">👁️</button>
-      </div>
-      <button class="form-btn" onclick="handleLogin()">Login</button>
+      
+      <form onsubmit="handleLogin(event)">
+        <div id="login-message"></div>
+        
+        <div class="form-group">
+          <label for="login-username">Username</label>
+          <input type="text" id="login-username" placeholder="Enter your username" autocomplete="username" required>
+          <i class="fas fa-user"></i>
+        </div>
+        
+        <div class="form-group" style="position:relative">
+          <label for="login-password">Password</label>
+          <input type="password" id="login-password" placeholder="Enter your password" autocomplete="current-password" required>
+          <i class="fas fa-lock"></i>
+          <button class="password-toggle" type="button" onclick="togglePassword('login-password')">👁️</button>
+        </div>
+        
+        <a href="#" class="footer-link">Forgot your password?</a>
+        <button class="form-btn" type="submit">Sign In</button>
+        <div class="mobile-toggle" onclick="toggleMobile()">Don't have an account? Sign Up</div>
+      </form>
     </div>
 
-    <!-- REGISTER FORM (HIDDEN) -->
-    <div class="form-container" id="register-form" style="display:none">
-      <div id="register-message"></div>
-      <div class="form-group">
-        <label for="register-username">Username</label>
-        <input type="text" id="register-username" placeholder="Choose a username" autocomplete="username">
+    <!-- REGISTER FORM -->
+    <div class="form-container sign-up-container">
+      <div class="login-header">
+        <div class="logo-dharma">ॐ</div>
+        <div class="logo-text">Nyay Mitra</div>
+        <div class="logo-sub">न्याय मित्र · Friend of Justice</div>
       </div>
-      <div class="form-group" style="position:relative">
-        <label for="register-password">Password</label>
-        <input type="password" id="register-password" placeholder="Create a strong password" autocomplete="new-password">
-        <button class="password-toggle" type="button" onclick="togglePassword('register-password')">👁️</button>
-      </div>
-      <div class="form-group" style="position:relative">
-        <label for="register-confirm">Confirm Password</label>
-        <input type="password" id="register-confirm" placeholder="Confirm your password" autocomplete="new-password">
-        <button class="password-toggle" type="button" onclick="togglePassword('register-confirm')">👁️</button>
-      </div>
-      <button class="form-btn" onclick="handleRegister()">Register</button>
+      
+      <form onsubmit="handleRegister(event)">
+        <div id="register-message"></div>
+        
+        <div class="form-group">
+          <label for="register-username">Username</label>
+          <input type="text" id="register-username" placeholder="Choose a username" autocomplete="username" required>
+          <i class="fas fa-user"></i>
+        </div>
+        
+        <div class="form-group" style="position:relative">
+          <label for="register-password">Password</label>
+          <input type="password" id="register-password" placeholder="Create a strong password" autocomplete="new-password" required>
+          <i class="fas fa-lock"></i>
+          <button class="password-toggle" type="button" onclick="togglePassword('register-password')">👁️</button>
+        </div>
+        
+        <div class="form-group" style="position:relative">
+          <label for="register-confirm">Confirm Password</label>
+          <input type="password" id="register-confirm" placeholder="Confirm your password" autocomplete="new-password" required>
+          <i class="fas fa-lock"></i>
+          <button class="password-toggle" type="button" onclick="togglePassword('register-confirm')">👁️</button>
+        </div>
+        
+        <button class="form-btn" type="submit">Sign Up</button>
+        <div class="mobile-toggle" onclick="toggleMobile()">Already have an account? Sign In</div>
+      </form>
     </div>
+
+    <!-- OVERLAY CONTAINER -->
+    <div class="overlay-container">
+      <div class="overlay">
+        <!-- Overlay Left (Sign In Panel) -->
+        <div class="overlay-panel overlay-left">
+          <h1>Welcome Back!</h1>
+          <p>Enter your credentials to access your justice portal</p>
+          <button class="btn ghost" id="signIn">Sign In</button>
+        </div>
+        
+        <!-- Overlay Right (Sign Up Panel) -->
+        <div class="overlay-panel overlay-right">
+          <h1>Hello, Friend!</h1>
+          <p>Join the Nyay Mitra community and start your journey</p>
+          <button class="btn ghost" id="signUp">Sign Up</button>
+        </div>
+      </div>
+    </div>
+
   </div>
 </div>
 
@@ -581,28 +889,93 @@ style.textContent=`
 `;
 document.head.appendChild(style);
 
-// ── TAB SWITCHING ──
-document.querySelectorAll('.tab-btn').forEach(btn=>{
-  btn.addEventListener('click',()=>{
-    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
-    document.querySelectorAll('.form-container').forEach(f=>f.style.display='none');
-    
-    btn.classList.add('active');
-    const tab=btn.dataset.tab;
-    document.getElementById(tab+'-form').style.display='block';
-    
-    document.getElementById(tab+'-message').innerHTML='';
-  });
+// ── NEUMORPHIC SLIDING ANIMATION ──
+const container = document.getElementById('container');
+const signUpButton = document.getElementById('signUp');
+const signInButton = document.getElementById('signIn');
+
+signUpButton.addEventListener('click', () => {
+  container.classList.add('right-panel-active');
 });
 
+signInButton.addEventListener('click', () => {
+  container.classList.remove('right-panel-active');
+});
+
+// Mobile toggle function
+function toggleMobile() {
+  if (container.classList.contains('right-panel-active')) {
+    container.classList.remove('right-panel-active');
+  } else {
+    container.classList.add('right-panel-active');
+  }
+}
+
 // ── PASSWORD TOGGLE ──
-function togglePassword(id){
-  const input=document.getElementById(id);
-  input.type=input.type==='password'?'text':'password';
+function togglePassword(id) {
+  const input = document.getElementById(id);
+  input.type = input.type === 'password' ? 'text' : 'password';
+}
+
+// ── FORM SUBMISSION HANDLERS ──
+function handleLogin(event) {
+  event.preventDefault();
+  const form = event.target;
+  const btn = form.querySelector('.form-btn');
+  const msgDiv = document.getElementById('login-message');
+  const originalText = btn.innerText;
+
+  // Loading state
+  btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i>';
+
+  // Simulate submission
+  setTimeout(() => {
+    btn.innerText = originalText;
+    showMessage(msgDiv, 'Login successful!', 'success');
+    form.reset();
+  }, 1500);
+}
+
+function handleRegister(event) {
+  event.preventDefault();
+  const form = event.target;
+  const btn = form.querySelector('.form-btn');
+  const msgDiv = document.getElementById('register-message');
+  const originalText = btn.innerText;
+
+  // Verify passwords match
+  const password = document.getElementById('register-password').value;
+  const confirm = document.getElementById('register-confirm').value;
+
+  if (password !== confirm) {
+    showMessage(msgDiv, 'Passwords do not match!', 'error');
+    return;
+  }
+
+  // Loading state
+  btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i>';
+
+  // Simulate submission
+  setTimeout(() => {
+    btn.innerText = originalText;
+    showMessage(msgDiv, 'Registration successful!', 'success');
+    form.reset();
+  }, 1500);
+}
+
+function showMessage(msgDiv, text, type) {
+  const message = document.createElement('div');
+  message.className = `message ${type}`;
+  message.innerText = text;
+  msgDiv.innerHTML = '';
+  msgDiv.appendChild(message);
+  setTimeout(() => {
+    message.remove();
+  }, 3000);
 }
 
 // ── INITIALIZE ──
-window.addEventListener('load',()=>{
+window.addEventListener('load', () => {
   animate();
   initializeSharedAudio();
   startSharedAudio();
