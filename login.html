@@ -203,16 +203,19 @@ body::after{
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  padding: 0 40px;
+  padding: 40px;
   text-align: center;
   top: 0;
   height: 100%;
   width: 50%;
   transform: translateX(0);
   transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
 .overlay-left {
+  left: 0;
   transform: translateX(-20%);
 }
 
@@ -232,8 +235,11 @@ body::after{
 .overlay-panel h1 {
   font-family: 'Cinzel Decorative', serif;
   font-size: 2rem;
+  font-weight: 700;
   text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
   margin-bottom: 1rem;
+  word-wrap: break-word;
+  white-space: normal;
 }
 
 .overlay-panel p {
@@ -241,6 +247,10 @@ body::after{
   font-size: 0.95rem;
   margin-bottom: 2rem;
   opacity: 0.95;
+  max-width: 100%;
+  word-wrap: break-word;
+  white-space: normal;
+  line-height: 1.6;
 }
 
 /* ── HEADER ── */
