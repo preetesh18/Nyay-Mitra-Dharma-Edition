@@ -938,12 +938,43 @@ function handleLogin(event) {
   // Loading state
   btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i>';
 
-  // Simulate submission
+  // Call the actual authentication from auth.js
   setTimeout(() => {
-    btn.innerText = originalText;
-    showMessage(msgDiv, 'Login successful!', 'success');
-    form.reset();
-  }, 1500);
+    // Get form values
+    const username = document.getElementById('login-username').value.trim();
+    const password = document.getElementById('login-password').value;
+
+    if (!username || !password) {
+      btn.innerText = originalText;
+      showMessage(msgDiv, 'Please fill in all fields', 'error');
+      return;
+    }
+
+    initializeAuth();
+    const users = JSON.parse(localStorage.getItem('nyay-users') || '{}');
+
+    if (users[username] && users[username].password === btoa(password)) {
+      // Success - set session and redirect
+      localStorage.setItem('nyay-current-user', username);
+      localStorage.setItem('nyay-session-time', Date.now());
+      
+      btn.innerText = originalText;
+      showMessage(msgDiv, '✓ Login successful! Redirecting...', 'success');
+
+      // Determine redirect URL
+      const isAdminUser = users[username].role === 'administrator';
+      const redirectUrl = isAdminUser ? 'admin-panel.html' : 'index.html';
+
+      // Redirect after a short delay
+      setTimeout(() => {
+        window.location.href = redirectUrl;
+      }, 1000);
+    } else {
+      btn.innerText = originalText;
+      showMessage(msgDiv, 'Invalid username or password', 'error');
+      document.getElementById('login-password').value = '';
+    }
+  }, 800);
 }
 
 function handleRegister(event) {
@@ -965,12 +996,46 @@ function handleRegister(event) {
   // Loading state
   btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i>';
 
-  // Simulate submission
+  // Register new user
   setTimeout(() => {
+    const username = document.getElementById('register-username').value.trim();
+
+    if (!username || !password) {
+      btn.innerText = originalText;
+      showMessage(msgDiv, 'Please fill in all fields', 'error');
+      return;
+    }
+
+    initializeAuth();
+    let users = JSON.parse(localStorage.getItem('nyay-users') || '{}');
+
+    if (users[username]) {
+      btn.innerText = originalText;
+      showMessage(msgDiv, 'Username already exists', 'error');
+      return;
+    }
+
+    // Create new user
+    users[username] = {
+      username: username,
+      password: btoa(password),
+      createdAt: new Date().toISOString(),
+      role: 'regular'
+    };
+
+    localStorage.setItem('nyay-users', JSON.stringify(users));
     btn.innerText = originalText;
-    showMessage(msgDiv, 'Registration successful!', 'success');
+    showMessage(msgDiv, '✓ Registration successful! Please login.', 'success');
+
+    // Reset form
     form.reset();
-  }, 1500);
+
+    // Switch to login form
+    setTimeout(() => {
+      container.classList.remove('right-panel-active');
+      document.getElementById('login-username').focus();
+    }, 1500);
+  }, 800);
 }
 
 function showMessage(msgDiv, text, type) {
