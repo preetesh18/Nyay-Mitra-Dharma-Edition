@@ -242,10 +242,12 @@ class SoundSystem {
     if (this.isMuted) {
       this.isMuted = false;
       audio.volume = this.lastVolume;
+      this.bgMusicGain.gain.value = this.lastVolume;
     } else {
       this.isMuted = true;
       this.lastVolume = audio.volume;
       audio.volume = 0;
+      this.bgMusicGain.gain.value = 0;
     }
     localStorage.setItem('bgMusicMuted', this.isMuted);
     this.updateUI();
@@ -275,6 +277,7 @@ class SoundSystem {
     this.bgMusicVolume = Math.max(0, Math.min(vol, 1));
     if (!this.isMuted) {
       audio.volume = this.bgMusicVolume;
+      this.bgMusicGain.gain.value = this.bgMusicVolume;
     }
     this.lastVolume = this.bgMusicVolume;
     localStorage.setItem('bgMusicVolume', this.bgMusicVolume);
@@ -289,8 +292,9 @@ class SoundSystem {
       return;
     }
     
-    // Set volume
+    // Set volume on both audio systems
     audio.volume = this.isMuted ? 0 : this.bgMusicVolume;
+    this.bgMusicGain.gain.value = this.isMuted ? 0 : this.bgMusicVolume;
     
     // Play audio
     const playPromise = audio.play();
