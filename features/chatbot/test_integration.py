@@ -209,7 +209,7 @@ def test_gemini_connectivity():
 def main():
     """Run all tests"""
     print("\n" + "#"*70)
-    print("# NAYA MITRA AI - INTEGRATION TEST SUITE")
+    print("# NYAY MITRA AI - INTEGRATION TEST SUITE")
     print("#"*70)
     
     tests = [

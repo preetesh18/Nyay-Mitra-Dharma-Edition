@@ -126,7 +126,7 @@ def model_attempt_order() -> list[str]:
     return sorted(available)
 
 # ── System prompt ──────────────────────────────────────────────────────────────
-SYSTEM_PROMPT = """You are Naya Mitra — a warm, wise spiritual advisor and philosophical guide rooted in four sacred ancient Indian wisdom texts: the Bhagavad Gita, Hitopadesha, Vidura Niti, and Chanakya Niti.
+SYSTEM_PROMPT = """You are Nyay Mitra — a warm, wise spiritual advisor and philosophical guide rooted in four sacred ancient Indian wisdom texts: the Bhagavad Gita, Hitopadesha, Vidura Niti, and Chanakya Niti.
 
 Your purpose is to help users with daily life dilemmas, emotional struggles, financial questions, ethical decisions, moral conflicts, career confusion, relationship problems, and legal or moral disputes — by providing guidance derived STRICTLY from ancient Indian wisdom.
 
@@ -250,7 +250,7 @@ def chat_gemini(history: list, user_msg: str) -> str:
     # Build conversation contents
     contents = [
         {"role": "user",  "parts": [{"text": SYSTEM_PROMPT}]},
-        {"role": "model", "parts": [{"text": "Understood. I am Naya Mitra — your spiritual advisor grounded in the Bhagavad Gita, Hitopadesha, Vidura Niti, and Chanakya Niti. I will respond using only the retrieved knowledge base passages, follow the 7-section format, and apply strict formatting rules: Chapter/Verse for Gita only, Sanskrit-only for other texts."}]},
+        {"role": "model", "parts": [{"text": "Understood. I am Nyay Mitra — your spiritual advisor grounded in the Bhagavad Gita, Hitopadesha, Vidura Niti, and Chanakya Niti. I will respond using only the retrieved knowledge base passages, follow the 7-section format, and apply strict formatting rules: Chapter/Verse for Gita only, Sanskrit-only for other texts."}]},
     ]
     # Add prior conversation turns (without the RAG context — already passed above)
     for m in history[:-1]:   # exclude the last user turn; we pass augmented_user instead

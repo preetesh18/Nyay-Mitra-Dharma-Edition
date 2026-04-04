@@ -1,5 +1,5 @@
 """
-retriever.py — Knowledge-base RAG for Naya Mitra AI
+retriever.py — Knowledge-base RAG for Nyay Mitra AI
 ─────────────────────────────────────────────────────
 Loads all four sacred-text datasets into memory at startup.
 retrieve(query, top_k) returns the most relevant passages via TF-IDF cosine
