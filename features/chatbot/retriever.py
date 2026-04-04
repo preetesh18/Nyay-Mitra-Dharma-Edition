@@ -178,24 +178,28 @@ def _load_vidura(path: Path) -> list[Passage]:
             records = json.load(f)
         
         for r in records:
-            # Extract verse information
-            chapter = r.get("chapter", "")
-            verse = r.get("verse", "")
-            shloka = r.get("shloka", "").strip()
-            meaning = r.get("meaning", "").strip()
+            # Extract verse information from actual JSON structure
+            verse_id = r.get("verse_id", "")
+            sequence = r.get("sequence_number", "")
+            sanskrit_shloka = r.get("sanskrit_shloka", "").strip()
+            translation = r.get("translation", "").strip()
+            context = r.get("context", "").strip()
             
-            if not meaning or len(meaning) < 80:
+            # Use translation as the main content
+            text = translation if translation else context
+            
+            if not text or len(text) < 80:
                 continue
             
-            # Use meaning as primary text
-            text = meaning
+            # Extract only Devanagari Sanskrit from shloka if available
+            sanskrit_only = _extract_devanagari_only(sanskrit_shloka) if sanskrit_shloka else ""
             
-            ref = f"Vidura Niti Chapter {chapter}, Verse {verse}" if chapter and verse else "Vidura Niti"
+            ref = f"Vidura Niti {verse_id}" if verse_id else "Vidura Niti"
             passages.append(Passage(
                 source="Vidura Niti",
                 ref=ref,
                 text=text[:500],
-                sanskrit=shloka,
+                sanskrit=sanskrit_only,
             ))
     except Exception as e:
         print(f"Error loading Vidura Niti JSON: {e}")
@@ -218,6 +222,9 @@ def _load_chanakya(path: Path) -> list[Passage]:
             if not meaning or len(meaning) < 80:
                 continue
             
+            # Extract only the Devanagari Sanskrit part (filter out transliteration)
+            sanskrit_only = _extract_devanagari_only(shloka) if shloka else ""
+            
             # Use meaning as primary text
             text = meaning
             
@@ -226,7 +233,7 @@ def _load_chanakya(path: Path) -> list[Passage]:
                 source="Chanakya Niti",
                 ref=ref,
                 text=text[:500],
-                sanskrit=shloka,
+                sanskrit=sanskrit_only if sanskrit_only else "",
             ))
     except Exception as e:
         print(f"Error loading Chanakya Niti JSON: {e}")
@@ -296,6 +303,46 @@ def retrieve(query: str, top_k: int = 6) -> list[Passage]:
     return results
 
 
+def _extract_devanagari_only(text: str) -> str:
+    """Extract only the Devanagari Sanskrit part from mixed Sanskrit+Transliteration text.
+    
+    Chanakya/Vidura shlokas typically have format:
+    [Devanagari Sanskrit lines]
+    [possibly blank line or spaces]
+    [Latin transliteration lines with lowercase latin + diacritics]
+    
+    This function returns only the Devanagari part.
+    """
+    if not text:
+        return ""
+    
+    lines = text.split("\n")
+    devanagari_lines = []
+    
+    for line in lines:
+        stripped = line.strip()
+        if not stripped:  # Skip empty lines
+            continue
+        
+        # Check if line starts with lowercase Latin letter (indicating transliteration)
+        # OR if it's mostly Latin characters (transliteration)
+        first_char = stripped[0] if stripped else ''
+        
+        # If it starts with lowercase letter OR contains mostly Latin chars, it's transliteration
+        if first_char.islower():
+            # This is likely the start of transliteration, stop here
+            break
+        
+        # Count Devanagari characters
+        devanagari_count = sum(1 for c in line if '\u0900' <= c <= '\u097F')
+        
+        # If line has significant Devanagari content, include it
+        if devanagari_count > 0:
+            devanagari_lines.append(stripped)
+    
+    return "\n".join(devanagari_lines) if devanagari_lines else text
+
+
 def _has_devanagari(text: str) -> bool:
     """Return True if text contains at least one Unicode Devanagari character."""
     return any('\u0900' <= c <= '\u097F' for c in text)
@@ -312,9 +359,10 @@ def format_passages_for_prompt(passages: list[Passage]) -> str:
     - Format: "Bhagavad Gita | Chapter X, Verse Y"
     
     **FOR ALL OTHER TEXTS (Chanakya Niti, Vidura Niti, Hitopadesha):**
-    - Show ONLY the source name and Sanskrit shloka
+    - Show ONLY the source name and Sanskrit shloka (if available in Devanagari)
     - NEVER show chapter/verse numbers for non-Gita texts
     - NEVER show English meaning or teaching for non-Gita texts
+   - ONLY show Sanskrit if it contains actual Devanagari characters
     - Format: "[Source Name]: Sanskrit text"
     """
     if not passages:
@@ -348,19 +396,17 @@ def format_passages_for_prompt(passages: list[Passage]) -> str:
             # ONLY show source name and Sanskrit
             lines.append(f"[{i}] {p.source}")
             
-            # ONLY include Sanskrit — nothing else
+            # ONLY include Sanskrit if it contains Devanagari - otherwise skip
             if p.sanskrit and _has_devanagari(p.sanskrit):
                 lines.append(f"    {p.sanskrit}")
-            else:
-                # Fallback if no Devanagari Sanskrit available
-                pass
+            # If no Devanagari, don't show Sanskrit at all
         
         lines.append("")
     
     lines.append("=== END OF KNOWLEDGE BASE ===\n")
     lines.append("📌 FORMATTING RULES FOR RESPONSE:\n")
     lines.append("• Bhagavad Gita: ALWAYS cite Chapter X, Verse Y with Sanskrit Shloka\n")
-    lines.append("• Other Texts: Show ONLY source name and Sanskrit - NO chapter/verse numbers\n")
+    lines.append("• Other Texts: Show ONLY source name and Sanskrit (if available in Devanagari)\n")
     lines.append("• NEVER fabricate verses not present in the knowledge base\n")
     
     return "\n".join(lines)
