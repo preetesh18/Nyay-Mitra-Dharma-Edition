@@ -1,0 +1,50 @@
+{
+  "Chatbot Homepage": {
+    "status": "\u274c FAIL",
+    "status_code": 200,
+    "response_time": "0.91s",
+    "content_size": "18497 chars",
+    "has_branding": false,
+    "details": "Issue: <!DOCTYPE html>\n<html lang=\"en\">\n<head>\n  <meta charset=\"UTF-8\" />\n  <meta name=\"viewport\" content=\""
+  },
+  "Verdict Homepage": {
+    "status": "\u274c FAIL",
+    "status_code": 500,
+    "response_time": "1.92s",
+    "content_size": "96 chars",
+    "has_branding": false,
+    "details": "Status: 500"
+  },
+  "Chatbot Static Files": {
+    "status": "\u26a0\ufe0f CHECK",
+    "status_code": 404,
+    "details": "Note: Static files may be inlined"
+  },
+  "Chatbot App Import": {
+    "status": "\u274c FAIL",
+    "error": "No module named 'retriever'"
+  },
+  "Verdict App Import": {
+    "status": "\u274c FAIL",
+    "error": "No module named 'retriever'"
+  },
+  "Knowledge Base": {
+    "status": "\u2705 PASS",
+    "gita_passages": 2,
+    "chanakya_passages": 2,
+    "hitopadesha_passages": 2,
+    "total_sample": 6,
+    "details": "All knowledge sources accessible and indexed"
+  },
+  "Configuration": {
+    "status": "\u2705 PASS",
+    "chatbot_env": "\u2705",
+    "verdict_env": "\u2705",
+    "details": "Both .env files present"
+  },
+  "GitHub Integration": {
+    "status": "\u2705 PASS",
+    "latest_commit": "45798d6 config: Set dharma_verdict to use same Gemini API key as chatbot",
+    "details": "Repository up to date"
+  }
+}
