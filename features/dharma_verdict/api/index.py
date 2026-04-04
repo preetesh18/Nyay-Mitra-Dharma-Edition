@@ -11,5 +11,6 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from app import app
 
-# Vercel serverless function
-handler = app.asgi  # Using ASGI format for Vercel
+# Vercel serverless handler (WSGI app)
+# Flask apps are WSGI compatible
+handler = app
