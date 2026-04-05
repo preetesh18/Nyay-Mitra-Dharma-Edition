@@ -16,11 +16,5 @@
   "env": {
     "GEMINI_API_KEY": "@gemini_api_key_verdict",
     "FLASK_ENV": "production"
-  },
-  "functions": {
-    "wsgi.py": {
-      "maxDuration": 60,
-      "memory": 1024
-    }
   }
 }
