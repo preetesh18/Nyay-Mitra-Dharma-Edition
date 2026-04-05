@@ -281,9 +281,11 @@ def retrieve(query: str, top_k: int = 6) -> list[Passage]:
     # Ensure we draw from at least 2 different sources when possible
     seen_sources: dict[str, int] = {}
     results: list[Passage] = []
+    
+    # First pass - try to get results with score > 0
     for score, passage in ranked:
         if score <= 0:
-            break
+            continue  # Skip zero scores but don't break
         src_count = seen_sources.get(passage.source, 0)
         if src_count >= 2:
             continue  # cap per-source at 2 to keep diversity
@@ -291,6 +293,18 @@ def retrieve(query: str, top_k: int = 6) -> list[Passage]:
         results.append(passage)
         if len(results) >= top_k:
             break
+    
+    # If we got no results (rare edge case), return top passages anyway
+    if not results:
+        seen_sources = {}
+        for score, passage in ranked[:top_k * 3]:  # Look at more candidates
+            src_count = seen_sources.get(passage.source, 0)
+            if src_count >= 2:
+                continue
+            seen_sources[passage.source] = src_count + 1
+            results.append(passage)
+            if len(results) >= top_k:
+                break
 
     # Guarantee at least one Sanskrit-bearing passage is present.
     # If none made it in, swap in the highest-scoring Sanskrit passage.

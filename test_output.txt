@@ -1,0 +1,19 @@
+======================================================================
+TESTING CHATBOT DATA LOADING
+======================================================================
+
+Checking directory: D:\Nyay-Mitra-Dharma Edition\features\chatbot\data
+Exists: True
+Files found: 4
+  - Bhagwad_Gita.csv (1529267 bytes)
+  - chanakya.json (214522 bytes)
+  - hitopadesha.json (282430 bytes)
+  - vidura_niti.json (115205 bytes)
+Traceback (most recent call last):
+  File "D:\Nyay-Mitra-Dharma Edition\test_data_loading.py", line 26, in <module>
+    print(f"\n\u2713 Gita CSV found: {gita_file}")
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python314\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\u2713' in position 2: character maps to <undefined>

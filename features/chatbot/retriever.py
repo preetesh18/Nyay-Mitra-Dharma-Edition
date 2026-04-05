@@ -266,9 +266,14 @@ def retrieve(query: str, top_k: int = 6) -> list[Passage]:
     """Return up to `top_k` passages most relevant to the query."""
     _build_corpus()
     tokens = _tokenize(query)
+    print(f"[DEBUG retrieve] Query: '{query}' -> Tokens: {tokens}", flush=True)
     if not tokens:
+        print(f"[DEBUG retrieve] No tokens extracted, returning empty", flush=True)
         return []
     scores = _tfidf_scores(tokens, _corpus)
+    print(f"[DEBUG retrieve] Got {len(scores)} scores, non-zero: {sum(1 for s in scores if s > 0)}", flush=True)
+    if scores:
+        print(f"[DEBUG retrieve] Score range: min={min(scores):.4f}, max={max(scores):.4f}", flush=True)
 
     # Apply 2x boost for passages with proper Devanagari Sanskrit so they
     # consistently outrank raw passages that have no verse text.
@@ -281,9 +286,11 @@ def retrieve(query: str, top_k: int = 6) -> list[Passage]:
     # Ensure we draw from at least 2 different sources when possible
     seen_sources: dict[str, int] = {}
     results: list[Passage] = []
+    
+    # First pass - try to get results with score > 0
     for score, passage in ranked:
         if score <= 0:
-            break
+            continue  # Skip zero scores but don't break
         src_count = seen_sources.get(passage.source, 0)
         if src_count >= 2:
             continue  # cap per-source at 2 to keep diversity
@@ -291,6 +298,21 @@ def retrieve(query: str, top_k: int = 6) -> list[Passage]:
         results.append(passage)
         if len(results) >= top_k:
             break
+    
+    # If we got no results (rare edge case), return top passages anyway
+    if not results:
+        print(f"[DEBUG] No score-matched passages, returning top passages anyway", flush=True)
+        seen_sources = {}
+        for score, passage in ranked[:top_k * 3]:  # Look at more candidates
+            src_count = seen_sources.get(passage.source, 0)
+            if src_count >= 2:
+                continue
+            seen_sources[passage.source] = src_count + 1
+            results.append(passage)
+            if len(results) >= top_k:
+                break
+
+    print(f"[DEBUG retrieve] Returning {len(results)} results", flush=True)
 
     # Guarantee at least one Sanskrit-bearing passage is present.
     # If none made it in, swap in the highest-scoring Sanskrit passage.
