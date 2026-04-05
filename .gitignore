@@ -1,0 +1,54 @@
+# Environment Variables (NEVER commit these!)
+.env
+.env.local
+.env.*.local
+.env*.local
+
+# Python Cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+dist/
+build/
+.Python
+env/
+venv/
+ENV/
+.venv
+
+# Vercel
+.vercel/
+.vercel-build-output/
+
+# IDE
+.vscode/
+.idea/
+.DS_Store
+*.swp
+*.swo
+*~
+.sublime-project
+.sublime-workspace
+
+# OS Files
+Thumbs.db
+.DS_Store
+*.log
+
+# Node (if using frontend)
+node_modules/
+npm-debug.log
+yarn-error.log
+.next/
+out/
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Temporary files
+*.tmp
+*.bak
+.cache/
