@@ -75,7 +75,12 @@ _AVAILABLE_GEMINI_MODELS = None
 
 def get_gemini_api_key():
     """Get API key at runtime to support environment variable updates."""
-    return os.environ.get("GEMINI_API_KEY", "").strip()
+    key = os.environ.get("GEMINI_API_KEY", "").strip()
+    if not key:
+        log.warning("🔴 GEMINI_API_KEY is NOT SET in environment variables!")
+    else:
+        log.info(f"✅ API Key loaded: {key[:10]}...{key[-5:]}")
+    return key
 
 
 def discover_gemini_models() -> set[str]:
@@ -220,6 +225,7 @@ STRICT RULES (DO NOT BREAK):
 
 def chat_gemini(history: list, user_msg: str) -> str:
     api_key = get_gemini_api_key()
+    print(f"🔑 DEBUG: Checking API key... Present: {bool(api_key)}, Length: {len(api_key) if api_key else 0}", flush=True)
     if not api_key:
         raise RuntimeError("GEMINI_API_KEY is not set")
 
