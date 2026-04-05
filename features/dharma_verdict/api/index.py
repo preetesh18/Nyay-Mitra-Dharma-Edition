@@ -4,15 +4,23 @@ This file exports the Flask app for Vercel to run as a serverless function.
 """
 
 import sys
+import os
 from pathlib import Path
 
-# Add parent directory to path so we can import app
+# Ensure parent directory is in path for imports
 parent_dir = Path(__file__).parent.parent
-sys.path.insert(0, str(parent_dir))
+if str(parent_dir) not in sys.path:
+    sys.path.insert(0, str(parent_dir))
 
-from app import app
+try:
+    from app import app
+    print("✅ Successfully imported Flask app", flush=True)
+except ImportError as e:
+    print(f"❌ Failed to import app: {e}", flush=True)
+    raise
 
 # Vercel expects a WSGI app at module level named 'app'
-# Our Flask app is already named 'app' in app.py
-# Just re-export it for Vercel
+if not hasattr(app, '__call__'):
+    raise RuntimeError("Flask app is not callable - check app.py exports")
+
 __all__ = ['app']
