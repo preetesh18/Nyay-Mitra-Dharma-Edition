@@ -18,8 +18,7 @@
   ],
   "env": {
     "GEMINI_API_KEY": "@gemini-api-key",
-    "FLASK_ENV": "production",
-    "FLASK_SECRET_KEY": "@flask-secret-key"
+    "FLASK_ENV": "production"
   },
   "functions": {
     "api/index.py": {

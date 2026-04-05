@@ -14,7 +14,7 @@ from datetime import datetime
 from pathlib import Path
 from dotenv import load_dotenv
 
-from flask import Flask, render_template, request, jsonify, session
+from flask import Flask, request, jsonify
 import httpx
 
 from retriever import retrieve, format_passages_for_prompt
@@ -23,7 +23,7 @@ load_dotenv()
 
 # ── App setup ──────────────────────────────────────────────────────────────────
 app = Flask(__name__)
-app.secret_key = os.environ.get("FLASK_SECRET_KEY", "naya-mitra-change-me")
+# Stateless API - no session management needed for Vercel deployment
 
 logging.basicConfig(level=logging.INFO, format="%(levelname)s  %(message)s")
 log = logging.getLogger(__name__)
@@ -314,20 +314,12 @@ def chat_gemini(history: list, user_msg: str) -> str:
     return text
 
 # ══════════════════════════════════════════════════════════════════════════════
-# Session / Log helpers
+# Session / Log helpers (stateless)
 # ══════════════════════════════════════════════════════════════════════════════
 
 def get_session_id() -> str:
-    if "sid" not in session:
-        session["sid"] = str(uuid.uuid4())
-    return session["sid"]
-
-def get_history() -> list:
-    return session.get("history", [])
-
-def save_history(h: list):
-    # Keep only the last 6 messages (3 exchanges) to stay within cookie size limits
-    session["history"] = h[-6:]
+    """Generate a new session ID (stateless)"""
+    return str(uuid.uuid4())
 
 def append_log(sid: str, user: str, assistant: str):
     if LOGS_DIR is None:
@@ -349,10 +341,7 @@ def append_log(sid: str, user: str, assistant: str):
 # Routes
 # ══════════════════════════════════════════════════════════════════════════════
 
-@app.route("/")
-def index():
-    get_session_id()
-    return render_template("index.html")
+# Removed index route - API-only backend for Vercel deployment
 
 
 @app.route("/api/test")
@@ -375,9 +364,8 @@ def api_chat():
             return jsonify({"error": "Empty message"}), 400
 
         sid = get_session_id()
-        history = get_history()
-        history.append({"role": "user", "content": user_msg})
-        print(f"✅ Session setup complete, history len={len(history)}", flush=True)
+        history = [{"role": "user", "content": user_msg}]  # Stateless - no session storage
+        print(f"✅ Session ID generated: {sid}", flush=True)
 
         reply = chat_gemini(history, user_msg)
         print(f"✅ Got reply: {len(reply)} chars", flush=True)
@@ -404,19 +392,16 @@ def api_chat():
         log.error("Traceback: %s", traceback.format_exc())
         return jsonify({"error": "Could not reach the wisdom engine. Please try again."}), 503
 
-    history.append({"role": "assistant", "content": reply})
-    save_history(history)
     append_log(sid, user_msg, reply)
     print(f"✅ Response ready", flush=True)
 
-    return jsonify({"reply": reply})
+    return jsonify({"session_id": sid, "reply": reply})
 
 
 @app.route("/api/reset", methods=["POST"])
 def api_reset():
-    session.pop("history", None)
-    session.pop("sid", None)
-    return jsonify({"status": "ok"})
+    # Stateless - no session to reset
+    return jsonify({"status": "ok", "message": "Stateless API - new session created on next request"})
 
 
 @app.route("/api/history")

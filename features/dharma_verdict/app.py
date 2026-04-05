@@ -14,7 +14,7 @@ from datetime import datetime
 from pathlib import Path
 from dotenv import load_dotenv
 
-from flask import Flask, render_template, request, jsonify, session
+from flask import Flask, request, jsonify
 import httpx
 
 from retriever import retrieve, format_passages_for_prompt
@@ -23,7 +23,7 @@ load_dotenv()
 
 # ── App setup ──────────────────────────────────────────────────────────────────
 app = Flask(__name__)
-app.secret_key = os.environ.get("FLASK_SECRET_KEY", "nyay-mitra-dharma-change-me")
+# Stateless API - no session management needed for Vercel deployment
 
 logging.basicConfig(level=logging.INFO, format="%(levelname)s  %(message)s")
 log = logging.getLogger(__name__)
