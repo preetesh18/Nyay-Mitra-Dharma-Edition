@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nyay Mitra - Features</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --gold: #C9A84C;
+            --gold-lt: #F0D483;
+            --saffron: #E8831A;
+            --ink: #080604;
+            --cream: #F5E8CA;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--ink) 0%, #1a1308 100%);
+            color: var(--cream);
+            font-family: 'EB Garamond', serif;
+            min-height: 100vh;
+        }
+
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            padding: 1.5rem 3rem;
+            background: rgba(8, 6, 4, 0.98);
+            border-bottom: 1px solid rgba(201, 168, 76, 0.18);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .brand {
+            font-family: 'Cinzel Decorative', serif;
+            font-size: 1.2rem;
+            background: linear-gradient(120deg, var(--gold-lt), var(--gold), var(--saffron));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        nav a {
+            color: #C4AA80;
+            text-decoration: none;
+            margin: 0 1.5rem;
+            font-family: 'Cinzel', serif;
+            font-size: 0.8rem;
+            letter-spacing: 0.1em;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: var(--gold-lt);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 8rem 2rem 2rem;
+        }
+
+        .page-title {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding-top: 3rem;
+        }
+
+        .page-title h1 {
+            font-family: 'Cinzel Decorative', serif;
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            background: linear-gradient(135deg, var(--gold-lt), var(--gold), var(--saffron));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+        }
+
+        .page-title p {
+            color: #C4AA80;
+            font-size: 1.1rem;
+            font-style: italic;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 3rem;
+            margin: 3rem 0;
+        }
+
+        .feature-card {
+            background: rgba(26, 19, 8, 0.8);
+            border: 1px solid rgba(201, 168, 76, 0.25);
+            border-radius: 8px;
+            padding: 2.5rem;
+            text-align: center;
+            transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .feature-card:hover {
+            background: rgba(26, 19, 8, 0.95);
+            border-color: rgba(201, 168, 76, 0.5);
+            transform: translateY(-8px);
+            box-shadow: 0 20px 50px rgba(201, 168, 76, 0.2);
+        }
+
+        .feature-icon {
+            font-size: 3.5rem;
+            display: block;
+        }
+
+        .feature-card h2 {
+            font-family: 'Cinzel', serif;
+            font-size: 1.5rem;
+            color: var(--gold-lt);
+            letter-spacing: 0.05em;
+        }
+
+        .feature-card p {
+            color: #C4AA80;
+            line-height: 1.8;
+            font-size: 1rem;
+        }
+
+        .feature-card .btn {
+            background: linear-gradient(135deg, var(--gold-lt), var(--gold));
+            color: var(--ink);
+            padding: 0.9rem 2.2rem;
+            border: none;
+            border-radius: 4px;
+            font-family: 'Cinzel', serif;
+            font-size: 0.8rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+            font-weight: 700;
+        }
+
+        .feature-card .btn:hover {
+            background: linear-gradient(135deg, var(--gold), #b8862a);
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(201, 168, 76, 0.4);
+        }
+
+        .back-button {
+            display: inline-block;
+            margin-bottom: 2rem;
+            color: var(--gold);
+            text-decoration: none;
+            font-family: 'Cinzel', serif;
+            font-size: 0.9rem;
+            letter-spacing: 0.1em;
+            transition: color 0.3s;
+        }
+
+        .back-button:hover {
+            color: var(--gold-lt);
+        }
+
+        footer {
+            text-align: center;
+            padding: 3rem 2rem;
+            color: #7A6230;
+            border-top: 1px solid rgba(201, 168, 76, 0.12);
+            margin-top: 5rem;
+        }
+
+        @media (max-width: 768px) {
+            header {
+                padding: 1rem 1.5rem;
+            }
+
+            nav a {
+                margin: 0 0.8rem;
+                font-size: 0.7rem;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="brand">Nyay Mitra</div>
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="index.html#features">Features</a>
+            <a href="index.html#about">About</a>
+        </nav>
+    </header>
+
+    <div class="container">
+        <a href="index.html" class="back-button">← Back to Home</a>
+
+        <div class="page-title">
+            <h1>Our Features</h1>
+            <p>Explore the Divine Tools of Dharmic Wisdom</p>
+        </div>
+
+        <div class="features-grid">
+            <!-- Feature 1: Chatbot -->
+            <div class="feature-card">
+                <span class="feature-icon">🤖</span>
+                <h2>Dharmic Chatbot</h2>
+                <p>
+                    Ask questions about Dharma, ethics, duty, and life guidance. Our AI advisor draws wisdom from ancient texts including the Bhagavad Gita, Chanakya Niti, and Hitopadesha to provide thoughtful insights.
+                </p>
+                <a href="chatbot-standalone.html" class="btn">Open Chatbot →</a>
+            </div>
+
+            <!-- Feature 2: Verdict Analyzer -->
+            <div class="feature-card">
+                <span class="feature-icon">⚖️</span>
+                <h2>Verdict Analyzer</h2>
+                <p>
+                    Get dharmic perspective on legal cases and disputes. Understand both sides of cases through the lens of ancient wisdom and ethical principles for balanced judgment.
+                </p>
+                <a href="dharma-verdict-standalone.html" class="btn">Analyze Cases →</a>
+            </div>
+
+            <!-- Feature 3: Studies -->
+            <div class="feature-card">
+                <span class="feature-icon">📚</span>
+                <h2>Sacred Studies</h2>
+                <p>
+                    Explore in-depth studies of sacred texts, dharmic principles, and their applications in modern life. Learn the foundations of Nyaya philosophy.
+                </p>
+                <a href="studies.html" class="btn">Read Studies →</a>
+            </div>
+
+            <!-- Feature 4: Texts Hub -->
+            <div class="feature-card">
+                <span class="feature-icon">📖</span>
+                <h2>Texts Hub</h2>
+                <p>
+                    Access a comprehensive library of Dharmic texts, including the Bhagavad Gita, Chanakya Niti, Hitopadesha, and Vidura Niti in searchable formats.
+                </p>
+                <a href="texts-hub.html" class="btn">Browse Texts →</a>
+            </div>
+
+            <!-- Feature 5: Modern Law -->
+            <div class="feature-card">
+                <span class="feature-icon">⚡</span>
+                <h2>Modern Law &amp; Dharma</h2>
+                <p>
+                    Explore the intersection of modern legal systems with ancient dharmic principles. Understand how timeless wisdom applies to contemporary justice.
+                </p>
+                <a href="modern-law.html" class="btn">Learn More →</a>
+            </div>
+
+            <!-- Feature 6: Yugas -->
+            <div class="feature-card">
+                <span class="feature-icon">🌍</span>
+                <h2>Yugas &amp; Ages</h2>
+                <p>
+                    Understand the cosmological cycles of Yugas - the four ages of Hindu philosophy - and their significance in the grand cycle of creation.
+                </p>
+                <a href="yuga-events.html" class="btn">Explore Yugas →</a>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>Nyay Mitra — न्याय मित्र · Friend of Justice</p>
+        <p style="margin-top: 1rem; font-size: 0.9rem; opacity: 0.7;">Bringing ancient wisdom to modern times</p>
+    </footer>
+
+    <script>
+        // Add smooth scroll behavior
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                const href = this.getAttribute('href');
+                if (href !== '#' && document.querySelector(href)) {
+                    e.preventDefault();
+                    document.querySelector(href).scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

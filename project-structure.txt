@@ -1,0 +1,32 @@
+At line:2 char:28
++ function Show-Tree([string]\, [int]\ = 0, [int]\ = 2) {
++                            ~
+Parameter declarations are a comma-separated list of variable names with optional 
+initializer expressions.
+At line:2 char:28
++ function Show-Tree([string]\, [int]\ = 0, [int]\ = 2) {
++                            ~
+Missing ')' in function parameter list.
+At line:3 char:47
++     Get-ChildItem -Path \ -Force | where {-not \.Name.StartsWith('.') ...
++                                               ~
+Missing expression after unary operator '-not'.
+At line:3 char:48
++ ...  Get-ChildItem -Path \ -Force | where {-not \.Name.StartsWith('.')} | ...
++                                                 ~~~~~~~~~~~~~~~~~
+Unexpected token '\.Name.StartsWith' in expression or statement.
+At line:4 char:15
++         '  ' * \ + '+- ' + \.Name
++               ~
+You must provide a value expression following the '*' operator.
+At line:4 char:16
++         '  ' * \ + '+- ' + \.Name
++                ~
+Unexpected token '\' in expression or statement.
+At line:9 char:1
++ }
++ ~
+Unexpected token '}' in expression or statement.
+    + CategoryInfo          : ParserError: (:) [], ParentContainsErrorRecordException
+    + FullyQualifiedErrorId : InvalidFunctionParameter
+ 
