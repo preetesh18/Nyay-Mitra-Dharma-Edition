@@ -796,9 +796,10 @@
 </footer>
 
 <script>
-  // Demo verdicts for testing without server
+  // Demo verdicts for testing without server (with full metadata for v2.0 display)
   const demoVerdicts = [
-    `## Nyay Mitra Analysis
+    {
+      verdict: `## Nyay Mitra Analysis
 
 ### 🙏 Compassionate Assessment
 Both parties present valid concerns rooted in differing perspectives. Justice requires acknowledging the legitimate grievances of both while seeking equitable resolution.
@@ -815,8 +816,37 @@ Both parties present valid concerns rooted in differing perspectives. Justice re
 
 ### 🌸 Path Forward
 Let this verdict serve as a guide toward reconciliation and mutual respect.`,
-
-    `## The Verdict of Dharmic Justice
+      metadata: {
+        query_analysis: {
+          emotion_detected: "anger",
+          intent: "judgment",
+          confidence: 0.82,
+          keywords_matched: ["justice", "fairness", "duty", "resolution"]
+        },
+        sources: [
+          {
+            verse_id: "BG-2.47",
+            source: "Bhagavad Gita",
+            confidence_level: "VERIFIED",
+            chapter: 2,
+            verse: 47,
+            shloka_sanskrit: "कर्मण्येवाधिकारस्ते मा फलेषु कदाचन",
+            english_translation: "Your right is to work only, but never to its fruits; let not the fruit of action be your motive"
+          },
+          {
+            verse_id: "Chanakya-3.5",
+            source: "Chanakya Niti",
+            confidence_level: "MODERATE",
+            chapter: 3,
+            verse: 5,
+            shloka_sanskrit: "न्यायो धर्मस्य मूलम्",
+            english_translation: "Justice is the root of dharma"
+          }
+        ]
+      }
+    },
+    {
+      verdict: `## The Verdict of Dharmic Justice
 
 ### 🙏 Emotional Wisdom
 The emotions present in this case reflect deep human concerns that deserve respect and understanding.
@@ -834,8 +864,37 @@ The emotions present in this case reflect deep human concerns that deserve respe
 
 ### 🌸 Resolution Path
 True justice emerges when all parties recognize their shared humanity and commitment to dharma.`,
-
-    `## Sacred Verdict - The Oracle Speaks
+      metadata: {
+        query_analysis: {
+          emotion_detected: "confusion",
+          intent: "guidance",
+          confidence: 0.75,
+          keywords_matched: ["wisdom", "understanding", "dignity", "dharma"]
+        },
+        sources: [
+          {
+            verse_id: "Hitopadesha-2.8",
+            source: "Hitopadesha",
+            confidence_level: "HIGH",
+            chapter: 2,
+            verse: 8,
+            shloka_sanskrit: "प्रियवाडी सदा प्रिय:",
+            english_translation: "One who speaks kindly is always dear"
+          },
+          {
+            verse_id: "Vidura-3.12",
+            source: "Vidura Niti",
+            confidence_level: "HIGH",
+            chapter: 3,
+            verse: 12,
+            shloka_sanskrit: "सत्यं ब्रूयाद् प्रियं ब्रूयाद्",
+            english_translation: "Speak truth, speak pleasantly; speak not unpleasant truths"
+          }
+        ]
+      }
+    },
+    {
+      verdict: `## Sacred Verdict - The Oracle Speaks
 
 ### 🙏 Analysis Complete
 This case reflects universal human challenges that have been addressed by dharmic wisdom for millennia.
@@ -851,7 +910,27 @@ This teaches us that our actions matter profoundly for others' behavior and outc
 - **For Both:** Remember that dharma transcends individual victory or defeat
 
 ### 🌸 Final Guidance
-May this verdict illuminate the path toward justice that serves the highest good of all involved.`
+May this verdict illuminate the path toward justice that serves the highest good of all involved.`,
+      metadata: {
+        query_analysis: {
+          emotion_detected: "fear",
+          intent: "conflict",
+          confidence: 0.78,
+          keywords_matched: ["action", "standard", "dharma", "victory"]
+        },
+        sources: [
+          {
+            verse_id: "BG-3.21",
+            source: "Bhagavad Gita",
+            confidence_level: "VERIFIED",
+            chapter: 3,
+            verse: 21,
+            shloka_sanskrit: "यद्यत् आचरति श्रेष्ठस् तत् तत् एव इतरः जनः",
+            english_translation: "Whatever a great man does, other people follow the same path"
+          }
+        ]
+      }
+    }
   ];
 
   let demoIndex = 0;
@@ -876,6 +955,7 @@ May this verdict illuminate the path toward justice that serves the highest good
 
     try {
       let data;
+      let metadata = null;
       try {
         const res = await fetch('/analyze', {
           method: 'POST',
@@ -883,9 +963,19 @@ May this verdict illuminate the path toward justice that serves the highest good
           body: JSON.stringify({ plaintiff, defendant, facts })
         });
         data = await res.json();
+        
+        // Extract v2.0 metadata if available
+        if (data.query_analysis || data.sources) {
+          metadata = {
+            query_analysis: data.query_analysis,
+            sources: data.sources
+          };
+        }
       } catch (e) {
-        // Fallback to demo verdict
-        data = { verdict: demoVerdicts[demoIndex % demoVerdicts.length] };
+        // Fallback to demo verdict (now includes metadata)
+        const demoData = demoVerdicts[demoIndex % demoVerdicts.length];
+        data = { verdict: demoData.verdict };
+        metadata = demoData.metadata || null;
         demoIndex++;
       }
 
@@ -898,8 +988,49 @@ May this verdict illuminate the path toward justice that serves the highest good
         return;
       }
 
-      const rendered = marked.parse(data.verdict || '');
-      document.getElementById('verdict-content').innerHTML = rendered;
+      let verdictHtml = marked.parse(data.verdict || '');
+      
+      // Add metadata if available (v2.0 format)
+      if (metadata) {
+        let metadataHtml = '<div style="margin-top: 20px; padding: 15px; background: rgba(212,160,23,0.08); border-left: 3px solid var(--gold); border-radius: 4px;">';
+        
+        // Add query analysis
+        if (metadata.query_analysis) {
+          const qa = metadata.query_analysis;
+          const emoticon = getEmoticonForEmotion(qa.emotion_detected);
+          metadataHtml += `
+            <p style="font-size: 0.9em; margin-bottom: 10px;">
+              <strong style="color: var(--gold);">📊 Case Analysis:</strong><br>
+              ${emoticon} <em>Emotional Tone:</em> ${qa.emotion_detected} 
+              | <em>Intent:</em> ${qa.intent} 
+              | <em>Confidence:</em> ${(qa.confidence * 100).toFixed(0)}%
+            </p>
+          `;
+        }
+        
+        // Add sources
+        if (metadata.sources && metadata.sources.length > 0) {
+          metadataHtml += '<p style="font-size: 0.9em;"><strong style="color: var(--gold);">📿 Dharmic References:</strong><br>';
+          metadata.sources.slice(0, 4).forEach(source => {
+            const confidenceBadge = getConfidenceBadge(source.confidence_level);
+            const citation = source.chapter && source.verse 
+              ? `${source.verse_id} (Chapter ${source.chapter}, Verse ${source.verse})`
+              : source.verse_id;
+            
+            metadataHtml += `
+              <span style="display: inline-block; margin: 4px 8px 4px 0; padding: 4px 8px; background: rgba(201,168,76,0.15); border-radius: 3px; font-size: 0.85em;">
+                <strong>${citation}</strong> <em>from ${source.source}</em> ${confidenceBadge}
+              </span><br>
+            `;
+          });
+          metadataHtml += '</p>';
+        }
+        
+        metadataHtml += '</div>';
+        verdictHtml = verdictHtml + metadataHtml;
+      }
+      
+      document.getElementById('verdict-content').innerHTML = verdictHtml;
       document.getElementById('verdict-section').classList.add('active');
       document.getElementById('verdict-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
 
@@ -909,6 +1040,29 @@ May this verdict illuminate the path toward justice that serves the highest good
       document.getElementById('input-section').style.display = 'block';
       showError('Network error. Please ensure the server is running.');
     }
+  }
+  
+  function getEmoticonForEmotion(emotion) {
+    const emoticons = {
+      "confusion": "❓",
+      "fear": "😨",
+      "guilt": "😔",
+      "anger": "😠",
+      "joy": "😊",
+      "seeking": "🔍",
+      "neutral": "😐"
+    };
+    return emoticons[emotion] || "💭";
+  }
+  
+  function getConfidenceBadge(level) {
+    const badges = {
+      "VERIFIED": "✓ VERIFIED",
+      "HIGH": "★ HIGH",
+      "MODERATE": "◐ MODERATE",
+      "LOW": "○ LOW"
+    };
+    return `<span style="background: rgba(212,160,23,0.3); padding: 1px 4px; border-radius: 2px; font-size: 0.8em; margin-left: 4px;">${badges[level] || level}</span>`;
   }
 
   function showError(msg) {

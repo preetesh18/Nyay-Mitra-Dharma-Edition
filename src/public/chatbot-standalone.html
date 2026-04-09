@@ -818,11 +818,51 @@
 
   // Demo responses for testing without server
   const demoResponses = [
-    "The path of dharma requires both action and reflection. As the Bhagavad Gita teaches, fulfilling one's duty without attachment to results is the way to eternal peace.",
-    "Betrayal teaches us about the impermanence of worldly bonds. Yet, Chanakya advises: know the worth of friendship and cherish those who remain true. Forgiveness frees the heart.",
-    "Financial hardship tests our spirit. Remember - wealth is transient, but character is eternal. Engage in righteous action (sattvic karma) and trust the divine timing.",
-    "Injustice in the world is inevitable, yet our response defines us. The Gita counsels equanimity - perform your duty without hatred, for anger clouds judgment.",
-    "When facing difficult choices, align with your dharma, consult your inner wisdom, and act without fear. The Hitopadesha teaches that thoughtful deliberation precedes wise decisions."
+    {
+      reply: "The path of dharma requires both action and reflection. As the Bhagavad Gita teaches, fulfilling one's duty without attachment to results is the way to eternal peace.",
+      metadata: {
+        query_analysis: { emotion_detected: "seeking", intent: "understanding", confidence: 0.8, keywords_matched: ["dharma", "path"] },
+        sources: [
+          { verse_id: "BG-2.47", source: "Bhagavad Gita", confidence_level: "VERIFIED", chapter: 2, verse: 47, shloka_sanskrit: "कर्मण्येवाधिकारस्ते मा फलेषु कदाचन्", english_translation: "Your right is to work only, but never to its fruits" }
+        ]
+      }
+    },
+    {
+      reply: "Betrayal teaches us about the impermanence of worldly bonds. Yet, Chanakya advises: know the worth of friendship and cherish those who remain true. Forgiveness frees the heart.",
+      metadata: {
+        query_analysis: { emotion_detected: "guilt", intent: "understanding", confidence: 0.75, keywords_matched: ["betrayal", "friendship"] },
+        sources: [
+          { verse_id: "Chanakya-3.5", source: "Chanakya Niti", confidence_level: "MODERATE", chapter: null, verse: null, shloka_sanskrit: "सज्जनो यदि कुप्यति कोपं भञ्जयितुं योग्यम्", english_translation: "A good man's anger should be appeased with respect" }
+        ]
+      }
+    },
+    {
+      reply: "Financial hardship tests our spirit. Remember - wealth is transient, but character is eternal. Engage in righteous action (sattvic karma) and trust the divine timing.",
+      metadata: {
+        query_analysis: { emotion_detected: "fear", intent: "seeking", confidence: 0.7, keywords_matched: ["financial", "hardship"] },
+        sources: [
+          { verse_id: "BG-18.13", source: "Bhagavad Gita", confidence_level: "VERIFIED", chapter: 18, verse: 13, shloka_sanskrit: "पञ्चैतानि महाबाहो कारणानि निबोध मे", english_translation: "The five causes of all action" }
+        ]
+      }
+    },
+    {
+      reply: "Injustice in the world is inevitable, yet our response defines us. The Gita counsels equanimity - perform your duty without hatred, for anger clouds judgment.",
+      metadata: {
+        query_analysis: { emotion_detected: "anger", intent: "understanding", confidence: 0.85, keywords_matched: ["injustice", "unfair"] },
+        sources: [
+          { verse_id: "BG-2.56", source: "Bhagavad Gita", confidence_level: "VERIFIED", chapter: 2, verse: 56, shloka_sanskrit: "दुःखेषु अनुद्विग्नमनाः सुखेषु विगतस्पृहः", english_translation: "One who is not disturbed by the incessant flow of desires" }
+        ]
+      }
+    },
+    {
+      reply: "When facing difficult choices, align with your dharma, consult your inner wisdom, and act without fear. The Hitopadesha teaches that thoughtful deliberation precedes wise decisions.",
+      metadata: {
+        query_analysis: { emotion_detected: "confusion", intent: "decision", confidence: 0.8, keywords_matched: ["choice", "decision"] },
+        sources: [
+          { verse_id: "BG-3.35", source: "Bhagavad Gita", confidence_level: "VERIFIED", chapter: 3, verse: 35, shloka_sanskrit: "श्रेयान्स्वधर्मो विगुणः परधर्मात् स्वनुष्ठितात्", english_translation: "Better to follow one's own dharma imperfectly than another's dharma perfectly" }
+        ]
+      }
+    }
   ];
 
   let demoIndex = 0;
@@ -844,6 +884,7 @@
     try {
       // Try to connect to server first
       let data;
+      let metadata = null;
       try {
         const res = await fetch("/api/chat", {
           method: "POST",
@@ -852,15 +893,25 @@
           timeout: 5000
         });
         data = await res.json();
+        
+        // Extract v2.0 metadata if available
+        if (data.query_analysis || data.sources) {
+          metadata = {
+            query_analysis: data.query_analysis,
+            sources: data.sources
+          };
+        }
       } catch (e) {
-        // Fallback to demo response
-        data = { reply: demoResponses[demoIndex % demoResponses.length] };
+        // Fallback to demo response (now includes metadata)
+        const demoData = demoResponses[demoIndex % demoResponses.length];
+        data = { reply: demoData.reply };
+        metadata = demoData.metadata || null;
         demoIndex++;
       }
 
       if (data.error) throw new Error(data.error);
 
-      appendBubble("assistant", data.reply);
+      appendBubble("assistant", data.reply, metadata);
       chatLog.push({ role: "assistant", content: data.reply, ts: new Date().toISOString() });
 
       if (ttsEnabled) speak(data.reply);
@@ -873,15 +924,83 @@
     }
   }
 
-  function appendBubble(role, text) {
+  function appendBubble(role, text, metadata = null) {
     const msg    = mkEl("div", `msg ${role}`);
     const avatar = mkEl("div", "avatar");
     avatar.textContent = role === "user" ? "🙏" : "🪷";
     const bubble = mkEl("div", "bubble");
-    bubble.innerHTML = renderText(text);
+    
+    // Main response text
+    let htmlContent = renderText(text);
+    
+    // Add metadata if available (v2.0 format)
+    if (metadata && role === "assistant") {
+      // Add query analysis (emotion + intent)
+      if (metadata.query_analysis) {
+        const qa = metadata.query_analysis;
+        const emoticon = getEmoticonForEmotion(qa.emotion_detected);
+        htmlContent += `
+          <hr style="border-color:rgba(212,160,23,.2);margin:15px 0 10px 0">
+          <div style="font-size: 0.85em; opacity: 0.8; color: var(--text-dim);">
+            <strong style="color: var(--gold);">📊 Analysis:</strong>
+            ${emoticon} <em>${qa.emotion_detected}</em> • Intent: <em>${qa.intent}</em>
+          </div>
+        `;
+      }
+      
+      // Add sources (verses with confidence)
+      if (metadata.sources && metadata.sources.length > 0) {
+        htmlContent += `
+          <hr style="border-color:rgba(212,160,23,.2);margin:10px 0">
+          <div style="font-size: 0.85em; opacity: 0.85; color: var(--text-dim);">
+            <strong style="color: var(--gold);">📿 Sources:</strong><br>
+        `;
+        
+        metadata.sources.slice(0, 3).forEach(source => {
+          const confidenceBadge = getConfidenceBadge(source.confidence_level);
+          const citation = source.chapter && source.verse 
+            ? `${source.verse_id} (Ch. ${source.chapter}, V. ${source.verse})`
+            : source.verse_id;
+          
+          htmlContent += `
+            <div style="margin: 6px 0; padding: 6px; background: rgba(212,160,23,0.08); border-left: 2px solid var(--gold); padding-left: 8px;">
+              <strong>${citation}</strong> ${confidenceBadge}<br>
+              <span style="font-style: italic; font-size: 0.9em;">${source.source}</span>
+            </div>
+          `;
+        });
+        
+        htmlContent += `</div>`;
+      }
+    }
+    
+    bubble.innerHTML = htmlContent;
     msg.append(avatar, bubble);
     chatEl.appendChild(msg);
     chatEl.scrollTo({ top: chatEl.scrollHeight, behavior: "smooth" });
+  }
+  
+  function getEmoticonForEmotion(emotion) {
+    const emoticons = {
+      "confusion": "❓",
+      "fear": "😨",
+      "guilt": "😔",
+      "anger": "😠",
+      "joy": "😊",
+      "seeking": "🔍",
+      "neutral": "😐"
+    };
+    return emoticons[emotion] || "💭";
+  }
+  
+  function getConfidenceBadge(level) {
+    const badges = {
+      "VERIFIED": "<span style='background: #2d5016; color: #90EE90; padding: 2px 6px; border-radius: 3px; font-size: 0.8em; margin-left: 4px;'>✓ VERIFIED</span>",
+      "HIGH": "<span style='background: #1a4d2e; color: #76C893; padding: 2px 6px; border-radius: 3px; font-size: 0.8em; margin-left: 4px;'>★ HIGH</span>",
+      "MODERATE": "<span style='background: #4a3728; color: #D4A574; padding: 2px 6px; border-radius: 3px; font-size: 0.8em; margin-left: 4px;'>◐ MODERATE</span>",
+      "LOW": "<span style='background: #3d2817; color: #A67C52; padding: 2px 6px; border-radius: 3px; font-size: 0.8em; margin-left: 4px;'>○ LOW</span>"
+    };
+    return badges[level] || "";
   }
 
   function renderText(t) {
